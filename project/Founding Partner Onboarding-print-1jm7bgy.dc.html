@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style data-omelette-print-defaults>
+@media print {
+  @page { margin: 0.5in; }
+  h1, h2, h3, h4, h5, h6 { break-after: avoid; }
+  figure, table, pre, blockquote, img, svg, tr, [class~="card" i] { break-inside: avoid; }
+  img, svg { max-width: 100%; }
+  p { orphans: 3; widows: 3; }
+}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@400..800&family=Figtree:wght@400..700&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F4EE; --card:#FFFFFF; --ink:#141210; --ink2:rgba(20,18,16,.62);
+    --ink3:rgba(20,18,16,.40); --line:rgba(20,18,16,.13); --line2:rgba(20,18,16,.07);
+    --accent:#E6B02C; --accent-deep:#8A6910; --accent-tint:#F6ECC7; --accent-wash:#FCF7E6;
+    --shadow-sm:0 1px 2px rgba(20,18,16,.05); --shadow:0 2px 8px rgba(20,18,16,.06),0 18px 46px rgba(20,18,16,.07);
+    --font-display:'Bricolage Grotesque'; --font-body:'Hanken Grotesk';
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#E7E2D8;font-family:var(--font-body),system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  input,textarea,select,button{font-family:inherit}
+  textarea{resize:none}
+  ::placeholder{color:var(--ink3)}
+  input:focus,textarea:focus,select:focus{outline:none}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes fadeA{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes fadeB{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(-4deg)}}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,16px)}to{opacity:1;transform:translate(-50%,0)}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;padding:26px 18px 90px;display:flex;flex-direction:column;align-items:center;gap:22px;background:radial-gradient(120% 90% at 50% 0%, #EEE9DF 0%, #E4DED3 60%, #DCD5C8 100%)">
+
+  <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center">
+    <div style="display:flex;background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:999px;padding:4px;gap:2px;box-shadow:var(--shadow-sm)">
+      <sc-for list="{{ deviceBtns }}" as="b" hint-placeholder-count="3">
+        <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button>
+      </sc-for>
+    </div>
+    <button onClick="{{ restart }}" style="border:1px solid var(--line);background:rgba(255,255,255,.7);color:var(--ink2);font-size:12.5px;font-weight:600;padding:9px 15px;border-radius:999px;cursor:pointer;box-shadow:var(--shadow-sm)">Restart demo</button>
+  </div>
+
+  <div style="{{ frameStyle }}">
+    <div style="{{ notchStyle }}"></div>
+    <div id="appscroll" style="width:100%;height:100%;overflow-y:auto;overflow-x:hidden;background:var(--paper);position:relative">
+
+      <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+        <div style="position:sticky;top:0;z-index:20;background:color-mix(in srgb, var(--paper) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line2)">
+          <div style="max-width:640px;margin:0 auto;padding:13px 20px 0;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <img src="assets/logo.png" alt="Locals for Locals" style="height:34px;width:auto;display:block"/>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="{{ savedPillStyle }}">
+                <span style="{{ savedDotStyle }}"></span>{{ savedLabel }}
+              </div>
+              <button onClick="{{ saveLater }}" style="background:none;border:none;color:var(--ink2);font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line);padding:6px 2px">Save &amp; finish later</button>
+            </div>
+          </div>
+          <div style="max-width:640px;margin:0 auto;padding:12px 20px 13px">
+            <div style="display:flex;align-items:center;gap:0">
+              <sc-for list="{{ steps }}" as="s" hint-placeholder-count="6">
+                <div style="{{ s.trackStyle }}"><div style="{{ s.fillStyle }}"></div></div>
+                <div style="{{ s.dotStyle }}">{{ s.dotMark }}</div>
+              </sc-for>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:9px">
+              <div style="font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.01em;color:var(--ink)">{{ stepTitle }}</div>
+              <div style="font-size:11.5px;font-weight:600;color:var(--ink3);letter-spacing:.04em;text-transform:uppercase">Step {{ stepNum }} / 6</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ROUTER -->
+      <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+        <div style="animation:fadeUp .5s ease both">
+          <div style="position:relative;padding:32px 22px 30px;text-align:center;overflow:hidden">
+            <div style="position:absolute;top:-40px;right:-30px;width:150px;height:150px;opacity:.05;background:url('assets/logo.png') center/contain no-repeat;transform:rotate(12deg)"></div>
+            <img src="assets/logo.png" alt="Locals for Locals" style="height:72px;width:auto;margin:6px auto 0;animation:floaty 6s ease-in-out infinite;transform-origin:center"/>
+            <div style="display:inline-flex;align-items:center;gap:7px;margin:26px auto 0;padding:6px 13px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent-deep)">
+              <span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>Davao City · By invitation
+            </div>
+            <h1 style="font-family:var(--font-display);font-weight:800;font-size:clamp(34px,8.5vw,52px);line-height:1.02;letter-spacing:-.02em;margin:18px auto 0;max-width:11ch">Join Davao's Founding Circle</h1>
+            <p style="font-size:16px;line-height:1.55;color:var(--ink2);margin:16px auto 0;max-width:34ch">Become one of Davao's first curated businesses inside Locals for Locals.</p>
+            <p style="font-size:15px;line-height:1.5;color:var(--ink);margin:14px auto 0;max-width:32ch;font-weight:600">Not everyone gets accepted. We're looking for businesses people genuinely love recommending.</p>
+            <div style="margin-top:26px">
+              <button onClick="{{ startApply }}" style="width:100%;max-width:340px;background:var(--ink);color:#fff;border:none;border-radius:14px;padding:17px 24px;font-size:16px;font-weight:700;letter-spacing:.01em;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s ease" style-hover="transform:translateY(-2px)">Apply Now</button>
+              <div style="font-size:12.5px;color:var(--ink3);margin-top:12px">Takes about 8 minutes · Save and finish anytime</div>
+            </div>
+          </div>
+
+          <div style="background:var(--ink);color:var(--paper);padding:34px 22px 40px;margin-top:8px">
+            <div style="max-width:520px;margin:0 auto">
+              <div style="font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);opacity:.9">What you get</div>
+              <h2 style="font-family:var(--font-display);font-weight:700;font-size:26px;line-height:1.12;letter-spacing:-.01em;margin:10px 0 22px">More than a listing — a place at the table.</h2>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ perks }}" as="p" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-top:1px solid rgba(247,244,238,.14)">
+                    <span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--accent);min-width:26px;padding-top:1px">{{ p.no }}</span>
+                    <div>
+                      <div style="font-size:16px;font-weight:600;line-height:1.3">{{ p.title }}</div>
+                      <div style="font-size:13.5px;color:rgba(247,244,238,.6);line-height:1.4;margin-top:3px">{{ p.desc }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <button onClick="{{ startApply }}" style="width:100%;background:var(--paper);color:var(--ink);border:none;border-radius:14px;padding:16px 24px;font-size:16px;font-weight:700;cursor:pointer;margin-top:26px;transition:transform .15s ease" style-hover="transform:translateY(-2px)">Apply Now</button>
+              <p style="text-align:center;font-size:12.5px;color:rgba(247,244,238,.5);margin:22px 0 0;font-style:italic">One founder. One business. One city at a time.</p>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- STEP 1: MEET THE FOUNDER (Typeform) -->
+      <sc-if value="{{ isFounder }}" hint-placeholder-val="{{ true }}">
+        <div style="max-width:560px;margin:0 auto;padding:20px 22px 40px;min-height:60vh;display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;gap:10px;margin-top:6px">
+            <div style="font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--accent-deep);letter-spacing:.05em">MEET THE FOUNDER</div>
+            <div style="flex:1;height:1px;background:var(--line)"></div>
+            <div style="font-size:12px;font-weight:600;color:var(--ink3)">{{ fq.step }} of {{ fq.total }}</div>
+          </div>
+
+          <sc-if value="{{ fq.isIntro }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:fadeUp .45s ease both;margin-top:38px">
+              <h2 style="font-family:var(--font-display);font-weight:800;font-size:30px;line-height:1.1;letter-spacing:-.015em;margin:0">This is the story people will fall in love with.</h2>
+              <p style="font-size:16px;line-height:1.6;color:var(--ink2);margin:16px 0 0">Take your time — you don't need to write paragraphs, just answer honestly. Eight quick questions.</p>
+            </div>
+          </sc-if>
+
+          <div style="{{ fq.cardAnim }}">
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:center;margin-top:30px">
+              <div style="display:flex;align-items:baseline;gap:12px">
+                <span style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--accent)">{{ fq.num }}</span>
+                <h2 style="font-family:var(--font-display);font-weight:700;font-size:26px;line-height:1.18;letter-spacing:-.01em;margin:0;flex:1">{{ fq.question }}</h2>
+              </div>
+
+              <sc-if value="{{ fq.isText }}" hint-placeholder-val="{{ true }}">
+                <div style="margin-top:22px;padding-left:27px">
+                  <input value="{{ fq.value }}" onInput="{{ fq.onInput }}" placeholder="{{ fq.placeholder }}" style="width:100%;border:none;border-bottom:2px solid var(--line);background:transparent;font-size:22px;font-family:var(--font-display);font-weight:500;color:var(--ink);padding:8px 0" style-focus="border-bottom-color:var(--accent)"/>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ fq.isArea }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:22px;padding-left:27px">
+                  <textarea value="{{ fq.value }}" onInput="{{ fq.onInput }}" placeholder="{{ fq.placeholder }}" rows="3" maxlength="{{ fq.max }}" style="width:100%;border:1px solid var(--line);border-radius:14px;background:var(--card);font-size:17px;line-height:1.5;color:var(--ink);padding:14px 16px;box-shadow:var(--shadow-sm)" style-focus="border-color:var(--accent)"></textarea>
+                  <div style="text-align:right;font-size:12px;color:var(--ink3);margin-top:6px">{{ fq.count }}</div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ fq.isPhoto }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:22px;padding-left:27px">
+                  <label style="{{ fq.photoBoxStyle }}">
+                    <sc-if value="{{ fq.hasPhoto }}" hint-placeholder-val="{{ false }}">
+                      {{ fq.photoImg }}
+                      <span style="position:absolute;bottom:10px;right:10px;background:rgba(20,18,16,.8);color:#fff;font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px">Change photo</span>
+                    </sc-if>
+                    <sc-if value="{{ fq.noPhoto }}" hint-placeholder-val="{{ true }}">
+                      <div style="text-align:center;padding:20px">
+                        <div style="width:46px;height:46px;border-radius:50%;background:var(--accent-tint);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:22px">＋</div>
+                        <div style="font-size:14.5px;font-weight:600;color:var(--ink)">Add a photo of yourself</div>
+                        <div style="font-size:12.5px;color:var(--ink3);margin-top:4px">Tap to upload · JPG or PNG</div>
+                      </div>
+                    </sc-if>
+                    <input type="file" accept="image/*" onChange="{{ fq.onFile }}" style="display:none"/>
+                  </label>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ fq.hasHelp }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:14px;padding-left:27px;display:flex;gap:8px;align-items:flex-start;color:var(--accent-deep)">
+                  <span style="font-size:13px">💡</span>
+                  <span style="font-size:13.5px;line-height:1.45;color:var(--ink2);font-style:italic">{{ fq.help }}</span>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ fq.hasError }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:14px;padding-left:27px;font-size:13px;color:#B4462F;font-weight:600">{{ fq.error }}</div>
+              </sc-if>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;margin-top:40px">
+            <button onClick="{{ back }}" style="border:1px solid var(--line);background:var(--card);color:var(--ink);width:52px;height:52px;border-radius:14px;font-size:20px;cursor:pointer;flex-shrink:0" title="Back">←</button>
+            <button onClick="{{ next }}" style="flex:1;background:var(--ink);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .15s ease" style-hover="transform:translateY(-2px)">{{ fq.nextLabel }}</button>
+          </div>
+          <button onClick="{{ next }}" style="{{ fq.skipStyle }}">Skip this one</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isS2 }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:600px;margin:0 auto;padding:22px 22px 40px;animation:fadeUp .45s ease both">
+          <h2 style="font-family:var(--font-display);font-weight:800;font-size:28px;line-height:1.12;letter-spacing:-.015em;margin:0">Almost done with the fun part.</h2>
+          <p style="font-size:15.5px;line-height:1.55;color:var(--ink2);margin:10px 0 0">Now let's get the practical details right.</p>
+
+          <div style="display:flex;flex-direction:column;gap:20px;margin-top:26px">
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Business name</label>
+              <input value="{{ d.businessName }}" onInput="{{ h.businessName }}" placeholder="Kalinaw Coffee" style="width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px;color:var(--ink);padding:13px 14px;box-shadow:var(--shadow-sm)" style-focus="border-color:var(--accent)"/>
+              <sc-if value="{{ hasErrBusinessName }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:#B4462F;font-weight:600;margin-top:6px">{{ errBusinessName }}</div></sc-if>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Business category</label>
+              <select value="{{ d.category }}" onChange="{{ h.category }}" style="width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px;color:var(--ink);padding:13px 14px;box-shadow:var(--shadow-sm);appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23999%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>');background-repeat:no-repeat;background-position:right 14px center" style-focus="border-color:var(--accent)">
+                <option value="" disabled>Choose one…</option>
+                <option value="Cafe">Cafe</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Wellness">Wellness</option>
+                <option value="Retail">Retail</option>
+                <option value="Studio">Studio</option>
+                <option value="Other">Other</option>
+              </select>
+              <sc-if value="{{ hasErrCategory }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:#B4462F;font-weight:600;margin-top:6px">{{ errCategory }}</div></sc-if>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Price range</label>
+              <div style="display:flex;gap:8px">
+                <sc-for list="{{ priceList }}" as="pr" hint-placeholder-count="4">
+                  <div onClick="{{ pr.onClick }}" style="{{ pr.style }}">
+                    <span style="font-family:var(--font-display);font-size:16px;font-weight:800;letter-spacing:.02em">{{ pr.sym }}</span>
+                    <span style="font-size:11px;font-weight:600">{{ pr.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Business description</label>
+              <textarea value="{{ d.description }}" onInput="{{ h.description }}" rows="3" placeholder="How would you describe this place to a friend?" style="width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px;line-height:1.5;color:var(--ink);padding:13px 14px;box-shadow:var(--shadow-sm)" style-focus="border-color:var(--accent)"></textarea>
+              <div style="font-size:12px;color:var(--ink3);margin-top:5px">2–3 sentences is perfect.</div>
+            </div>
+
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <div style="flex:1;min-width:140px">
+                <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">City</label>
+                <input value="{{ d.city }}" onInput="{{ h.city }}" placeholder="Davao City" style="width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px;color:var(--ink);padding:13px 14px;box-shadow:var(--shadow-sm)" style-focus="border-color:var(--accent)"/>
+              </div>
+              <div style="flex:2;min-width:180px">
+                <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Address</label>
+                <input value="{{ d.address }}" onInput="{{ h.address }}" placeholder="Street, barangay, city" style="width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px;color:var(--ink);padding:13px 14px;box-shadow:var(--shadow-sm)" style-focus="border-color:var(--accent)"/>
+              </div>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Google Maps pin</label>
+              <div style="position:relative;height:120px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background-image:repeating-linear-gradient(45deg,#EFE9DF 0 12px,#E9E2D5 12px 24px);display:flex;align-items:center;justify-content:center;cursor:pointer" onClick="{{ dropPin }}">
+                <div style="{{ pinLabelStyle }}">
+                  <span style="font-size:22px">📍</span>
+                  <span style="font-family:ui-monospace,Menlo,monospace;font-size:11.5px;font-weight:600;color:var(--ink2)">{{ pinLabel }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid var(--line2);padding-top:20px">
+              <div style="font-size:13px;font-weight:700;margin-bottom:4px">Where can people find you?</div>
+              <div style="font-size:12.5px;color:var(--ink3);margin-bottom:12px">Add at least one — you don't need them all.</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:0 14px;box-shadow:var(--shadow-sm)">
+                  <span style="font-size:13px;font-weight:700;color:var(--ink3);width:76px;flex-shrink:0">Instagram</span>
+                  <input value="{{ d.instagram }}" onInput="{{ h.instagram }}" placeholder="@yourbusiness" style="flex:1;border:none;background:transparent;font-size:15px;color:var(--ink);padding:13px 0"/>
+                </div>
+                <div style="display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:0 14px;box-shadow:var(--shadow-sm)">
+                  <span style="font-size:13px;font-weight:700;color:var(--ink3);width:76px;flex-shrink:0">Facebook</span>
+                  <input value="{{ d.facebook }}" onInput="{{ h.facebook }}" placeholder="facebook.com/…" style="flex:1;border:none;background:transparent;font-size:15px;color:var(--ink);padding:13px 0"/>
+                </div>
+                <div style="display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:0 14px;box-shadow:var(--shadow-sm)">
+                  <span style="font-size:13px;font-weight:700;color:var(--ink3);width:76px;flex-shrink:0">Website</span>
+                  <input value="{{ d.website }}" onInput="{{ h.website }}" placeholder="yoursite.com" style="flex:1;border:none;background:transparent;font-size:15px;color:var(--ink);padding:13px 0"/>
+                </div>
+                <div style="display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:0 14px;box-shadow:var(--shadow-sm)">
+                  <span style="font-size:13px;font-weight:700;color:var(--ink3);width:76px;flex-shrink:0">TikTok</span>
+                  <input value="{{ d.tiktok }}" onInput="{{ h.tiktok }}" placeholder="@yourbusiness" style="flex:1;border:none;background:transparent;font-size:15px;color:var(--ink);padding:13px 0"/>
+                </div>
+              </div>
+              <sc-if value="{{ hasErrSocial }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:#B4462F;font-weight:600;margin-top:8px">{{ errSocial }}</div></sc-if>
+            </div>
+
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <div style="flex:1;min-width:150px">
+                <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Phone number</label>
+                <input value="{{ d.phone }}" onInput="{{ h.phone }}" placeholder="+63 917 …" style="width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px;color:var(--ink);padding:13px 14px;box-shadow:var(--shadow-sm)" style-focus="border-color:var(--accent)"/>
+              </div>
+              <div style="flex:1;min-width:150px">
+                <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Email</label>
+                <input value="{{ d.email }}" onInput="{{ h.email }}" placeholder="hello@…" style="width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px;color:var(--ink);padding:13px 14px;box-shadow:var(--shadow-sm)" style-focus="border-color:var(--accent)"/>
+              </div>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Business hours</label>
+              <div style="display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:0 14px;box-shadow:var(--shadow-sm)">
+                <span style="font-size:16px">🕐</span>
+                <input value="{{ d.hours }}" onInput="{{ h.hours }}" placeholder="e.g. Tue–Sun · 7AM – 8PM" style="flex:1;border:none;background:transparent;font-size:15px;color:var(--ink);padding:13px 0"/>
+              </div>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:4px">Highlights</label>
+              <div style="font-size:12.5px;color:var(--ink3);margin-bottom:12px">Choose as many as fit.</div>
+              <div style="display:flex;flex-wrap:wrap;gap:9px">
+                <sc-for list="{{ highlightList }}" as="hi" hint-placeholder-count="10">
+                  <div onClick="{{ hi.onClick }}" style="{{ hi.style }}"><span style="font-size:15px">{{ hi.icon }}</span>{{ hi.name }}</div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;margin-top:32px">
+            <button onClick="{{ back }}" style="border:1px solid var(--line);background:var(--card);color:var(--ink);width:52px;height:52px;border-radius:14px;font-size:20px;cursor:pointer;flex-shrink:0">←</button>
+            <button onClick="{{ next }}" style="flex:1;background:var(--ink);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .15s ease" style-hover="transform:translateY(-2px)">{{ s2NextLabel }}</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isCatDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:600px;margin:0 auto;padding:22px 22px 40px;animation:fadeUp .45s ease both">
+          <div style="display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:var(--accent-wash);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-deep)">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>Tailored for you
+          </div>
+          <h2 style="font-family:var(--font-display);font-weight:800;font-size:27px;line-height:1.12;letter-spacing:-.015em;margin:14px 0 0">{{ catData.title }}</h2>
+          <p style="font-size:15px;line-height:1.55;color:var(--ink2);margin:10px 0 0">{{ catData.intro }}</p>
+
+          <div style="display:flex;flex-direction:column;gap:26px;margin-top:26px">
+            <sc-for list="{{ catData.sections }}" as="sec" hint-placeholder-count="4">
+              <div>
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                  <label style="font-size:14px;font-weight:700;color:var(--ink)">{{ sec.label }}</label>
+                  <sc-if value="{{ sec.showNote }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:var(--accent-deep)">{{ sec.note }}</span></sc-if>
+                </div>
+                <sc-if value="{{ sec.hasHint }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:var(--ink3);margin-top:3px">{{ sec.hint }}</div></sc-if>
+
+                <sc-if value="{{ sec.isChips }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:12px">
+                    <sc-for list="{{ sec.options }}" as="opt" hint-placeholder-count="8">
+                      <div onClick="{{ opt.onClick }}" style="{{ opt.style }}">{{ opt.label }}</div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ sec.isNumber }}" hint-placeholder-val="{{ false }}">
+                  <input value="{{ sec.value }}" onInput="{{ sec.onInput }}" inputmode="numeric" placeholder="e.g. 6" style="width:140px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px;color:var(--ink);padding:13px 14px;box-shadow:var(--shadow-sm);margin-top:12px" style-focus="border-color:var(--accent)"/>
+                </sc-if>
+
+                <sc-if value="{{ sec.isDishes }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:11px;margin-top:12px">
+                    <sc-for list="{{ sec.list }}" as="dish" hint-placeholder-count="2">
+                      <div style="display:flex;gap:12px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:12px;box-shadow:var(--shadow-sm)">
+                        <label style="position:relative;width:66px;height:66px;border-radius:10px;flex-shrink:0;cursor:pointer;overflow:hidden;background:repeating-linear-gradient(45deg,#EFE9DF 0 8px,#E5DDCF 8px 16px);display:flex;align-items:center;justify-content:center">
+                          <sc-if value="{{ dish.hasPhoto }}" hint-placeholder-val="{{ false }}">{{ dish.photoImg }}</sc-if>
+                          <sc-if value="{{ dish.noPhoto }}" hint-placeholder-val="{{ true }}"><span style="font-size:16px;color:var(--ink3)">📷</span></sc-if>
+                          <input type="file" accept="image/*" onChange="{{ dish.onPhoto }}" style="display:none"/>
+                        </label>
+                        <div style="flex:1;display:flex;flex-direction:column;gap:7px;min-width:0">
+                          <div style="display:flex;gap:8px">
+                            <input value="{{ dish.name }}" onInput="{{ dish.onName }}" placeholder="Dish name" style="flex:1;min-width:0;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:14.5px;font-weight:700;color:var(--ink);padding:4px 0" style-focus="border-bottom-color:var(--accent)"/>
+                            <div style="display:flex;align-items:center;gap:2px;border-bottom:1px solid var(--line);width:78px"><span style="font-size:13px;font-weight:700;color:var(--ink3)">₱</span><input value="{{ dish.price }}" onInput="{{ dish.onPrice }}" inputmode="numeric" placeholder="0" style="width:100%;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--ink);padding:4px 0"/></div>
+                          </div>
+                          <input value="{{ dish.desc }}" onInput="{{ dish.onDesc }}" placeholder="One short line about it" style="width:100%;border:none;background:transparent;font-size:13px;color:var(--ink2);padding:2px 0"/>
+                        </div>
+                        <button onClick="{{ dish.onRemove }}" style="align-self:flex-start;width:24px;height:24px;border-radius:50%;border:none;background:var(--paper);color:var(--ink3);font-size:14px;cursor:pointer;flex-shrink:0">×</button>
+                      </div>
+                    </sc-for>
+                    <sc-if value="{{ sec.canAdd }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ sec.addDish }}" style="border:1.5px dashed var(--line);background:var(--card);color:var(--accent-deep);border-radius:12px;padding:12px;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px">＋ Add a dish</button>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;margin-top:32px">
+            <button onClick="{{ back }}" style="border:1px solid var(--line);background:var(--card);color:var(--ink);width:52px;height:52px;border-radius:14px;font-size:20px;cursor:pointer;flex-shrink:0">←</button>
+            <button onClick="{{ next }}" style="flex:1;background:var(--ink);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .15s ease" style-hover="transform:translateY(-2px)">Next: your local privilege →</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isS3 }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:560px;margin:0 auto;padding:22px 22px 40px;animation:fadeUp .45s ease both">
+          <div style="font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--accent-deep);letter-spacing:.05em">YOUR LOCAL PRIVILEGE</div>
+          <h2 style="font-family:var(--font-display);font-weight:800;font-size:27px;line-height:1.14;letter-spacing:-.015em;margin:12px 0 0">What memorable experience would you like to offer Local members?</h2>
+          <p style="font-size:15px;line-height:1.55;color:var(--ink2);margin:12px 0 0">Think of it as a welcome, not a discount. Pick the one that feels most like you.</p>
+
+          <div style="display:flex;flex-direction:column;gap:11px;margin-top:24px">
+            <sc-for list="{{ privList }}" as="p" hint-placeholder-count="5">
+              <div onClick="{{ p.onClick }}" style="{{ p.style }}">
+                <div style="{{ p.radioStyle }}"></div>
+                <div>
+                  <div style="font-size:15.5px;font-weight:700;color:var(--ink)">{{ p.name }}</div>
+                  <div style="font-size:13px;color:var(--ink2);margin-top:2px">{{ p.desc }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ hasErrPrivilege }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:#B4462F;font-weight:600;margin-top:10px">{{ errPrivilege }}</div></sc-if>
+
+          <sc-if value="{{ showPrivOther }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:14px">
+              <input value="{{ d.privOther }}" onInput="{{ h.privOther }}" placeholder="Describe your experience…" style="width:100%;border:1px solid var(--accent);border-radius:12px;background:var(--card);font-size:15px;color:var(--ink);padding:13px 14px;box-shadow:var(--shadow-sm)"/>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showDiscountTip }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:14px;display:flex;gap:11px;align-items:flex-start;background:var(--accent-wash);border:1px solid var(--accent-tint);border-radius:14px;padding:14px 16px;animation:fadeUp .3s ease both">
+              <span style="font-size:17px">💡</span>
+              <div style="font-size:13.5px;line-height:1.5;color:var(--ink)"><strong>Tip:</strong> experiences tend to bring people back more than discounts. Want to try a signature item instead? Totally your call.</div>
+            </div>
+          </sc-if>
+
+          <div style="margin-top:30px;display:flex;flex-direction:column;gap:20px">
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Minimum spend to redeem</label>
+              <div style="display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:0 14px;box-shadow:var(--shadow-sm)">
+                <span style="font-size:16px;font-weight:700;color:var(--ink3)">₱</span>
+                <input value="{{ d.minSpend }}" onInput="{{ h.minSpend }}" inputmode="numeric" placeholder="300" style="flex:1;border:none;background:transparent;font-size:15px;color:var(--ink);padding:13px 0"/>
+              </div>
+              <div style="font-size:12.5px;color:var(--ink3);margin-top:6px">This protects your margins — members spend at least this much before the perk applies.</div>
+            </div>
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Terms &amp; conditions <span style="color:var(--ink3);font-weight:500">· optional</span></label>
+              <textarea value="{{ d.terms }}" onInput="{{ h.terms }}" rows="2" placeholder="e.g. blackout dates, dine-in only" style="width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px;line-height:1.5;color:var(--ink);padding:13px 14px;box-shadow:var(--shadow-sm)" style-focus="border-color:var(--accent)"></textarea>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;margin-top:32px">
+            <button onClick="{{ back }}" style="border:1px solid var(--line);background:var(--card);color:var(--ink);width:52px;height:52px;border-radius:14px;font-size:20px;cursor:pointer;flex-shrink:0">←</button>
+            <button onClick="{{ next }}" style="flex:1;background:var(--ink);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .15s ease" style-hover="transform:translateY(-2px)">Next: add your photos →</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isS4 }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:600px;margin:0 auto;padding:22px 22px 40px;animation:fadeUp .45s ease both">
+          <h2 style="font-family:var(--font-display);font-weight:800;font-size:28px;line-height:1.12;letter-spacing:-.015em;margin:0">Let's make your profile look as good as your business.</h2>
+          <p style="font-size:15px;line-height:1.55;color:var(--ink2);margin:10px 0 0">Watch it come together on the right as you go.</p>
+
+          <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:24px;align-items:flex-start">
+            <!-- uploads -->
+            <div style="flex:1;min-width:260px;display:flex;flex-direction:column;gap:22px">
+              <div>
+                <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Cover photo <span style="color:var(--accent-deep)">· required</span></label>
+                <label style="position:relative;display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:3/2;border-radius:14px;overflow:hidden;cursor:pointer;border:2px dashed var(--line);background:var(--card);box-shadow:var(--shadow-sm)">
+                  <sc-if value="{{ hasCover }}" hint-placeholder-val="{{ false }}">
+                    {{ coverImg }}
+                    <span style="position:absolute;bottom:10px;right:10px;background:rgba(20,18,16,.8);color:#fff;font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px">Replace</span>
+                  </sc-if>
+                  <sc-if value="{{ noCover }}" hint-placeholder-val="{{ true }}">
+                    <div style="text-align:center;padding:16px"><div style="font-size:26px">🖼️</div><div style="font-size:13.5px;font-weight:600;margin-top:6px">Upload cover</div><div style="font-size:11.5px;color:var(--ink3);margin-top:2px">Landscape, at least 1200×800</div></div>
+                  </sc-if>
+                  <input type="file" accept="image/*" onChange="{{ onCover }}" style="display:none"/>
+                </label>
+                <sc-if value="{{ hasErrCover }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:#B4462F;font-weight:600;margin-top:6px">{{ errCover }}</div></sc-if>
+              </div>
+
+              <div>
+                <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Logo <span style="color:var(--ink3);font-weight:500">· optional</span></label>
+                <label style="position:relative;display:flex;align-items:center;gap:12px;width:100%;border-radius:14px;cursor:pointer;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow-sm);padding:12px">
+                  <div style="width:52px;height:52px;border-radius:12px;overflow:hidden;flex-shrink:0;background:repeating-linear-gradient(45deg,#EFE9DF 0 8px,#E5DDCF 8px 16px);display:flex;align-items:center;justify-content:center">
+                    <sc-if value="{{ hasLogo }}" hint-placeholder-val="{{ false }}">{{ logoImg }}</sc-if>
+                    <sc-if value="{{ noLogo }}" hint-placeholder-val="{{ true }}"><span style="font-size:18px">＋</span></sc-if>
+                  </div>
+                  <div style="font-size:13.5px;font-weight:600;color:var(--ink2)">Upload your logo</div>
+                  <input type="file" accept="image/*" onChange="{{ onLogo }}" style="display:none"/>
+                </label>
+              </div>
+
+              <div>
+                <label style="display:block;font-size:13px;font-weight:700;margin-bottom:4px">Gallery photos <span style="color:var(--accent-deep)">· 2–6</span></label>
+                <div style="font-size:12px;color:var(--ink3);margin-bottom:10px">{{ galleryCount }} added · use ← → to reorder</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+                  <sc-for list="{{ galleryList }}" as="g" hint-placeholder-count="3">
+                    <div style="position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm)">
+                      {{ g.img }}
+                      <button onClick="{{ g.onRemove }}" style="position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;border:none;background:rgba(20,18,16,.75);color:#fff;font-size:12px;cursor:pointer;line-height:1">×</button>
+                      <div style="position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;background:linear-gradient(transparent,rgba(20,18,16,.55));padding:4px 6px">
+                        <button onClick="{{ g.onLeft }}" style="border:none;background:none;color:#fff;font-size:13px;cursor:pointer;padding:2px">←</button>
+                        <button onClick="{{ g.onRight }}" style="border:none;background:none;color:#fff;font-size:13px;cursor:pointer;padding:2px">→</button>
+                      </div>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{ showGalleryAdd }}" hint-placeholder-val="{{ true }}">
+                    <label style="aspect-ratio:1;border-radius:12px;border:2px dashed var(--line);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--ink3)">
+                      <span style="font-size:22px">＋</span><span style="font-size:11px;font-weight:600">Add</span>
+                      <input type="file" accept="image/*" multiple onChange="{{ onGalleryPick }}" style="display:none"/>
+                    </label>
+                  </sc-if>
+                </div>
+              </div>
+
+              <div>
+                <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Menu photos <span style="color:var(--ink3);font-weight:500">· optional</span></label>
+                <label style="position:relative;display:flex;align-items:center;gap:12px;width:100%;border-radius:14px;cursor:pointer;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow-sm);padding:12px">
+                  <div style="width:52px;height:52px;border-radius:12px;overflow:hidden;flex-shrink:0;background:repeating-linear-gradient(45deg,#EFE9DF 0 8px,#E5DDCF 8px 16px);display:flex;align-items:center;justify-content:center">
+                    <sc-if value="{{ hasMenu }}" hint-placeholder-val="{{ false }}">{{ menuImg }}</sc-if>
+                    <sc-if value="{{ noMenu }}" hint-placeholder-val="{{ true }}"><span style="font-size:18px">🍽️</span></sc-if>
+                  </div>
+                  <div style="font-size:13.5px;font-weight:600;color:var(--ink2)">Add your menu</div>
+                  <input type="file" accept="image/*" onChange="{{ onMenu }}" style="display:none"/>
+                </label>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:12px;border:1px solid var(--line2);border-radius:14px;background:var(--accent-wash);padding:12px 14px">
+                <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--accent-tint);display:flex;align-items:center;justify-content:center">
+                  <sc-if value="{{ hasOwner }}" hint-placeholder-val="{{ false }}">{{ ownerImg }}</sc-if>
+                  <sc-if value="{{ noOwnerP }}" hint-placeholder-val="{{ true }}"><span style="font-size:18px">👤</span></sc-if>
+                </div>
+                <div><div style="font-size:13.5px;font-weight:700">Owner photo</div><div style="font-size:12px;color:var(--ink2)">Pulled from Step 1 — you can change it there.</div></div>
+              </div>
+            </div>
+
+            <!-- live preview -->
+            <div style="flex:1;min-width:230px;position:sticky;top:118px">
+              <div style="font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:7px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);animation:spin 1.4s linear infinite"></span>Live preview</div>
+              <div style="background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)">
+                <div style="position:relative;aspect-ratio:3/2">
+                  <div style="{{ prevCoverStyle }}"></div>
+                  <sc-if value="{{ prevNoCover }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-size:11px;color:var(--ink3)">cover photo</div></sc-if>
+                </div>
+                <div style="padding:14px 16px 16px">
+                  <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-deep)">{{ prevCat }} · {{ prevCity }} · {{ prevPrice }}</div>
+                  <div style="font-family:var(--font-display);font-size:19px;font-weight:800;margin-top:5px;letter-spacing:-.01em">{{ prevName }}</div>
+                  <div style="display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line2)">
+                    <div style="width:30px;height:30px;border-radius:50%;overflow:hidden;background:var(--accent-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                      <sc-if value="{{ hasOwner }}" hint-placeholder-val="{{ false }}">{{ ownerImg }}</sc-if>
+                      <sc-if value="{{ noOwnerP }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px">👤</span></sc-if>
+                    </div>
+                    <div style="font-size:12px;color:var(--ink2)">Founding Partner</div>
+                  </div>
+                </div>
+              </div>
+              <div style="font-size:12px;color:var(--ink3);text-align:center;margin-top:10px;line-height:1.4">This is roughly how members will see your card.</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;margin-top:32px">
+            <button onClick="{{ back }}" style="border:1px solid var(--line);background:var(--card);color:var(--ink);width:52px;height:52px;border-radius:14px;font-size:20px;cursor:pointer;flex-shrink:0">←</button>
+            <button onClick="{{ next }}" style="flex:1;background:var(--ink);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .15s ease" style-hover="transform:translateY(-2px)">Next: review your story →</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:620px;margin:0 auto;padding:22px 20px 40px;animation:fadeUp .45s ease both">
+          <h2 style="font-family:var(--font-display);font-weight:800;font-size:27px;line-height:1.14;letter-spacing:-.015em;margin:0;padding:0 2px">Here's how your story will look to Davao.</h2>
+          <p style="font-size:15px;line-height:1.55;color:var(--ink2);margin:10px 2px 0">Everything good? Tap <strong>Edit</strong> on any part to fix it — you won't lose your place.</p>
+
+          <!-- PROFILE PREVIEW -->
+          <div style="margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)">
+            <div style="position:relative;aspect-ratio:16/9">
+              <div style="{{ rvCoverStyle }}"></div>
+              <button onClick="{{ editPhotos }}" style="position:absolute;top:12px;right:12px;background:rgba(20,18,16,.78);color:#fff;border:none;font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer;backdrop-filter:blur(4px)">Edit photos</button>
+            </div>
+            <div style="padding:20px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                <div>
+                  <div style="font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-deep)">{{ rv.category }} · {{ rv.city }} · {{ rv.priceRange }}</div>
+                  <div style="font-family:var(--font-display);font-size:25px;font-weight:800;letter-spacing:-.015em;margin-top:5px">{{ rv.businessName }}</div>
+                </div>
+                <button onClick="{{ editBusiness }}" style="flex-shrink:0;background:var(--paper);border:1px solid var(--line);color:var(--ink);font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer">Edit</button>
+              </div>
+              <p style="font-size:14.5px;line-height:1.6;color:var(--ink2);margin:12px 0 0">{{ rv.description }}</p>
+              <div style="font-size:12.5px;color:var(--accent-deep);font-weight:600;margin-top:12px">{{ rv.highlights }}</div>
+            </div>
+
+            <sc-if value="{{ hasCatReview }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:20px;border-top:1px solid var(--line2)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+                <div style="font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)">What we're known for</div>
+                <button onClick="{{ editCatDetail }}" style="background:var(--paper);border:1px solid var(--line);color:var(--ink);font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer">Edit</button>
+              </div>
+              <sc-if value="{{ hasCatDishes }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+                  <sc-for list="{{ catReviewDishes }}" as="dish" hint-placeholder-count="2">
+                    <div style="display:flex;gap:12px;align-items:center">
+                      <div style="width:48px;height:48px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--accent-tint);display:flex;align-items:center;justify-content:center">
+                        <sc-if value="{{ dish.hasPhoto }}" hint-placeholder-val="{{ false }}">{{ dish.photoImg }}</sc-if>
+                        <sc-if value="{{ dish.noPhoto }}" hint-placeholder-val="{{ true }}"><span style="font-size:16px">🍽️</span></sc-if>
+                      </div>
+                      <div style="flex:1;min-width:0">
+                        <div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:14px;font-weight:700">{{ dish.name }}</span><span style="font-size:13.5px;font-weight:700;color:var(--accent-deep)">{{ dish.price }}</span></div>
+                        <div style="font-size:12.5px;color:var(--ink2);line-height:1.4">{{ dish.desc }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <sc-for list="{{ catReviewSections }}" as="cs" hint-placeholder-count="3">
+                  <div>
+                    <div style="font-size:11.5px;font-weight:700;color:var(--ink3);margin-bottom:3px">{{ cs.label }}</div>
+                    <div style="font-size:13.5px;color:var(--ink);line-height:1.45">{{ cs.valueStr }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+
+            <!-- founder story -->
+            <div style="padding:20px;border-top:1px solid var(--line2);background:var(--accent-wash)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+                <div style="font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)">The Founder's Story</div>
+                <button onClick="{{ editStory }}" style="background:var(--card);border:1px solid var(--line);color:var(--ink);font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer">Edit</button>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:54px;height:54px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--accent-tint);display:flex;align-items:center;justify-content:center">
+                  <sc-if value="{{ rvHasOwner }}" hint-placeholder-val="{{ false }}">{{ rvOwnerImg }}</sc-if>
+                  <sc-if value="{{ rvNoOwner }}" hint-placeholder-val="{{ true }}"><span style="font-size:22px">👤</span></sc-if>
+                </div>
+                <div><div style="font-family:var(--font-display);font-size:17px;font-weight:700">{{ rv.founderName }}</div><div style="font-size:12.5px;color:var(--ink2)">Founder</div></div>
+              </div>
+              <div style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
+                <div><div style="font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:3px">Why I started</div><div style="font-size:14.5px;line-height:1.55;font-style:italic;color:var(--ink)">"{{ rv.why }}"</div></div>
+                <div><div style="font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:3px">What I hope you remember</div><div style="font-size:14.5px;line-height:1.55;font-style:italic;color:var(--ink)">"{{ rv.remember }}"</div></div>
+                <div style="display:flex;gap:20px;flex-wrap:wrap">
+                  <div><div style="font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:2px">Signature</div><div style="font-size:14px;font-weight:600">{{ rv.signature }}</div></div>
+                  <div><div style="font-size:12px;font-weight:700;color:var(--ink3);margin-bottom:2px">Must-try</div><div style="font-size:14px;font-weight:600">{{ rv.favorite }}</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- privilege -->
+            <div style="padding:20px;border-top:1px solid var(--line2)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <div style="font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)">Your Local Privilege</div>
+                <button onClick="{{ editPrivilege }}" style="background:var(--paper);border:1px solid var(--line);color:var(--ink);font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer">Edit</button>
+              </div>
+              <div style="display:flex;align-items:center;gap:13px;border:1px dashed var(--accent);border-radius:14px;padding:15px;background:var(--accent-wash)">
+                <span style="font-size:26px">🎁</span>
+                <div><div style="font-size:15.5px;font-weight:700">{{ rv.privilege }}</div><div style="font-size:12.5px;color:var(--ink2);margin-top:2px">Min. spend ₱{{ rv.minSpend }} · {{ rv.terms }}</div></div>
+              </div>
+            </div>
+
+            <!-- details -->
+            <div style="padding:20px;border-top:1px solid var(--line2);display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;gap:10px;font-size:13.5px;color:var(--ink)"><span style="width:20px">🕐</span>{{ rv.hours }}</div>
+              <div style="display:flex;gap:10px;font-size:13.5px;color:var(--ink)"><span style="width:20px">📍</span>{{ rv.address }}</div>
+              <div style="display:flex;gap:10px;font-size:13.5px;color:var(--ink)"><span style="width:20px">📷</span>{{ rv.instagram }}</div>
+              <div style="display:flex;gap:10px;font-size:13.5px;color:var(--ink)"><span style="width:20px">✉️</span>{{ rv.email }}</div>
+            </div>
+          </div>
+
+          <!-- CERTIFICATE PREVIEW -->
+          <div style="margin-top:26px">
+            <div style="text-align:center;font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px">A glimpse of what's waiting</div>
+            <div style="position:relative;background:var(--paper);border:2.5px solid var(--ink);border-radius:8px;padding:28px 24px;text-align:center;box-shadow:var(--shadow);overflow:hidden">
+              <div style="position:absolute;inset:9px;border:1px solid var(--accent);border-radius:4px;pointer-events:none"></div>
+              <div style="position:relative">
+                <div style="font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:.22em;color:var(--accent-deep)">FOUNDING PARTNER</div>
+                <img src="assets/logo.png" style="height:46px;width:auto;margin:14px auto 0"/>
+                <div style="font-size:12.5px;color:var(--ink2);margin-top:16px">This certifies that</div>
+                <div style="font-family:var(--font-display);font-size:26px;font-weight:800;letter-spacing:-.01em;margin-top:4px">{{ rv.businessName }}</div>
+                <div style="font-size:12.5px;color:var(--ink2);margin-top:6px;line-height:1.5;max-width:32ch;margin-left:auto;margin-right:auto">is officially one of the Founding Businesses of Locals for Locals Davao.</div>
+                <div style="display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:78px;height:78px;border-radius:50%;background:var(--ink);color:#fff;margin-top:18px">
+                  <span style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--accent)">FOUNDING</span>
+                  <span style="font-family:var(--font-display);font-size:26px;font-weight:800;line-height:1">04</span>
+                  <span style="font-size:9px;color:rgba(247,244,238,.7)">of 30</span>
+                </div>
+                <div style="font-size:12.5px;color:var(--ink3);margin-top:14px;font-style:italic">Yours the moment you join.</div>
+              </div>
+            </div>
+          </div>
+
+          <button onClick="{{ next }}" style="width:100%;background:var(--ink);color:#fff;border:none;border-radius:14px;padding:17px;font-size:16px;font-weight:700;cursor:pointer;margin-top:26px;box-shadow:var(--shadow);transition:transform .15s ease" style-hover="transform:translateY(-2px)">Continue to Membership →</button>
+          <button onClick="{{ back }}" style="display:block;margin:14px auto 0;background:none;border:none;color:var(--ink3);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Back to photos</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isPay }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:560px;margin:0 auto;padding:22px 22px 40px;animation:fadeUp .45s ease both">
+          <div style="text-align:center">
+            <img src="assets/logo.png" style="height:52px;width:auto;margin:6px auto 0"/>
+            <h2 style="font-family:var(--font-display);font-weight:800;font-size:28px;line-height:1.12;letter-spacing:-.015em;margin:18px 0 0">Become a Founding Partner</h2>
+            <p style="font-size:15px;line-height:1.55;color:var(--ink2);margin:10px auto 0;max-width:32ch">You're not buying a listing. You're joining the circle that's building local Davao.</p>
+          </div>
+
+          <div style="margin-top:24px;background:var(--ink);color:var(--paper);border-radius:20px;padding:24px;box-shadow:var(--shadow)">
+            <div style="display:flex;align-items:baseline;justify-content:space-between">
+              <div style="font-family:var(--font-display);font-size:15px;font-weight:700">Founding Circle Membership</div>
+              <div style="text-align:right"><span style="font-family:var(--font-display);font-size:24px;font-weight:800">₱7,000</span><span style="font-size:13px;color:rgba(247,244,238,.6)"> / year</span></div>
+            </div>
+            <div style="height:1px;background:rgba(247,244,238,.15);margin:18px 0"></div>
+            <div style="display:flex;flex-direction:column;gap:13px">
+              <div style="display:flex;gap:11px;align-items:flex-start"><span style="color:var(--accent);font-size:14px">◆</span><div><div style="font-size:14.5px;font-weight:600">Founder story — three story videos</div></div></div>
+              <div style="display:flex;gap:11px;align-items:flex-start"><span style="color:var(--accent);font-size:14px">◆</span><div><div style="font-size:14.5px;font-weight:600">Business profile on the Locals for Locals platform</div></div></div>
+              <div style="display:flex;gap:11px;align-items:flex-start"><span style="color:var(--accent);font-size:14px">◆</span><div><div style="font-size:14.5px;font-weight:600">Local Business Network</div><div style="font-size:12.5px;color:rgba(247,244,238,.6);margin-top:1px">The community of Davao's local business owners</div></div></div>
+              <div style="display:flex;gap:11px;align-items:flex-start"><span style="color:var(--accent);font-size:14px">◆</span><div><div style="font-size:14.5px;font-weight:600">Founders Table events</div><div style="font-size:12.5px;color:rgba(247,244,238,.6);margin-top:1px">Meet with local founders · Venue TBA</div></div></div>
+              <div style="display:flex;gap:11px;align-items:flex-start"><span style="color:var(--accent);font-size:14px">◆</span><div style="flex:1"><div style="font-size:14.5px;font-weight:600">Business trainings</div>
+                <div style="margin-top:8px;display:flex;flex-direction:column;gap:7px">
+                  <div style="font-size:12.5px;color:rgba(247,244,238,.78);line-height:1.4"><strong style="color:var(--paper)">Sep 4, 2026</strong> · Roadmap Training — Jason Li, Davao Famous Group of Restaurants</div>
+                  <div style="font-size:12.5px;color:rgba(247,244,238,.78);line-height:1.4"><strong style="color:var(--paper)">Oct 13, 2026</strong> · Branding &amp; Identity — Koi of Kugi SlowBar</div>
+                  <div style="font-size:12.5px;color:rgba(247,244,238,.78);line-height:1.4"><strong style="color:var(--paper)">Dec 12, 2026</strong> · Meet &amp; Greet with Davao OGs at the Founders Table</div>
+                </div>
+              </div></div>
+              <div style="display:flex;gap:11px;align-items:flex-start"><span style="color:var(--accent);font-size:14px">◆</span><div><div style="font-size:14.5px;font-weight:600">Invitations to inclusive founder's events</div></div></div>
+            </div>
+          </div>
+
+          <div style="margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow-sm)">
+            <div style="font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:14px">How to pay</div>
+            <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+              <div style="width:132px;height:132px;border-radius:14px;border:1.5px dashed var(--line);background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;flex-shrink:0;text-align:center;padding:10px">
+                <span style="font-size:22px;opacity:.5">▦</span>
+                <span style="font-family:ui-monospace,Menlo,monospace;font-size:10.5px;font-weight:600;color:var(--ink3);line-height:1.35">GCash QR<br/>added by dev</span>
+              </div>
+              <div style="flex:1;min-width:160px">
+                <div style="font-size:13.5px;font-weight:700">Scan to pay via GCash</div>
+                <div style="font-size:12.5px;color:var(--ink2);margin-top:4px;line-height:1.5">Or bank transfer:<br/>BPI · Locals for Locals Inc.<br/>Acct 1234-5678-90</div>
+              </div>
+            </div>
+
+            <div style="margin-top:18px">
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Upload payment reference</label>
+              <label style="display:flex;align-items:center;gap:12px;border:1.5px dashed var(--line);border-radius:12px;background:var(--paper);padding:14px;cursor:pointer">
+                <sc-if value="{{ hasPayRef }}" hint-placeholder-val="{{ false }}">
+                  {{ payRefImg }}
+                  <div style="font-size:13.5px;font-weight:600;color:var(--accent-deep)">Screenshot attached ✓ — tap to replace</div>
+                </sc-if>
+                <sc-if value="{{ noPayRef }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-size:20px">📎</span><div style="font-size:13.5px;font-weight:600;color:var(--ink2)">Attach your payment screenshot</div>
+                </sc-if>
+                <input type="file" accept="image/*" onChange="{{ onPayRef }}" style="display:none"/>
+              </label>
+              <div style="font-size:12px;color:var(--ink3);margin-top:8px;line-height:1.5">We'll verify manually within a few hours — or instantly if you paid through the gateway.</div>
+            </div>
+          </div>
+
+          <button onClick="{{ confirmMembership }}" style="width:100%;background:var(--ink);color:#fff;border:none;border-radius:14px;padding:17px;font-size:16px;font-weight:700;cursor:pointer;margin-top:22px;box-shadow:var(--shadow);transition:transform .15s ease" style-hover="transform:translateY(-2px)">Confirm Founding Membership</button>
+          <button onClick="{{ back }}" style="display:block;margin:14px auto 0;background:none;border:none;color:var(--ink3);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Back to review</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isWelcome }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:fadeUp .5s ease both">
+          <div style="background:var(--ink);color:var(--paper);padding:40px 22px 34px;text-align:center;position:relative;overflow:hidden">
+            <div style="position:absolute;top:-30px;left:-30px;width:140px;height:140px;opacity:.06;background:url('assets/logo-white.png') center/contain no-repeat;transform:rotate(-14deg)"></div>
+            <div style="position:absolute;bottom:-40px;right:-24px;width:150px;height:150px;opacity:.06;background:url('assets/logo-white.png') center/contain no-repeat;transform:rotate(10deg)"></div>
+            <div style="position:relative">
+              <div style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:var(--accent);margin:0 auto;animation:pop .5s ease both;font-size:30px">✓</div>
+              <h2 style="font-family:var(--font-display);font-weight:800;font-size:30px;line-height:1.1;letter-spacing:-.015em;margin:20px 0 0">Congratulations.</h2>
+              <p style="font-size:16px;line-height:1.55;color:rgba(247,244,238,.8);margin:12px auto 0;max-width:28ch">You're officially part of the Founding Circle. <strong style="color:var(--accent)">No. 04 of 30.</strong></p>
+            </div>
+          </div>
+
+          <div style="max-width:520px;margin:0 auto;padding:26px 22px 40px">
+            <!-- certificate -->
+            <div style="position:relative;background:var(--paper);border:2.5px solid var(--ink);border-radius:8px;padding:30px 24px;text-align:center;box-shadow:var(--shadow);overflow:hidden;animation:fadeUp .5s .1s ease both">
+              <div style="position:absolute;inset:9px;border:1px solid var(--accent);border-radius:4px;pointer-events:none"></div>
+              <div style="position:relative">
+                <div style="font-family:var(--font-display);font-size:14px;font-weight:700;letter-spacing:.22em;color:var(--accent-deep)">FOUNDING PARTNER</div>
+                <img src="assets/logo.png" style="height:50px;width:auto;margin:16px auto 0"/>
+                <div style="font-size:12.5px;color:var(--ink2);margin-top:18px">This certifies that</div>
+                <div style="font-family:var(--font-display);font-size:27px;font-weight:800;letter-spacing:-.01em;margin-top:4px">{{ certBusiness }}</div>
+                <div style="font-size:12.5px;color:var(--ink2);margin-top:8px;line-height:1.5;max-width:32ch;margin-left:auto;margin-right:auto">is officially one of the Founding Businesses of Locals for Locals Davao.</div>
+                <div style="display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;background:var(--ink);color:#fff;margin-top:20px">
+                  <span style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--accent)">FOUNDING</span>
+                  <span style="font-family:var(--font-display);font-size:30px;font-weight:800;line-height:1">04</span>
+                  <span style="font-size:9px;color:rgba(247,244,238,.7)">of 30</span>
+                </div>
+                <div style="font-size:13px;color:var(--ink);margin-top:18px;font-style:italic;line-height:1.5;max-width:30ch;margin-left:auto;margin-right:auto">"Together, we strengthen local economies one business at a time."</div>
+                <div style="font-size:12px;color:var(--ink3);margin-top:14px;letter-spacing:.03em">Joined {{ certDate }}</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:11px;margin-top:18px">
+              <button onClick="{{ downloadCert }}" style="flex:1;background:var(--ink);color:#fff;border:none;border-radius:13px;padding:15px;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">⬇ Download</button>
+              <button onClick="{{ shareCert }}" style="flex:1;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:13px;padding:15px;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">↗ Share</button>
+            </div>
+            <div style="text-align:center;font-size:12px;color:var(--ink3);margin-top:10px">Post it to your Stories — it doubles as your announcement.</div>
+
+            <!-- what happens next -->
+            <div style="margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow-sm)">
+              <div style="font-family:var(--font-display);font-size:15px;font-weight:700">What happens next</div>
+              <div style="font-size:12.5px;color:var(--ink3);margin-top:2px">Within 48 hours, our team will:</div>
+              <div style="margin-top:16px;display:flex;flex-direction:column;gap:0">
+                <sc-for list="{{ nextSteps }}" as="n" hint-placeholder-count="4">
+                  <div style="display:flex;gap:13px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line2)">
+                    <div style="width:24px;height:24px;border-radius:50%;background:var(--accent-tint);color:var(--accent-deep);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">{{ n.no }}</div>
+                    <div style="font-size:14px;line-height:1.45;color:var(--ink)">{{ n.text }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <p style="text-align:center;font-size:13px;color:var(--ink3);margin:26px 0 0;font-style:italic">One founder. One business. One city at a time.</p>
+            <button onClick="{{ restart }}" style="display:block;margin:18px auto 0;background:none;border:none;color:var(--ink3);font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Run the demo again</button>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:13px 20px;border-radius:999px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow);z-index:80;animation:toastIn .3s ease both;display:flex;align-items:center;gap:9px">
+      <span style="color:var(--accent)">✓</span>{{ toast }}
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:940},&quot;veganOption&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Highlight options&quot;},&quot;organicOption&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Highlight options&quot;},&quot;localSourcingOption&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Highlight options&quot;},&quot;wheelchairOption&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Accessibility &amp; family&quot;},&quot;childSeatOption&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Accessibility &amp; family&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem('lfl_onboard')||'{}'); } catch(e){}
+    this.state = {
+      screen: saved.screen || 'landing',
+      q: saved.q || 0,
+      data: saved.data || {},
+      device: 'mobile',
+      errors: {},
+      toast: null,
+      justSaved: false,
+    };
+    this.FQ = [
+      {key:'founderName', question:"First — what's your name?", type:'text', ph:'Maria Elena Solano', required:true},
+      {key:'founderPhoto', question:"Add a photo of yourself", type:'photo', help:"A natural photo, not a headshot — we'll polish it in your video shoot."},
+      {key:'why', question:"Why did you start this business?", type:'area', max:200, help:"One or two honest sentences."},
+      {key:'proud', question:"What are you most proud of?", type:'area', max:200},
+      {key:'remember', question:"If someone only visits once, what do you hope they remember?", type:'area', max:200},
+      {key:'signature', question:"What's your signature product?", type:'text', ph:'e.g. Barako cold brew'},
+      {key:'different', question:"What's one thing that makes you different?", type:'area', max:200},
+      {key:'favorite', question:"Your favorite menu item or product", type:'text', ph:'e.g. Muscovado cold brew', help:"This helps us recommend you to the right members."},
+    ];
+    this.STEP_KEYS = ['founder','s2','s3','s4','review','pay'];
+    this.STEP_LABELS = ['Meet the Founder','Tell Us About Your Business','Your Local Privilege','Business Profile Assets','Review Your Story','Founding Membership'];
+    this.STEP_SHORT = ['Founder','Business','Privilege','Photos','Review','Payment'];
+    this.SAMPLE = {
+      founderName:'Maria Elena Solano', businessName:'Kalinaw Coffee', category:'Cafe',
+      why:'I wanted a quiet corner in Davao where people could slow down over honest, local coffee.',
+      proud:'Training three baristas from our barangay who now compete nationally.',
+      remember:'That they felt unhurried — like the whole city paused for one cup.',
+      signature:'Barako cold brew with muscovado', different:'Every bean is roasted in-house, sourced from small farms up on Mt. Apo.',
+      favorite:'Muscovado cold brew',
+      description:"A slow-living cafe serving single-origin Mindanao beans, roasted in-house. Come for the barako, stay for the quiet.",
+      city:'Davao City', address:'Purok 3, Juna Subdivision, Matina, Davao City', priceRange:'₱₱',
+      instagram:'@kalinawcoffee', facebook:'', website:'', tiktok:'',
+      phone:'+63 917 555 0142', email:'hello@kalinawcoffee.ph',
+      hours:'Tue–Sun · 7:00 AM – 8:00 PM',
+      highlights:['Specialty Coffee','Great for Remote Work','Free Wi-Fi','Alfresco'],
+      privilege:'Signature drink upgrade', privSecondary:'', minSpend:'300',
+      terms:'Dine-in only. One upgrade per visit.',
+    };
+    this.HIGHLIGHTS = [
+      ['🏆','Hidden Gem'],['🐶','Pet Friendly'],['🌿','Alfresco'],['☕','Specialty Coffee'],
+      ['📶','Free Wi-Fi'],['☪️','Halal'],['💻','Great for Remote Work'],['🎂','Birthday Friendly'],
+      ['🌅','Sunset Views'],['🚗','Parking Available'],
+    ];
+    this.PRIVILEGES = [
+      ['Complimentary dessert','A small treat on the house'],
+      ['Signature drink upgrade','Bump their order up, our pick'],
+      ['Birthday treat','Free cake on their birthday'],
+      ['Discount on products or services','A percentage off'],
+      ['Other','Something uniquely yours'],
+    ];
+    this.CATEGORIES = ['Cafe','Restaurant','Wellness','Retail','Studio','Other'];
+    this.CATCONFIG = {
+      Restaurant: { title:'Restaurant Information', intro:'A few restaurant-specific details so members know exactly what to expect.', sections:[
+        {key:'cuisine', type:'chips', max:3, label:'What type of cuisine do you serve?', hint:'Select up to 3', options:['Filipino','Japanese','Korean','Chinese','Italian','French','American','Thai','Vietnamese','Indian','Mediterranean','Mexican','Seafood','Steakhouse','Café','Bakery','Dessert','Fusion','Vegetarian','Vegan']},
+        {key:'dishes', type:'dishes', label:'Signature dishes', hint:'Add up to 5 — name, a short line, and price'},
+        {key:'dietary', type:'chips', label:'Dietary options', options:['Halal','Vegetarian','Vegan','Gluten-Free','Dairy-Free','Organic','Keto-Friendly']},
+        {key:'dining', type:'chips', label:'Dining style', options:['Dine-in','Takeaway','Delivery','Reservations','Private Events','Catering']},
+        {key:'goodfor', type:'chips', label:'Good for', hint:'Select all that apply', options:['Family Dining','Date Night','Barkada','Business Meetings','Solo Dining','Celebrations','Kids','Senior Friendly','Remote Work']},
+        {key:'catAmenities', type:'chips', label:'Amenities', options:['Airconditioned','Alfresco','Pet Friendly','Parking','Free Wi-Fi','Wheelchair Accessible','Private Room','Function Room','Live Music','Outdoor Seating','Charging Outlets']},
+        {key:'atmosphere', type:'chips', max:5, label:'Atmosphere', hint:'Choose up to 5', options:['Cozy','Quiet','Romantic','Casual','Luxury','Rustic','Modern','Industrial','Family Friendly','Instagram-worthy','Hidden Gem','Scenic View']},
+        {key:'bestfor', type:'chips', label:'Our restaurant is best for…', options:['Authentic Filipino Food','Birthday Celebrations','Family Gatherings','Romantic Dates','Coffee & Work','Brunch','Late Night','Business Lunches','Tourists','First-Time Visitors','Quick Meals','Large Groups']},
+      ]},
+      Cafe: { title:'Café Information', intro:"Let's capture what makes your café worth the trip.", sections:[
+        {key:'coffee', type:'chips', label:'What do you serve?', options:['Espresso','Pour-over','Cold Brew','Single-Origin','Specialty Latte','Matcha','Tea','Non-Coffee','Frappe','Signature Drinks']},
+        {key:'dishes', type:'dishes', label:'Signature drinks & pastries', hint:'Add up to 5 favourites'},
+        {key:'food', type:'chips', label:'Food & pastries', options:['Pastries','Cakes','Sandwiches','Brunch','All-Day Breakfast','Vegan Options','Local Delicacies']},
+        {key:'remote', type:'chips', label:'Remote-work amenities', options:['Free Wi-Fi','Charging Outlets','Quiet Zones','Long Tables','Meeting Space','Airconditioned','Bottomless Coffee']},
+        {key:'goodfor', type:'chips', label:'Good for', options:['Remote Work','Studying','Dates','Barkada','Solo','Meetings','Reading']},
+        {key:'atmosphere', type:'chips', max:5, label:'Atmosphere', hint:'Choose up to 5', options:['Cozy','Quiet','Minimalist','Rustic','Modern','Plant-filled','Instagram-worthy','Hidden Gem','Scenic View']},
+      ]},
+      Wellness: { title:'Wellness & Spa Information', intro:'Help members find the right escape.', sections:[
+        {key:'treatments', type:'chips', label:'Treatments offered', options:['Massage','Facials','Body Scrub','Sauna','Aromatherapy','Reflexology','Nail Care','Hair Removal','Hot Stone','Couples Package']},
+        {key:'therapists', type:'number', label:'How many therapists on your team?', hint:'A rough number is fine'},
+        {key:'catAmenities', type:'chips', label:'Amenities', options:['Private Rooms','Showers','Lockers','Parking','Airconditioned','Refreshments','Wheelchair Accessible','Couples Rooms']},
+        {key:'goodfor', type:'chips', label:'Good for', options:['Relaxation','Couples','Groups','Solo','Post-Workout','Special Occasions']},
+        {key:'atmosphere', type:'chips', max:5, label:'Atmosphere', hint:'Choose up to 5', options:['Serene','Luxurious','Minimalist','Tropical','Clinical','Cozy']},
+      ]},
+      Studio: { title:'Studio & Gym Information', intro:'Tell members how you help them move.', sections:[
+        {key:'classes', type:'chips', label:'Classes offered', options:['Strength','HIIT','Yoga','Pilates','Spin','Boxing','CrossFit','Zumba','Personal Training','Functional']},
+        {key:'equipment', type:'chips', label:'Equipment', options:['Free Weights','Machines','Cardio','Functional Rigs','Recovery','Sauna','Pool']},
+        {key:'membership', type:'chips', label:'Membership options', options:['Walk-in','Monthly','Annual','Class Packs','Personal Training','Student Rates','Corporate']},
+        {key:'catAmenities', type:'chips', label:'Amenities', options:['Showers','Lockers','Parking','Airconditioned','Towel Service','Free Wi-Fi','Wheelchair Accessible','Juice Bar']},
+        {key:'goodfor', type:'chips', label:'Good for', options:['Beginners','Weight Loss','Strength','Athletes','Seniors','Group Classes']},
+      ]},
+      Retail: { title:'Retail Information', intro:'Show members what they can discover in-store.', sections:[
+        {key:'products', type:'chips', label:'What do you sell?', options:['Apparel','Accessories','Home Goods','Beauty','Local Crafts','Food & Drink','Books','Plants','Gifts','Vintage']},
+        {key:'services', type:'chips', label:'Services', options:['Custom Orders','Gift Wrapping','Delivery','Repairs','Personal Shopping','Loyalty Program']},
+        {key:'catAmenities', type:'chips', label:'Amenities', options:['Parking','Airconditioned','Fitting Rooms','Free Wi-Fi','Wheelchair Accessible','Card Payments']},
+        {key:'goodfor', type:'chips', label:'Good for', options:['Gifts','Souvenirs','Everyday','Special Occasions','Collectors']},
+      ]},
+    };
+    this.h = {};
+    ['founderName','why','proud','remember','signature','different','favorite','businessName','description','city','address','maps','facebook','instagram','website','tiktok','phone','email','hours','minSpend','terms','privOther','paymentRef']
+      .forEach(k => { this.h[k] = e => this.up(k, e.target.value); });
+    this.h.category = e => this.up('category', e.target.value);
+  }
+
+  persist(){
+    try { localStorage.setItem('lfl_onboard', JSON.stringify({screen:this.state.screen, q:this.state.q, data:this.state.data})); } catch(e){}
+  }
+  flashSaved(){
+    this.setState({justSaved:true});
+    clearTimeout(this._st);
+    this._st = setTimeout(()=>this.setState({justSaved:false}), 1400);
+  }
+  up(key, val){
+    this.setState(s => ({data:{...s.data, [key]:val}, errors:{...s.errors, [key]:null}}), ()=>{ this.persist(); this.flashSaved(); });
+  }
+  onFile(key){
+    return e => {
+      const f = e.target.files && e.target.files[0];
+      if(!f) return;
+      const url = URL.createObjectURL(f);
+      this.setState(s => ({data:{...s.data, [key]:url}, errors:{...s.errors, [key]:null}}), ()=>{ this.persist(); this.flashSaved(); });
+    };
+  }
+  onGallery(e){
+    const files = [...(e.target.files||[])].slice(0,6).map(f=>URL.createObjectURL(f));
+    this.setState(s => ({data:{...s.data, gallery:[...(s.data.gallery||[]), ...files].slice(0,6)}}), ()=>{ this.persist(); this.flashSaved(); });
+  }
+  toggleHighlight(name){
+    this.setState(s => {
+      const cur = s.data.highlights || [];
+      const has = cur.includes(name);
+      return {data:{...s.data, highlights: has ? cur.filter(x=>x!==name) : [...cur, name]}};
+    }, ()=>{ this.persist(); this.flashSaved(); });
+  }
+  setPriv(name){ this.up('privilege', name); }
+  hasCat(){ return !!this.CATCONFIG[this.state.data.category]; }
+  toggleMulti(key, val, max){
+    this.setState(s=>{
+      const cur = s.data[key]||[];
+      const has = cur.includes(val);
+      if(!has && max && cur.length>=max) return {};
+      return {data:{...s.data, [key]: has ? cur.filter(x=>x!==val) : [...cur, val]}};
+    }, ()=>{ this.persist(); this.flashSaved(); });
+  }
+  addDish(){ this.setState(s=>({data:{...s.data, dishes:[...(s.data.dishes||[]), {name:'',desc:'',price:'',photo:''}].slice(0,5)}}), ()=>{this.persist();this.flashSaved();}); }
+  updateDish(i, field, val){ this.setState(s=>{ const ds=[...(s.data.dishes||[])]; ds[i]={...ds[i], [field]:val}; return {data:{...s.data, dishes:ds}}; }, ()=>{this.persist();this.flashSaved();}); }
+  updateDishPhoto(i){ return e=>{ const f=e.target.files&&e.target.files[0]; if(!f) return; const url=URL.createObjectURL(f); this.updateDish(i,'photo',url); }; }
+  removeDish(i){ this.setState(s=>({data:{...s.data, dishes:(s.data.dishes||[]).filter((_,j)=>j!==i)}}), ()=>{this.persist();this.flashSaved();}); }
+  dropPin(){ this.up('maps', 'pinned'); this.toast('Pin dropped on the map.'); }
+  removeGallery(i){ this.setState(s=>({data:{...s.data, gallery:(s.data.gallery||[]).filter((_,j)=>j!==i)}}), ()=>{this.persist();this.flashSaved();}); }
+  moveGallery(i,dir){ this.setState(s=>{ const g=[...(s.data.gallery||[])]; const j=i+dir; if(j<0||j>=g.length) return {}; [g[i],g[j]]=[g[j],g[i]]; return {data:{...s.data, gallery:g}}; }, ()=>{this.persist();this.flashSaved();}); }
+
+  scrollTop(){ const el = document.getElementById('appscroll'); if(el) el.scrollTop = 0; }
+  makeImg(src, style){ return src ? React.createElement('img', {src, style}) : null; }
+  componentDidMount(){ this.applyInset(); }
+  componentDidUpdate(){ this.applyInset(); }
+  applyInset(){ const el = document.getElementById('appscroll'); if(el) el.style.paddingTop = (this.state.device==='mobile'?32:0)+'px'; }
+  toast(msg){ this.setState({toast:msg}); clearTimeout(this._tt); this._tt = setTimeout(()=>this.setState({toast:null}), 2600); }
+
+  go(screen){ this.setState({screen, errors:{}}, ()=>{ this.scrollTop(); this.persist(); }); }
+  startApply(){ this.go('founder'); }
+  saveLater(){ this.persist(); this.toast('Saved. Come back anytime from the same device.'); }
+  restart(){
+    try{ localStorage.removeItem('lfl_onboard'); }catch(e){}
+    this.setState({screen:'landing', q:0, data:{}, errors:{}});
+  }
+  setDevice(d){ this.setState({device:d}); }
+
+  validate(){
+    const d = this.state.data, e = {};
+    if(this.state.screen==='founder'){
+      const cur = this.FQ[this.state.q];
+      if(cur.required && !(d[cur.key]||'').trim()) e[cur.key] = 'This one we do need — just your name.';
+    }
+    if(this.state.screen==='s2'){
+      if(!(d.businessName||'').trim()) e.businessName = 'Your business needs a name.';
+      if(!(d.category||'').trim()) e.category = 'Pick a category.';
+      if(!(d.facebook||'').trim() && !(d.instagram||'').trim() && !(d.website||'').trim())
+        e.social = 'Add at least one — Facebook, Instagram, or a website.';
+    }
+    if(this.state.screen==='s3'){
+      if(!(d.privilege||'').trim()) e.privilege = 'Choose one experience to offer.';
+    }
+    if(this.state.screen==='s4'){
+      if(!d.cover) e.cover = 'A cover photo is required.';
+    }
+    this.setState({errors:e});
+    return Object.keys(e).length===0;
+  }
+
+  next(){
+    if(!this.validate()){ this.flashSaved(); return; }
+    const sc = this.state.screen;
+    if(sc==='founder'){
+      if(this.state.q < this.FQ.length-1){ this.setState(s=>({q:s.q+1, errors:{}}), ()=>this.scrollTop()); }
+      else this.go('s2');
+      return;
+    }
+    if(sc==='s2'){ this.go(this.hasCat()?'catdetail':'s3'); return; }
+    if(sc==='catdetail'){ this.go('s3'); return; }
+    const flow = ['s3','s4','review','pay','welcome'];
+    const i = flow.indexOf(sc);
+    if(i>=0 && i<flow.length-1) this.go(flow[i+1]);
+  }
+  back(){
+    const sc = this.state.screen;
+    if(sc==='founder'){
+      if(this.state.q>0){ this.setState(s=>({q:s.q-1, errors:{}}), ()=>this.scrollTop()); }
+      else this.go('landing');
+      return;
+    }
+    const map = {s2:'founder', catdetail:'s2', s3:(this.hasCat()?'catdetail':'s2'), s4:'s3', review:'s4', pay:'review'};
+    if(map[sc]) this.go(map[sc]);
+  }
+
+  pv(key){
+    const v = this.state.data[key];
+    if(Array.isArray(v)) return v.length ? v : this.SAMPLE[key];
+    return (v!=null && String(v).trim()!=='') ? v : this.SAMPLE[key];
+  }
+
+  fmtDate(){
+    return new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  }
+
+  async downloadCert(){
+    const W=1080,H=1350, c=document.createElement('canvas'); c.width=W;c.height=H;
+    const x=c.getContext('2d');
+    const paper='#F7F4EE', ink='#141210', accent='#C79412';
+    x.fillStyle=paper; x.fillRect(0,0,W,H);
+    x.strokeStyle=ink; x.lineWidth=3; x.strokeRect(46,46,W-92,H-92);
+    x.strokeStyle=accent; x.lineWidth=1.5; x.strokeRect(60,60,W-120,H-120);
+    const cx=W/2;
+    x.textAlign='center';
+    x.fillStyle=accent; x.font='700 26px Georgia, serif';
+    x.fillText('F O U N D I N G   P A R T N E R', cx, 168);
+    x.strokeStyle=accent; x.lineWidth=1; x.beginPath(); x.moveTo(cx-90,190); x.lineTo(cx+90,190); x.stroke();
+    try{
+      const logo = await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src='assets/logo.png'; });
+      const lw=190, lh=lw*(logo.height/logo.width); x.drawImage(logo, cx-lw/2, 236, lw, lh);
+    }catch(e){}
+    x.fillStyle=ink; x.font='700 22px Georgia, serif';
+    x.fillText('This certifies that', cx, 520);
+    x.fillStyle=ink; x.font='800 60px Georgia, serif';
+    x.fillText(this.pv('businessName'), cx, 596);
+    x.fillStyle='rgba(20,18,16,.7)'; x.font='400 24px Georgia, serif';
+    const line='is officially one of the Founding Businesses of';
+    x.fillText(line, cx, 652);
+    x.fillText('Locals for Locals Davao.', cx, 688);
+    // seal
+    const sy=860, r=96;
+    x.beginPath(); x.arc(cx, sy, r, 0, Math.PI*2); x.fillStyle=ink; x.fill();
+    x.fillStyle=accent; x.font='700 15px Georgia, serif'; x.fillText('FOUNDING PARTNER', cx, sy-30);
+    x.fillStyle='#fff'; x.font='800 62px Georgia, serif'; x.fillText('04', cx, sy+26);
+    x.fillStyle='rgba(247,244,238,.7)'; x.font='600 15px Georgia, serif'; x.fillText('of 30', cx, sy+56);
+    x.fillStyle=ink; x.font='italic 400 24px Georgia, serif';
+    x.fillText('“Together, we strengthen local', cx, 1070);
+    x.fillText('economies one business at a time.”', cx, 1106);
+    x.fillStyle='rgba(20,18,16,.55)'; x.font='600 18px Georgia, serif';
+    x.fillText('Joined '+this.fmtDate(), cx, 1200);
+    const a=document.createElement('a'); a.download='Founding-Partner-Certificate.png'; a.href=c.toDataURL('image/png'); a.click();
+    this.toast('Certificate downloaded — ready to post.');
+  }
+
+  renderVals(){
+    const S = this.state, d = S.data;
+    const dims = { mobile:{w:402,h:844,notch:true,r:44}, tablet:{w:760,h:1000,notch:false,r:30}, desktop:{w:1160,h:820,notch:false,r:20} };
+    const dv = dims[S.device];
+    const frameStyle = {width:dv.w+'px', maxWidth:'100%', height:dv.h+'px', maxHeight:'82vh', background:'#000', borderRadius:dv.r+'px', padding:S.device==='mobile'?'11px':(S.device==='desktop'?'0':'12px'), boxShadow:'0 40px 90px rgba(20,18,16,.28), 0 6px 20px rgba(20,18,16,.18)', position:'relative', overflow:'hidden'};
+    if(S.device==='desktop'){ frameStyle.border='10px solid #1c1a17'; }
+    const innerRadius = S.device==='mobile'? 33 : (S.device==='desktop'? 10 : 20);
+    frameStyle['--ir'] = innerRadius+'px';
+    // apply inner radius to scroll container via wrapper: we set on frame padding, so round the scroll area
+    const notchStyle = dv.notch ? {position:'absolute', top:'11px', left:'50%', transform:'translateX(-50%)', width:'128px', height:'30px', background:'#000', borderRadius:'0 0 18px 18px', zIndex:30} : {display:'none'};
+
+    const deviceBtns = ['mobile','tablet','desktop'].map(k=>({
+      label: k.charAt(0).toUpperCase()+k.slice(1),
+      onClick: ()=>this.setDevice(k),
+      style: `border:none;border-radius:999px;padding:8px 15px;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s ease;${S.device===k?'background:var(--ink);color:#fff':'background:transparent;color:var(--ink2)'}`
+    }));
+
+    const inFlow = ['founder','s2','catdetail','s3','s4','review','pay'].includes(S.screen);
+    const curStepIdx = {founder:0,s2:1,catdetail:1,s3:2,s4:3,review:4,pay:5}[S.screen];
+    const steps = this.STEP_SHORT.map((lbl,i)=>{
+      const done = curStepIdx>i, current = curStepIdx===i;
+      return {
+        label: lbl,
+        trackStyle: i===0 ? {display:'none'} : {flex:1,height:'2px',background: done||current? 'var(--accent)' : 'var(--line)', transition:'background .3s'},
+        fillStyle: {display:'none'},
+        dotStyle: {width:'22px',height:'22px',borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'11px',fontWeight:'700',transition:'all .3s',
+          background: done? 'var(--accent)' : (current? 'var(--ink)' : 'var(--card)'),
+          color: done||current? '#fff' : 'var(--ink3)',
+          border: done||current? 'none' : '1.5px solid var(--line)'},
+        dotMark: done ? '✓' : String(i+1),
+      };
+    });
+
+    // founder question
+    const cur = this.FQ[S.q];
+    const val = d[cur.key]||'';
+    const fq = {
+      step: S.q+1, total: this.FQ.length, num: String(S.q+1).padStart(2,'0'),
+      question: cur.question, help: cur.help||'', hasHelp: !!cur.help,
+      isText: cur.type==='text', isArea: cur.type==='area', isPhoto: cur.type==='photo',
+      isIntro: S.q===0,
+      value: val, onInput: this.h[cur.key], placeholder: cur.ph||'Type your answer…',
+      max: cur.max||200, count: (val.length)+' / '+(cur.max||200),
+      onFile: this.onFile('founderPhoto'), photoUrl: d.founderPhoto||'', hasPhoto: !!d.founderPhoto, noPhoto: !d.founderPhoto,
+      photoImg: this.makeImg(d.founderPhoto, {width:'100%',height:'100%',objectFit:'cover',position:'absolute',inset:0}),
+      photoBoxStyle: {position:'relative',display:'flex',alignItems:'center',justifyContent:'center',width:'100%',aspectRatio:'4/3',border: d.founderPhoto?'none':'2px dashed var(--line)',borderRadius:'18px',background:'var(--card)',cursor:'pointer',overflow:'hidden',boxShadow:'var(--shadow-sm)'},
+      hasError: !!S.errors[cur.key], error: S.errors[cur.key]||'',
+      nextLabel: S.q===this.FQ.length-1 ? 'Next: your business →' : 'Continue',
+      cardAnim: {animation:(S.q%2? 'fadeA':'fadeB')+' .4s ease both'},
+      skipStyle: (cur.required || S.q===0) ? {display:'none'} : {display:'block',margin:'14px auto 0',background:'none',border:'none',color:'var(--ink3)',fontSize:'13px',fontWeight:'600',cursor:'pointer',textDecoration:'underline',textUnderlineOffset:'3px'},
+    };
+
+    // Step 2 highlights (base + tweakable dietary/sourcing options)
+    const selHi = d.highlights || [];
+    const hiSource = [...this.HIGHLIGHTS];
+    if(this.props.veganOption ?? true) hiSource.push(['🌱','Vegan / Vegetarian']);
+    if(this.props.organicOption ?? true) hiSource.push(['🥬','Organic']);
+    if(this.props.localSourcingOption ?? true) hiSource.push(['🧺','Locally Sourced']);
+    if(this.props.wheelchairOption ?? true) hiSource.push(['♿','Wheelchair Accessible']);
+    if(this.props.childSeatOption ?? true) hiSource.push(['🪑','High Chairs Available']);
+    const highlightList = hiSource.map(([icon,name])=>{
+      const on = selHi.includes(name);
+      return { icon, name, onClick: ()=>this.toggleHighlight(name),
+        style: {display:'flex',alignItems:'center',gap:'8px',padding:'10px 13px',borderRadius:'999px',cursor:'pointer',fontSize:'13.5px',fontWeight:'600',transition:'all .15s ease',userSelect:'none',
+          border: on? '1.5px solid var(--accent)' : '1.5px solid var(--line)',
+          background: on? 'var(--accent-tint)' : 'var(--card)',
+          color: on? 'var(--accent-deep)' : 'var(--ink2)'} };
+    });
+
+    // Step 3 privileges
+    const privList = this.PRIVILEGES.map(([name,desc])=>{
+      const on = d.privilege===name;
+      return { name, desc, onClick: ()=>this.setPriv(name),
+        radioStyle: {width:'20px',height:'20px',borderRadius:'50%',flexShrink:0,border: on?'6px solid var(--accent)':'2px solid var(--line)',background:'var(--card)',transition:'all .15s'},
+        style: {display:'flex',alignItems:'flex-start',gap:'13px',padding:'16px',borderRadius:'16px',cursor:'pointer',transition:'all .15s ease',
+          border: on? '1.5px solid var(--accent)' : '1.5px solid var(--line)',
+          background: on? 'var(--accent-wash)' : 'var(--card)',
+          boxShadow:'var(--shadow-sm)'} };
+    });
+    // Price range selector
+    const priceLevels = [['₱','Budget'],['₱₱','Moderate'],['₱₱₱','Premium'],['₱₱₱₱','Fine']];
+    const priceList = priceLevels.map(([sym,label])=>{
+      const on = d.priceRange===sym;
+      return { sym, label, onClick: ()=>this.up('priceRange', sym),
+        style: {flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:'2px',padding:'11px 6px',borderRadius:'12px',cursor:'pointer',transition:'all .15s ease',
+          border: on? '1.5px solid var(--accent)' : '1.5px solid var(--line)',
+          background: on? 'var(--accent-tint)' : 'var(--card)',
+          color: on? 'var(--accent-deep)' : 'var(--ink2)'} };
+    });
+
+    const showDiscountTip = d.privilege==='Discount on products or services';
+    const showPrivOther = d.privilege==='Other';
+
+    // Category-specific onboarding step
+    const catCfg = this.CATCONFIG[d.category];
+    const chipStyle = (on, dim)=>({display:'flex',alignItems:'center',gap:'6px',padding:'9px 13px',borderRadius:'999px',cursor: dim?'not-allowed':'pointer',fontSize:'13px',fontWeight:600,transition:'all .15s ease',userSelect:'none',
+      border: on?'1.5px solid var(--accent)':'1.5px solid var(--line)', background: on?'var(--accent-tint)':'var(--card)', color: on?'var(--accent-deep)':'var(--ink2)', opacity: dim?0.42:1});
+    let catData = null;
+    if(catCfg){
+      catData = { title: catCfg.title, intro: catCfg.intro, sections: catCfg.sections.map(sec=>{
+        if(sec.type==='chips'){
+          const sel = d[sec.key]||[]; const max = sec.max||0;
+          return { isChips:true, isDishes:false, isNumber:false, label:sec.label, hint:sec.hint||'', hasHint:!!sec.hint,
+            note: max?`${sel.length} / ${max}`:'', showNote:!!max,
+            options: sec.options.map(opt=>{ const on=sel.includes(opt); const dim = !!max && sel.length>=max && !on;
+              return { label:opt, onClick: ()=>this.toggleMulti(sec.key,opt,max), style: chipStyle(on,dim) }; }) };
+        }
+        if(sec.type==='number'){
+          return { isNumber:true, isChips:false, isDishes:false, label:sec.label, hint:sec.hint||'', hasHint:!!sec.hint,
+            value: d[sec.key]||'', onInput: (e)=>this.up(sec.key, e.target.value) };
+        }
+        if(sec.type==='dishes'){
+          const dishes = d.dishes||[];
+          return { isDishes:true, isChips:false, isNumber:false, label:sec.label, hint:sec.hint||'', hasHint:!!sec.hint,
+            canAdd: dishes.length<5, addDish: ()=>this.addDish(), dishCount: dishes.length,
+            list: dishes.map((ds,i)=>({ num:i+1, name:ds.name||'', desc:ds.desc||'', price:ds.price||'',
+              photoImg: this.makeImg(ds.photo, {width:'100%',height:'100%',objectFit:'cover'}), hasPhoto: !!ds.photo, noPhoto: !ds.photo,
+              onName:(e)=>this.updateDish(i,'name',e.target.value), onDesc:(e)=>this.updateDish(i,'desc',e.target.value),
+              onPrice:(e)=>this.updateDish(i,'price',e.target.value), onPhoto:this.updateDishPhoto(i), onRemove:()=>this.removeDish(i) })) };
+        }
+        return {};
+      }) };
+    }
+
+    const perks = [
+      ['01','Professional business profile','A polished page members browse and share.'],
+      ['02','Founder story — three videos','A shoot that turns your story into film.'],
+      ['03','Founder network & trainings','Real sessions with Davao\u2019s best operators.'],
+      ['04','A seat at the Founders Table','Rooms and dinners you can\u2019t buy into later.'],
+      ['05','Visibility to Locals members','Seen by people looking for exactly you.'],
+    ].map(p=>({no:p[0],title:p[1],desc:p[2]}));
+
+    return {
+      // frame + chrome
+      frameStyle, notchStyle, deviceBtns, restart: ()=>this.restart(),
+      showChrome: inFlow, steps, stepTitle: this.STEP_LABELS[curStepIdx]||'', stepNum: (curStepIdx||0)+1,
+      savedLabel: S.justSaved ? 'Saving…' : 'Saved',
+      savedPillStyle: {display:'inline-flex',alignItems:'center',gap:'6px',fontSize:'11.5px',fontWeight:'700',color: S.justSaved?'var(--accent-deep)':'var(--ink3)',background:'var(--card)',border:'1px solid var(--line)',padding:'5px 11px',borderRadius:'999px',transition:'color .3s'},
+      savedDotStyle: {width:'6px',height:'6px',borderRadius:'50%',background:S.justSaved?'var(--accent)':'#7CA982', animation:S.justSaved?'spin 1s linear infinite':'none'},
+      saveLater: ()=>this.saveLater(),
+      // routing flags
+      isLanding: S.screen==='landing', isFounder: S.screen==='founder',
+      isS2: S.screen==='s2', isCatDetail: S.screen==='catdetail', catData, isS3: S.screen==='s3', isS4: S.screen==='s4',
+      s2NextLabel: catCfg ? ('Next: '+d.category+' details →') : 'Next: your local privilege →',
+      isReview: S.screen==='review', isPay: S.screen==='pay', isWelcome: S.screen==='welcome',
+      // handlers
+      startApply: ()=>this.startApply(), next: ()=>this.next(), back: ()=>this.back(),
+      // content
+      perks, fq, d, h: this.h,
+      highlightList, privList, priceList, showDiscountTip, showPrivOther,
+      dropPin: ()=>this.dropPin(),
+      onCover: this.onFile('cover'), coverUrl: d.cover||'', hasCover: !!d.cover, noCover: !d.cover,
+      coverImg: this.makeImg(d.cover, {position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}),
+      errCover: S.errors.cover||'', hasErrCover: !!S.errors.cover,
+      onLogo: this.onFile('logo'), logoUrl: d.logo||'', hasLogo: !!d.logo, noLogo: !d.logo,
+      logoImg: this.makeImg(d.logo, {width:'100%',height:'100%',objectFit:'cover'}),
+      onGalleryPick: (e)=>this.onGallery(e),
+      galleryList: (d.gallery||[]).map((url,i)=>({ url, img: this.makeImg(url,{width:'100%',height:'100%',objectFit:'cover'}), onRemove: ()=>this.removeGallery(i), onLeft: ()=>this.moveGallery(i,-1), onRight: ()=>this.moveGallery(i,1), num: i+1 })),
+      galleryCount: (d.gallery||[]).length, galleryEnough: (d.gallery||[]).length>=2, showGalleryAdd: (d.gallery||[]).length<6,
+      onMenu: this.onFile('menu'), menuUrl: d.menu||'', hasMenu: !!d.menu, noMenu: !d.menu,
+      menuImg: this.makeImg(d.menu, {width:'100%',height:'100%',objectFit:'cover'}),
+      ownerUrl: d.founderPhoto||'', hasOwner: !!d.founderPhoto, noOwnerP: !d.founderPhoto,
+      ownerImg: this.makeImg(d.founderPhoto, {width:'100%',height:'100%',objectFit:'cover'}),
+      prevNoCover: !d.cover,
+      // Review — merged preview values
+      rv: {
+        founderName: this.pv('founderName'), why: this.pv('why'), proud: this.pv('proud'),
+        remember: this.pv('remember'), signature: this.pv('signature'), different: this.pv('different'),
+        favorite: this.pv('favorite'), businessName: this.pv('businessName'), category: this.pv('category'),
+        description: this.pv('description'), city: this.pv('city'), address: this.pv('address'), priceRange: this.pv('priceRange'),
+        instagram: this.pv('instagram'), phone: this.pv('phone'), email: this.pv('email'), hours: this.pv('hours'),
+        privilege: (d.privilege==='Other' ? (d.privOther||this.SAMPLE.privilege) : this.pv('privilege')),
+        minSpend: this.pv('minSpend'), terms: (d.terms||this.SAMPLE.terms),
+        highlights: (this.pv('highlights')||[]).join(' · '),
+      },
+      rvCoverStyle: {position:'absolute',inset:0,backgroundSize:'cover',backgroundPosition:'center',
+        backgroundImage: d.cover? `url(${d.cover})` : 'repeating-linear-gradient(45deg,#E6DFD2 0 16px,#DED6C6 16px 32px)'},
+      rvHasOwner: !!d.founderPhoto, rvOwnerUrl: d.founderPhoto||'', rvNoOwner: !d.founderPhoto,
+      rvOwnerImg: this.makeImg(d.founderPhoto, {width:'100%',height:'100%',objectFit:'cover'}),
+      certDate: this.fmtDate(),
+      catReviewSections: catCfg ? catCfg.sections.filter(s=>s.type==='chips').map(s=>({label:s.label, valueStr:(d[s.key]||[]).join(' · ')})).filter(x=>x.valueStr) : [],
+      catReviewDishes: (d.dishes||[]).filter(ds=>ds.name).map(ds=>({ name:ds.name, desc:ds.desc||'', price: ds.price?('₱'+ds.price):'', photoImg:this.makeImg(ds.photo,{width:'100%',height:'100%',objectFit:'cover'}), hasPhoto:!!ds.photo, noPhoto:!ds.photo })),
+      hasCatReview: catCfg && ((catCfg.sections.filter(s=>s.type==='chips').some(s=>(d[s.key]||[]).length)) || (d.dishes||[]).some(ds=>ds.name)),
+      hasCatDishes: (d.dishes||[]).some(ds=>ds.name),
+      editCatDetail: ()=>this.go('catdetail'),
+      editStory: ()=>{ this.setState({q:0}); this.go('founder'); },
+      editBusiness: ()=>this.go('s2'), editPrivilege: ()=>this.go('s3'), editPhotos: ()=>this.go('s4'),
+      onPayRef: this.onFile('paymentRef'), payRefUrl: d.paymentRef||'', hasPayRef: !!d.paymentRef, noPayRef: !d.paymentRef,
+      payRefImg: this.makeImg(d.paymentRef, {width:'44px',height:'44px',borderRadius:'8px',objectFit:'cover',flexShrink:0}),
+      confirmMembership: ()=>this.go('welcome'),
+      downloadCert: ()=>this.downloadCert(),
+      shareCert: ()=>this.toast('Share sheet opened — post it to your Stories.'),
+      certBusiness: this.pv('businessName'),
+      nextSteps: [
+        {no:'1', text:'Review your profile and reach out to say hello.'},
+        {no:'2', text:'Schedule your Founder Story session.'},
+        {no:'3', text:'Book your video shoot — three short films.'},
+        {no:'4', text:'Publish your profile for Locals members to find.'},
+      ],
+      // live preview card
+      prevName: this.pv('businessName'), prevCat: this.pv('category'), prevCity: this.pv('city'), prevPrice: this.pv('priceRange'),
+      prevCoverStyle: {position:'absolute',inset:0,backgroundSize:'cover',backgroundPosition:'center',
+        backgroundImage: d.cover? `url(${d.cover})` : 'repeating-linear-gradient(45deg,#E6DFD2 0 14px,#DED6C6 14px 28px)'},
+      prevHasCover: !!d.cover,
+      pinLabel: d.maps==='pinned' ? 'PINNED — TAP TO ADJUST' : 'TAP TO DROP YOUR PIN',
+      pinLabelStyle: {display:'flex',alignItems:'center',gap:'8px',padding:'8px 14px',borderRadius:'999px',background: d.maps==='pinned'?'var(--accent-tint)':'rgba(255,255,255,.85)',border:'1px solid var(--line)'},
+      errBusinessName: S.errors.businessName||'', hasErrBusinessName: !!S.errors.businessName,
+      errCategory: S.errors.category||'', hasErrCategory: !!S.errors.category,
+      errSocial: S.errors.social||'', hasErrSocial: !!S.errors.social,
+      errPrivilege: S.errors.privilege||'', hasErrPrivilege: !!S.errors.privilege,
+      hasToast: !!S.toast, toast: S.toast,
+    };
+  }
+}
+</script>
+<script>
+(async () => {
+  if (!document.title || !document.title.trim()) document.title = "Founding Partner Onboarding";
+  // Prepend so page-supplied @page / break rules (deck-stage's margin:0,
+  // author CSS) keep source-order precedence over the baseline.
+  const baseCss = document.createElement('style');
+  baseCss.textContent = "@media print {\n  figure, table { break-inside: avoid; }\n  *, *::before, *::after {\n    print-color-adjust: exact; -webkit-print-color-adjust: exact;\n    backdrop-filter: none !important; -webkit-backdrop-filter: none !important;\n    animation-delay: -99s !important; animation-duration: .001s !important;\n    animation-iteration-count: 1 !important; animation-fill-mode: both !important;\n    animation-play-state: running !important; transition-duration: 0s !important;\n  }\n}";
+  document.head.prepend(baseCss);
+  if (document.readyState === 'loading') {
+    await new Promise((r) => document.addEventListener('DOMContentLoaded', r, { once: true }));
+  }
+  let ds = document.querySelector('deck-stage');
+  // whenDefined never resolves when nothing registers the element, so only
+  // await it when a <deck-stage> tag exists (and race a timeout regardless).
+  if (ds && !customElements.get('deck-stage')) {
+    try {
+      await Promise.race([
+        customElements.whenDefined('deck-stage'),
+        new Promise((r) => setTimeout(r, 3000)),
+      ]);
+    } catch (e) {}
+    ds = document.querySelector('deck-stage');
+  }
+  // dc-runtime assigns window.DCLogic at init and mounts into #dc-root on
+  // DOMContentLoaded; settle on that subtree so React has rendered before
+  // print(). Non-DC pages fall through to weighing body.
+  const isDc = !ds && 'DCLogic' in window;
+  const settleRoot = ds || (isDc ? document.getElementById('dc-root') : null) || document.body;
+  if (settleRoot) {
+    // Weigh only content children — skip script/style/template so inline
+    // Babel/CSS doesn't register as stable "content" before the framework
+    // has mounted anything.
+    const MEDIA = 'img,svg,canvas,video,picture,iframe,embed,object';
+    const weigh = () => {
+      let text = 0, media = 0;
+      for (const c of settleRoot.children) {
+        const t = c.tagName;
+        if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+        text += (c.textContent || '').trim().length;
+        media += c.querySelectorAll(MEDIA).length + (c.matches(MEDIA) ? 1 : 0);
+      }
+      return text + media * 100;
+    };
+    // "Non-zero and stable" alone is not sufficient to mean rendered: generic
+    // body can carry a static shell while async main content is pending, and
+    // #dc-root can carry the root DC's static text while child refs are still
+    // .sc-placeholder boxes. Gate generic on readyState 'complete', and never
+    // accept stability while a dc-runtime placeholder is present.
+    const isGeneric = settleRoot === document.body;
+    const deadline = Date.now() + 15000;
+    let last = -1, stable = 0;
+    while (Date.now() < deadline) {
+      const n = weigh();
+      const ready =
+        (!isGeneric || document.readyState === 'complete') &&
+        !settleRoot.querySelector('.sc-placeholder');
+      if (n > 0 && n === last && ready) { if (++stable >= 2) break; } else { stable = 0; }
+      last = n;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+  // Project support.js may predate runtime default-seeding; push via bridge.
+  if (isDc && window.__dcSetProps && window.__dcRootName) {
+    try {
+      const dpEl = document.querySelector('script[data-dc-script]');
+      const meta = JSON.parse((dpEl && dpEl.getAttribute('data-props')) || '{}');
+      const bag = {};
+      for (const k in meta)
+        if (k[0] !== '$' && meta[k] && meta[k].default !== undefined)
+          bag[k] = meta[k].default;
+      if (Object.keys(bag).length) {
+        window.__dcSetProps(window.__dcRootName(), bag);
+        await new Promise((r) => setTimeout(r, 50));
+      }
+    } catch (e) {}
+  }
+  // Reveal content gated on scroll or visibility before printing. Lazy <img>,
+  // IntersectionObserver fade-ins, and collapsed <details> don't render while
+  // off-screen, so a long page would print with them blank or closed. Open
+  // every <details>, force native-lazy images eager, and scroll the document
+  // through its full height to trip lazy-load + IO; then wait (bounded) for the
+  // newly-triggered images. Inert for deck-stage (slides aren't scroll-gated).
+  try {
+    for (const d of document.querySelectorAll('details')) d.open = true;
+    for (const img of document.querySelectorAll('img[loading="lazy"]'))
+      img.loading = 'eager';
+    const scroller = document.scrollingElement || document.documentElement;
+    const full = Math.max(scroller.scrollHeight, document.body.scrollHeight);
+    const step = window.innerHeight || 800;
+    for (let y = 0; y <= full; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((r) => requestAnimationFrame(r));
+    }
+    window.scrollTo(0, 0);
+    await Promise.race([
+      Promise.all(
+        [...document.images].map((img) =>
+          img.complete
+            ? null
+            : new Promise((res) => {
+                img.addEventListener('load', res, { once: true });
+                img.addEventListener('error', res, { once: true });
+              })
+        )
+      ),
+      new Promise((r) => setTimeout(r, 4000)),
+    ]);
+  } catch (e) {}
+  try { await document.fonts.ready; } catch (e) {}
+  // Jump every animation to its end state so print() never captures a slide
+  // mid-entrance. Ordering matters: the 0s-transition style must be live
+  // BEFORE data-deck-active is set so attribute-keyed transitions don't
+  // start a (now-0s) run from the pre-active base.
+  const st = document.createElement('style');
+  st.textContent = '*,*::before,*::after{animation-delay:-99s !important;animation-duration:.001s !important;animation-iteration-count:1 !important;animation-fill-mode:both !important;animation-play-state:running !important;transition-duration:0s !important}';
+  document.head.appendChild(st);
+  for (const d of document.querySelectorAll('deck-stage')) {
+    for (const c of d.children) {
+      const t = c.tagName;
+      if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+      c.setAttribute('data-deck-active', '');
+    }
+  }
+  // Re-append deck-stage's @page last so no author @page can add a margin and
+  // spill each full-bleed slide onto two sheets. Backstop for old copies.
+  if (ds) {
+    let pg = document.getElementById('deck-stage-print-page');
+    if (!pg) {
+      pg = document.createElement('style');
+      pg.textContent = '@page{size:' + (+ds.getAttribute('width') || 1920) +
+        'px ' + (+ds.getAttribute('height') || 1080) + 'px;margin:0}';
+    }
+    document.body.appendChild(pg);
+  }
+  try {
+    const sweep = () => {
+      for (const a of document.getAnimations()) {
+        try { a.finish(); } catch (e) {
+          try { a.currentTime = (a.effect && a.effect.getComputedTiming().duration) || 0; a.pause(); } catch (e2) {}
+        }
+      }
+    };
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+  } catch (e) {}
+  // Size the PDF page to the rendered design unless the file opted into
+  // standard paper via @page{size:letter|A4|…}. Decks own their own @page.
+  // Wrappers (body, …) lose padding+margin so the frame sits at (0,0); the
+  // frame itself loses only margin — its padding is INSIDE the measured
+  // rect and must stay, or content shifts and leaves a gap at bottom/right.
+  var __m = null;
+  try { __m = (() => {
+  var STAMP = true;
+  var docEl = document.documentElement;
+  var doc = { width: docEl.scrollWidth, height: docEl.scrollHeight };
+
+  var ds = document.querySelector('deck-stage');
+  if (ds) {
+    var dw = Number(ds.getAttribute('width')) || 1920;
+    var dh = Number(ds.getAttribute('height')) || 1080;
+    var n = typeof ds.length === 'number' ? ds.length : ds.children.length;
+    var idx = typeof ds.index === 'number' ? ds.index : 0;
+    var frames = [];
+    for (var i = 0; i < n; i++) frames.push({ left: 0, top: 0, width: dw, height: dh });
+    return { kind: 'deck', source: 'declared', doc: doc, frames: frames,
+      authored: frames.map(function(){return{width:true,height:true}}),
+      deck: { width: dw, height: dh, slideCount: n, index: idx },
+      signals: { paperPage: false, pxPage: false } };
+  }
+
+  // Declared kind: a doc-page tag names the kind outright, so no signal
+  // heuristics run (like the deck branch above, signals report false —
+  // they describe inferred classifications only). The tag alone is not
+  // trusted: the element must have upgraded (shadowRoot present), so a
+  // leftover tag whose script was deleted falls through to the heuristics
+  // that handle plain markup.
+  var stageSx = window.scrollX || 0, stageSy = window.scrollY || 0;
+  var dp = document.querySelector('doc-page');
+  if (dp && dp.shadowRoot) {
+    // Crop to the sheet, not the host — the desk around it is screen-only
+    // chrome that must not land in PNG exports.
+    var sheet = dp.shadowRoot.querySelector('.sheet');
+    var sr = (sheet || dp).getBoundingClientRect();
+    return { kind: 'paper-doc', source: 'declared', doc: doc,
+      frames: [{ left: sr.left + stageSx, top: sr.top + stageSy,
+        width: sr.width, height: sr.height }],
+      authored: [{ width: false, height: false }],
+      signals: { paperPage: false, pxPage: false } };
+  }
+  var paperPage = false, pxPage = false;
+  var eachRule = function (fn) {
+    for (var s = 0; s < document.styleSheets.length; s++) {
+      var rs; try { rs = document.styleSheets[s].cssRules; } catch (e) { continue; }
+      for (var r = 0; r < rs.length; r++) {
+        fn(rs[r]);
+        if (rs[r].cssRules) for (var n = 0; n < rs[r].cssRules.length; n++) fn(rs[r].cssRules[n]);
+      }
+    }
+  };
+  eachRule(function (r) {
+    if (r.type !== 6) return;
+    var m = /\bsize\s*:\s*([^;}]+)/i.exec(r.cssText || '');
+    if (!m) return;
+    if (/\b(letter|a[3-5]|legal|ledger)\b/i.test(m[1])) paperPage = true;
+    if (/\d+(?:\.\d+)?px\b/i.test(m[1])) pxPage = true;
+  });
+  var signals = { paperPage: paperPage, pxPage: pxPage };
+
+  var pxVal = function (v) {
+    var m = /^(\d+(?:\.\d+)?)px$/.exec(v || ''); return m ? +m[1] : 0;
+  };
+  var authoredPx = function (el, prop) {
+    if (pxVal(el.style[prop])) return true;
+    var attr = el.getAttribute(prop);
+    if (attr && /^\d+$/.test(attr)) return true;
+    var hit = false;
+    eachRule(function (r) {
+      if (hit || r.type !== 1 || !r.style) return;
+      try { if (el.matches(r.selectorText) && pxVal(r.style[prop])) hit = true; } catch (e) {}
+    });
+    return hit;
+  };
+
+  var el = document.body, rootPxW = false;
+  for (;;) {
+    var kids = [];
+    for (var c = 0; c < el.children.length; c++) {
+      var t = el.children[c].tagName;
+      if (t !== 'SCRIPT' && t !== 'STYLE' && t !== 'TEMPLATE') kids.push(el.children[c]);
+    }
+    if (kids.length !== 1 || !(kids[0] instanceof HTMLElement)) break;
+    if (STAMP) el.setAttribute('data-om-frame-wrap', '');
+    el = kids[0];
+    rootPxW = authoredPx(el, 'width');
+    if (rootPxW) break;
+  }
+  if (!rootPxW) rootPxW = authoredPx(el, 'width');
+
+  // @page{size:letter} alone is a flowing doc; with a px-width root it's a
+  // fixed sheet pretending to be paper — fall through and size to render.
+  if (paperPage && !rootPxW) {
+    return { kind: 'paper-doc', source: 'inferred', doc: doc, signals: signals,
+      frames: [{ left: 0, top: 0, width: doc.width, height: doc.height }],
+      authored: [{ width: false, height: false }] };
+  }
+
+  var sx = window.scrollX || 0, sy = window.scrollY || 0;
+  var rectOf = function (e) {
+    var r = e.getBoundingClientRect();
+    var oy; try { oy = getComputedStyle(e).overflowY; } catch (err) {}
+    var h = oy === 'visible' ? Math.max(r.height, e.scrollHeight || 0) : r.height;
+    return { left: r.left + sx, top: r.top + sy, width: r.width, height: h };
+  };
+
+  // Multi-frame: ≥2 visible non-fixed children, each with authored px width
+  // AND height, all within ±2px of each other. Off unless the page opts in
+  // via data-om-multi-frame on the stop element — guards against card grids
+  // and pricing tables that match the geometry but aren't separate canvases.
+  if (el.hasAttribute('data-om-multi-frame')) {
+    var cands = [];
+    for (var k = 0; k < el.children.length; k++) {
+      var ch = el.children[k];
+      var cs; try { cs = getComputedStyle(ch); } catch (e) { continue; }
+      if (cs.display === 'none' || cs.visibility === 'hidden' || cs.position === 'fixed') continue;
+      var rc = rectOf(ch);
+      if (rc.width < 2 || rc.height < 2) continue;
+      if (!authoredPx(ch, 'width') || !authoredPx(ch, 'height')) continue;
+      cands.push(rc);
+    }
+    if (cands.length >= 2) {
+      var w0 = cands[0].width, h0 = cands[0].height, ok = true;
+      for (var q = 1; q < cands.length; q++)
+        if (Math.abs(cands[q].width - w0) > 2 || Math.abs(cands[q].height - h0) > 2) ok = false;
+      if (ok) return { kind: 'multi-frame', source: 'inferred', doc: doc, signals: signals,
+        frames: cands, authored: cands.map(function(){return{width:true,height:true}}) };
+    }
+  }
+
+  if (STAMP) el.setAttribute('data-om-frame', '');
+  return { kind: 'single-canvas', source: 'inferred', doc: doc, signals: signals,
+    frames: [rectOf(el)],
+    authored: [{ width: rootPxW, height: authoredPx(el, 'height') }] };
+})(); } catch (e) {}
+  var frame = null;
+  if (__m && __m.kind === 'single-canvas') {
+    var f = __m.frames && __m.frames[0];
+    if (f && f.width >= 200 && f.height >= 200) {
+      frame = f;
+      var fst = document.createElement('style');
+      fst.textContent = '@media print{@page{size:' + Math.ceil(f.width) + 'px ' +
+        Math.ceil(f.height) + 'px;margin:0}' +
+        'html,body,[data-om-frame-wrap]{padding:0!important;margin:0!important;background:none!important}' +
+        '[data-om-frame]{margin:0!important}}';
+      document.body.appendChild(fst);
+    }
+  }
+  // Relax break-inside on oversized elements. An element taller than a
+  // printable page can't honor break-inside: avoid — browsers either overflow
+  // it or push it whole to the next page, leaving a blank gap, then break it
+  // anyway at an arbitrary point. After the final layout (content revealed,
+  // animations jumped), find elements taller than a page that still compute
+  // break-inside: avoid and reset them to auto, so the browser breaks them at
+  // their children's boundaries instead (children keep their own avoid). PAGE_PX
+  // is a conservative portrait estimate at 96 CSS px/in — Letter/A4 usable
+  // height minus our 0.5in margins — so only clearly-oversized elements are
+  // touched and under-page elements still stay whole. Skipped for decks (slides
+  // are sized to the page) and for fixed-size canvases (frame set, or an author
+  // px-based @page) — runs as before for flowing docs on letter/A4.
+  try {
+    if (!ds && !frame && !(__m && __m.signals && __m.signals.pxPage)) {
+      const PAGE_PX = 1024;
+      // Our print defaults add a real @page margin only when the source has
+      // no @page of its own; computed style can't tell us (it reports screen
+      // media), so read the injected rule directly.
+      const defaults = document.querySelector('style[data-omelette-print-defaults]');
+      const pageInset = /@page\s*\{[^}]*margin/.test(defaults ? defaults.textContent || '' : '');
+      const SEL = 'section,article,figure,table,pre,blockquote,[class~="card" i],[class~="page" i],[class~="sheet" i]';
+      for (const el of document.body.querySelectorAll(SEL)) {
+        if (el instanceof HTMLElement && el.offsetHeight > PAGE_PX) {
+          el.setAttribute('data-om-oversized', '');
+          // Fake-paged docs simulate sheets with over-tall break-after:page
+          // boxes; honoring the break spills half-blank pages and ends a
+          // colored box mid-sheet. Flow them, and (only when we own the page
+          // inset) drop the redundant padding/background via the rule below.
+          const cs = getComputedStyle(el);
+          if (cs.breakAfter === 'page' || cs.pageBreakAfter === 'always') {
+            el.setAttribute('data-om-fakepage', '');
+          }
+        }
+      }
+      const ost = document.createElement('style');
+      ost.textContent = '@media print{' +
+        '[data-om-oversized]{break-inside:auto !important;page-break-inside:auto !important}' +
+        '[data-om-fakepage]{break-after:auto !important;page-break-after:auto !important}' +
+        (pageInset ? '[data-om-fakepage]{padding:0 !important;background:none !important}' : '') +
+        '}';
+      document.head.appendChild(ost);
+    }
+  } catch (e) {}
+  // macOS Preview renders Skia-PDF Luminosity soft-masks as opaque grey boxes;
+  // swap the CSS that triggers them for Preview-safe forms.
+  try {
+    for (const el of document.body.querySelectorAll('*')) {
+      const cs = getComputedStyle(el);
+
+      if (cs.boxShadow !== 'none' && cs.filter === 'none') {
+        const outs = [], kept = [];
+        for (const s of cs.boxShadow.split(/,(?![^(]*[)])/)) {
+          const t = s.trim();
+          const m = t.match(/^(rgba?[(][^)]+[)]) (-?[0-9.]+px) (-?[0-9.]+px) ([0-9.]+px) -?[0-9.]+px$/);
+          if (m && parseFloat(m[4]) > 0) outs.push('drop-shadow(' + m[2] + ' ' + m[3] + ' ' + m[4] + ' ' + m[1] + ')');
+          else kept.push(t);
+        }
+        if (outs.length) {
+          el.style.setProperty('filter', outs.join(' '), 'important');
+          el.style.setProperty('box-shadow', kept.join(', ') || 'none', 'important');
+        }
+      }
+
+      const mask = cs.maskImage && cs.maskImage !== 'none' ? cs.maskImage : cs.webkitMaskImage;
+      if (mask && mask !== 'none' && cs.filter === 'none') el.style.setProperty('filter', 'opacity(1)', 'important');
+    }
+  } catch (e) {}
+  setTimeout(() => { try { window.print(); } catch (e) {} }, 200);
+})();
+</script>
+</body>
+</html>
