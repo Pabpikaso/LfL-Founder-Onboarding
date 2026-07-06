@@ -75,18 +75,11 @@ export function PaymentStep({ api }: { api: OnboardingApi }) {
 
       <div style={{ marginTop: 22, background: 'var(--card)', border: '1px solid var(--line)', borderRadius: 18, padding: 20, boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, marginBottom: 14 }}>How to pay</div>
-        <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <PaymentQr />
-          <div style={{ flex: 1, minWidth: 160 }}>
-            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Scan to pay via GCash</div>
-            <div style={{ fontSize: 12.5, color: 'var(--ink2)', marginTop: 4, lineHeight: 1.5 }}>
-              Or bank transfer:
-              <br />
-              BPI · Locals for Locals Inc.
-              <br />
-              Acct 1234-5678-90
-            </div>
-          </div>
+        </div>
+        <div style={{ fontSize: 12.5, color: 'var(--ink2)', marginTop: 14, lineHeight: 1.5, textAlign: 'center' }}>
+          Open your banking app and scan the code above to pay via InstaPay.
         </div>
 
         <div style={{ marginTop: 18 }}>
