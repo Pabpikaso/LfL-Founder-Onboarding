@@ -1,4 +1,4 @@
-import { CATCONFIG, SAMPLE } from '../../data/constants';
+import { CATCONFIG, FOUNDING_CAP_PER_CITY, SAMPLE } from '../../data/constants';
 import type { OnboardingApi } from '../../state/useOnboarding';
 import { pv } from '../../utils/preview';
 import { editPill, primaryButtonFull, textLinkButton } from '../../styles/shared';
@@ -46,7 +46,7 @@ export function ReviewStep({ api }: { api: OnboardingApi }) {
   return (
     <div style={{ maxWidth: 620, margin: '0 auto', padding: '22px 20px 40px', animation: 'fadeUp .45s ease both' }}>
       <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 27, lineHeight: 1.14, letterSpacing: '-.015em', margin: 0, padding: '0 2px' }}>
-        Here's how your story will look to Davao.
+        Here's how your story will look to {rv.city}.
       </h2>
       <p style={{ fontSize: 15, lineHeight: 1.55, color: 'var(--ink2)', margin: '10px 2px 0' }}>
         Everything good? Tap <strong>Edit</strong> on any part to fix it — you won't lose your place.
@@ -228,7 +228,7 @@ export function ReviewStep({ api }: { api: OnboardingApi }) {
         <div style={{ textAlign: 'center', fontSize: 12.5, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--ink3)', marginBottom: 12 }}>
           A glimpse of what's waiting
         </div>
-        <Certificate businessName={rv.businessName || ''} variant="preview" />
+        <Certificate businessName={rv.businessName || ''} city={rv.city || ''} variant="preview" foundingNumber={null} cap={FOUNDING_CAP_PER_CITY} />
       </div>
 
       <button onClick={next} style={{ ...primaryButtonFull, marginTop: 26 }}>

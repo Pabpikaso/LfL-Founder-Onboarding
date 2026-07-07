@@ -1,19 +1,25 @@
 import { useState } from 'react';
-import { FOUNDING_PARTNER_CAP, FOUNDING_PARTNER_NUMBER, WELCOME_NEXT_STEPS } from '../../data/constants';
+import { WELCOME_NEXT_STEPS } from '../../data/constants';
 import type { OnboardingApi } from '../../state/useOnboarding';
 import { downloadCertificatePng, formatJoinDate } from '../../utils/certificate';
 import { pv } from '../../utils/preview';
 import { Certificate } from '../Certificate';
 
 export function WelcomeStep({ api }: { api: OnboardingApi }) {
-  const { data, showToast } = api;
+  const { data, showToast, submissionResult } = api;
   const businessName = (pv(data, 'businessName') as string) || '';
   const [downloading, setDownloading] = useState(false);
 
+  const isWaitlisted = submissionResult?.status === 'waitlisted';
+  const city = submissionResult?.city || data.city || '';
+  const cap = submissionResult?.cap ?? 100;
+  const foundingNumber = submissionResult?.foundingNumber ?? null;
+
   const handleDownload = async () => {
+    if (foundingNumber == null) return;
     setDownloading(true);
     try {
-      await downloadCertificatePng(businessName);
+      await downloadCertificatePng({ businessName, city, foundingNumber, cap });
       showToast('Certificate downloaded — ready to post.');
     } finally {
       setDownloading(false);
@@ -80,44 +86,59 @@ export function WelcomeStep({ api }: { api: OnboardingApi }) {
             ✓
           </div>
           <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 30, lineHeight: 1.1, letterSpacing: '-.015em', margin: '20px 0 0' }}>
-            Congratulations.
+            {isWaitlisted ? "You're on the list." : 'Congratulations.'}
           </h2>
-          <p style={{ fontSize: 16, lineHeight: 1.55, color: 'rgba(247,244,238,.8)', margin: '12px auto 0', maxWidth: '28ch' }}>
-            You're officially part of the Founding Circle.{' '}
-            <strong style={{ color: 'var(--accent)' }}>
-              No. {String(FOUNDING_PARTNER_NUMBER).padStart(2, '0')} of {FOUNDING_PARTNER_CAP}.
-            </strong>
+          <p style={{ fontSize: 16, lineHeight: 1.55, color: 'rgba(247,244,238,.8)', margin: '12px auto 0', maxWidth: '30ch' }}>
+            {isWaitlisted ? (
+              <>
+                All {cap} Founding spots in <strong style={{ color: 'var(--accent)' }}>{city}</strong> are filled — you're first in line the
+                moment one opens up.
+              </>
+            ) : (
+              <>
+                You're officially part of the Founding Circle.{' '}
+                <strong style={{ color: 'var(--accent)' }}>
+                  No. {String(foundingNumber).padStart(2, '0')} of {cap} in {city}.
+                </strong>
+              </>
+            )}
           </p>
         </div>
       </div>
 
       <div style={{ maxWidth: 520, margin: '0 auto', padding: '26px 22px 40px' }}>
-        <div style={{ animation: 'fadeUp .5s .1s ease both' }}>
-          <Certificate businessName={businessName} variant="full" dateJoined={formatJoinDate()} />
-        </div>
+        {!isWaitlisted && (
+          <>
+            <div style={{ animation: 'fadeUp .5s .1s ease both' }}>
+              <Certificate businessName={businessName} city={city} variant="full" foundingNumber={foundingNumber} cap={cap} dateJoined={formatJoinDate()} />
+            </div>
 
-        <div style={{ display: 'flex', gap: 11, marginTop: 18 }}>
-          <button
-            onClick={handleDownload}
-            disabled={downloading}
-            style={{ flex: 1, background: 'var(--ink)', color: '#fff', border: 'none', borderRadius: 13, padding: 15, fontSize: 14.5, fontWeight: 700, cursor: downloading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: downloading ? 0.7 : 1 }}
-          >
-            ⬇ {downloading ? 'Preparing…' : 'Download'}
-          </button>
-          <button
-            onClick={handleShare}
-            style={{ flex: 1, background: 'var(--card)', color: 'var(--ink)', border: '1px solid var(--line)', borderRadius: 13, padding: 15, fontSize: 14.5, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
-          >
-            ↗ Share
-          </button>
-        </div>
-        <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--ink3)', marginTop: 10 }}>
-          Post it to your Stories — it doubles as your announcement.
-        </div>
+            <div style={{ display: 'flex', gap: 11, marginTop: 18 }}>
+              <button
+                onClick={handleDownload}
+                disabled={downloading}
+                style={{ flex: 1, background: 'var(--ink)', color: '#fff', border: 'none', borderRadius: 13, padding: 15, fontSize: 14.5, fontWeight: 700, cursor: downloading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: downloading ? 0.7 : 1 }}
+              >
+                ⬇ {downloading ? 'Preparing…' : 'Download'}
+              </button>
+              <button
+                onClick={handleShare}
+                style={{ flex: 1, background: 'var(--card)', color: 'var(--ink)', border: '1px solid var(--line)', borderRadius: 13, padding: 15, fontSize: 14.5, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+              >
+                ↗ Share
+              </button>
+            </div>
+            <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--ink3)', marginTop: 10 }}>
+              Post it to your Stories — it doubles as your announcement.
+            </div>
+          </>
+        )}
 
-        <div style={{ marginTop: 30, background: 'var(--card)', border: '1px solid var(--line)', borderRadius: 18, padding: 22, boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ marginTop: isWaitlisted ? 0 : 30, background: 'var(--card)', border: '1px solid var(--line)', borderRadius: 18, padding: 22, boxShadow: 'var(--shadow-sm)' }}>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700 }}>What happens next</div>
-          <div style={{ fontSize: 12.5, color: 'var(--ink3)', marginTop: 2 }}>Within 48 hours, our team will:</div>
+          <div style={{ fontSize: 12.5, color: 'var(--ink3)', marginTop: 2 }}>
+            {isWaitlisted ? "We'll reach out the moment a spot opens. In the meantime:" : 'Within 48 hours, our team will:'}
+          </div>
           <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 0 }}>
             {WELCOME_NEXT_STEPS.map((n) => (
               <div key={n.no} style={{ display: 'flex', gap: 13, alignItems: 'flex-start', padding: '12px 0', borderTop: '1px solid var(--line2)' }}>

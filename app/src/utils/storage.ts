@@ -1,3 +1,4 @@
+import type { SubmitResult } from './api';
 import type { OnboardingData, Screen } from '../types';
 
 const STORAGE_KEY = 'lfl_onboard';
@@ -6,6 +7,7 @@ export interface PersistedState {
   screen: Screen;
   q: number;
   data: OnboardingData;
+  submissionResult: SubmitResult | null;
 }
 
 export function loadPersisted(): Partial<PersistedState> {

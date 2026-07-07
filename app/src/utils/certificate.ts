@@ -1,10 +1,15 @@
-import { FOUNDING_PARTNER_CAP, FOUNDING_PARTNER_NUMBER } from '../data/constants';
-
 export function formatJoinDate(): string {
   return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-export async function downloadCertificatePng(businessName: string): Promise<void> {
+export interface CertificateData {
+  businessName: string;
+  city: string;
+  foundingNumber: number;
+  cap: number;
+}
+
+export async function downloadCertificatePng({ businessName, city, foundingNumber, cap }: CertificateData): Promise<void> {
   const W = 1080;
   const H = 1350;
   const canvas = document.createElement('canvas');
@@ -61,7 +66,7 @@ export async function downloadCertificatePng(businessName: string): Promise<void
   ctx.fillStyle = 'rgba(20,18,16,.7)';
   ctx.font = '400 24px Georgia, serif';
   ctx.fillText('is officially one of the Founding Businesses of', cx, 652);
-  ctx.fillText('Locals for Locals Davao.', cx, 688);
+  ctx.fillText(`Locals for Locals ${city}.`, cx, 688);
 
   const sealY = 860;
   const sealR = 96;
@@ -74,10 +79,10 @@ export async function downloadCertificatePng(businessName: string): Promise<void
   ctx.fillText('FOUNDING PARTNER', cx, sealY - 30);
   ctx.fillStyle = '#fff';
   ctx.font = '800 62px Georgia, serif';
-  ctx.fillText(String(FOUNDING_PARTNER_NUMBER).padStart(2, '0'), cx, sealY + 26);
+  ctx.fillText(String(foundingNumber).padStart(2, '0'), cx, sealY + 26);
   ctx.fillStyle = 'rgba(247,244,238,.7)';
   ctx.font = '600 15px Georgia, serif';
-  ctx.fillText(`of ${FOUNDING_PARTNER_CAP}`, cx, sealY + 56);
+  ctx.fillText(`of ${cap}`, cx, sealY + 56);
 
   ctx.fillStyle = ink;
   ctx.font = 'italic 400 24px Georgia, serif';

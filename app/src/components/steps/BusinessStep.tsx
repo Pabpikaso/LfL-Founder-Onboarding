@@ -1,4 +1,4 @@
-import { CATCONFIG, CATEGORIES, HIGHLIGHTS, PRICE_LEVELS } from '../../data/constants';
+import { CATCONFIG, CATEGORIES, CITIES, HIGHLIGHTS, PRICE_LEVELS } from '../../data/constants';
 import type { OnboardingApi } from '../../state/useOnboarding';
 import { errorText, helperText, input, label, navRow, stepHeading, stepShellStyle, stepSubcopy, backButton, primaryButton } from '../../styles/shared';
 
@@ -106,7 +106,28 @@ export function BusinessStep({ api }: { api: OnboardingApi }) {
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: 140 }}>
             <label style={label}>City</label>
-            <input value={data.city || ''} onChange={(e) => updateField('city', e.target.value)} placeholder="Davao City" style={input} />
+            <select
+              value={data.city || ''}
+              onChange={(e) => updateField('city', e.target.value)}
+              style={{
+                ...input,
+                appearance: 'none',
+                backgroundImage:
+                  "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23999%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>')",
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 14px center',
+              }}
+            >
+              <option value="" disabled>
+                Choose one…
+              </option>
+              {CITIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            {errors.city && <div style={errorText}>{errors.city}</div>}
           </div>
           <div style={{ flex: 2, minWidth: 180 }}>
             <label style={label}>Address</label>

@@ -43,7 +43,7 @@ export function Landing({ onApply }: LandingProps) {
           }}
         >
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)' }} />
-          Davao City · By invitation
+          Davao · Manila · Cebu — by invitation
         </div>
         <h1
           style={{
@@ -53,13 +53,13 @@ export function Landing({ onApply }: LandingProps) {
             lineHeight: 1.02,
             letterSpacing: '-.02em',
             margin: '18px auto 0',
-            maxWidth: '11ch',
+            maxWidth: '12ch',
           }}
         >
-          Join Davao's Founding Circle
+          Join the Founding Circle
         </h1>
         <p style={{ fontSize: 16, lineHeight: 1.55, color: 'var(--ink2)', margin: '16px auto 0', maxWidth: '34ch' }}>
-          Become one of Davao's first curated businesses inside Locals for Locals.
+          Become one of the first 100 curated businesses in Davao, Manila, or Cebu inside Locals for Locals.
         </p>
         <p style={{ fontSize: 15, lineHeight: 1.5, color: 'var(--ink)', margin: '14px auto 0', maxWidth: '32ch', fontWeight: 600 }}>
           Not everyone gets accepted. We're looking for businesses people genuinely love recommending.

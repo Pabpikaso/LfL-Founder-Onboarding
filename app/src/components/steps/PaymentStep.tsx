@@ -3,7 +3,8 @@ import { primaryButtonFull, textLinkButton } from '../../styles/shared';
 import { PaymentQr } from '../PaymentQr';
 
 export function PaymentStep({ api }: { api: OnboardingApi }) {
-  const { data, uploadFile, go, back } = api;
+  const { data, uploadFile, back, confirmMembership, submitting, submitError } = api;
+  const city = data.city || 'your city';
 
   return (
     <div style={{ maxWidth: 560, margin: '0 auto', padding: '22px 22px 40px', animation: 'fadeUp .45s ease both' }}>
@@ -13,7 +14,7 @@ export function PaymentStep({ api }: { api: OnboardingApi }) {
           Become a Founding Partner
         </h2>
         <p style={{ fontSize: 15, lineHeight: 1.55, color: 'var(--ink2)', margin: '10px auto 0', maxWidth: '32ch' }}>
-          You're not buying a listing. You're joining the circle that's building local Davao.
+          You're not buying a listing. You're joining the circle that's building local {city}.
         </p>
       </div>
 
@@ -39,7 +40,7 @@ export function PaymentStep({ api }: { api: OnboardingApi }) {
             <span style={{ color: 'var(--accent)', fontSize: 14 }}>◆</span>
             <div>
               <div style={{ fontSize: 14.5, fontWeight: 600 }}>Local Business Network</div>
-              <div style={{ fontSize: 12.5, color: 'rgba(247,244,238,.6)', marginTop: 1 }}>The community of Davao's local business owners</div>
+              <div style={{ fontSize: 12.5, color: 'rgba(247,244,238,.6)', marginTop: 1 }}>The community of {city}'s local business owners</div>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 11, alignItems: 'flex-start' }}>
@@ -112,10 +113,20 @@ export function PaymentStep({ api }: { api: OnboardingApi }) {
         </div>
       </div>
 
-      <button onClick={() => go('welcome')} style={{ ...primaryButtonFull, marginTop: 22 }}>
-        Confirm Founding Membership
+      {submitError && (
+        <div style={{ marginTop: 18, background: 'var(--accent-wash)', border: '1px solid var(--error)', borderRadius: 12, padding: '12px 14px', fontSize: 13.5, color: 'var(--error)', fontWeight: 600 }}>
+          {submitError} — please try again.
+        </div>
+      )}
+
+      <button
+        onClick={confirmMembership}
+        disabled={submitting}
+        style={{ ...primaryButtonFull, marginTop: 22, opacity: submitting ? 0.7 : 1, cursor: submitting ? 'default' : 'pointer' }}
+      >
+        {submitting ? 'Submitting…' : 'Confirm Founding Membership'}
       </button>
-      <button onClick={back} style={textLinkButton}>
+      <button onClick={back} disabled={submitting} style={textLinkButton}>
         Back to review
       </button>
     </div>

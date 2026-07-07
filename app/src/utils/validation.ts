@@ -19,6 +19,7 @@ export function validateScreen(
   if (screen === 's2') {
     if (!str(data.businessName).trim()) errors.businessName = 'Your business needs a name.';
     if (!str(data.category).trim()) errors.category = 'Pick a category.';
+    if (!str(data.city).trim()) errors.city = 'Pick a city.';
     if (
       !str(data.facebook).trim() &&
       !str(data.instagram).trim() &&

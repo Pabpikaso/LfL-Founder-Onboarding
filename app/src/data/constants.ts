@@ -74,6 +74,8 @@ export const STEP_SHORT = [
 
 export const CATEGORIES = ['Cafe', 'Restaurant', 'Wellness', 'Retail', 'Studio', 'Other'];
 
+export const CITIES = ['Davao', 'Manila', 'Cebu'];
+
 export const HIGHLIGHTS: Array<[string, string]> = [
   ['🏆', 'Hidden Gem'],
   ['🐶', 'Pet Friendly'],
@@ -193,7 +195,7 @@ export const CATCONFIG: Record<string, CategoryConfig> = {
 export const PERKS: Array<{ no: string; title: string; desc: string }> = [
   { no: '01', title: 'Professional business profile', desc: 'A polished page members browse and share.' },
   { no: '02', title: 'Founder story — three videos', desc: 'A shoot that turns your story into film.' },
-  { no: '03', title: 'Founder network & trainings', desc: "Real sessions with Davao's best operators." },
+  { no: '03', title: 'Founder network & trainings', desc: 'Real sessions with the best local operators.' },
   { no: '04', title: 'A seat at the Founders Table', desc: "Rooms and dinners you can't buy into later." },
   { no: '05', title: 'Visibility to Locals members', desc: 'Seen by people looking for exactly you.' },
 ];
@@ -205,8 +207,7 @@ export const WELCOME_NEXT_STEPS = [
   { no: '4', text: 'Publish your profile for Locals members to find.' },
 ];
 
-export const FOUNDING_PARTNER_NUMBER = 4;
-export const FOUNDING_PARTNER_CAP = 30;
+export const FOUNDING_CAP_PER_CITY = 100;
 
 // Fallback content used only to preview the Review screen and certificate
 // with realistic content if a founder skips an optional field.

@@ -1,0 +1,153 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Locals for Locals — Founding Partner Onboarding backend.
+  Stores submissions, assigns real sequential Founding Partner numbers
+  per city (capped at 100 each, waitlisted beyond that), handles direct-to-S3
+  photo uploads via presigned URLs, and serves a password-gated admin list.
+
+Parameters:
+  AdminKey:
+    Type: String
+    NoEcho: true
+    Description: Shared secret the admin dashboard sends as the x-admin-key header.
+  NotifyEmail:
+    Type: String
+    Description: Email address to receive a notification on every submission (must be SES-verified).
+  AllowedOrigin:
+    Type: String
+    Default: "*"
+    Description: CORS origin allowed to call this API (set to https://apply.localsforlocals.ph once known).
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 10
+    MemorySize: 256
+    Environment:
+      Variables:
+        SUBMISSIONS_TABLE: !Ref SubmissionsTable
+        COUNTERS_TABLE: !Ref CountersTable
+        ASSETS_BUCKET: !Ref AssetsBucket
+        ADMIN_KEY: !Ref AdminKey
+        NOTIFY_EMAIL: !Ref NotifyEmail
+        FOUNDING_CAP: "100"
+
+Resources:
+  SubmissionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: submissionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: submissionId
+          KeyType: HASH
+
+  CountersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: city
+          AttributeType: S
+      KeySchema:
+        - AttributeName: city
+          KeyType: HASH
+
+  AssetsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods: [PUT, GET]
+            AllowedOrigins: ["*"]
+            AllowedHeaders: ["*"]
+            MaxAge: 3000
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - !Ref AllowedOrigin
+        AllowHeaders:
+          - content-type
+          - x-admin-key
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+
+  PresignUploadFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: presign.handler
+      CodeUri: src/
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref AssetsBucket
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /uploads/presign
+            Method: POST
+
+  SubmitApplicationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: submit.handler
+      CodeUri: src/
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SubmissionsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CountersTable
+        - Statement:
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource: "*"
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /submissions
+            Method: POST
+
+  AdminListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: listSubmissions.handler
+      CodeUri: src/
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref SubmissionsTable
+        - S3ReadPolicy:
+            BucketName: !Ref AssetsBucket
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /admin/submissions
+            Method: GET
+
+Outputs:
+  ApiUrl:
+    Description: Base URL for the API — put this in the frontend's VITE_API_BASE_URL
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+  AssetsBucketName:
+    Value: !Ref AssetsBucket
+  SubmissionsTableName:
+    Value: !Ref SubmissionsTable
+  CountersTableName:
+    Value: !Ref CountersTable
