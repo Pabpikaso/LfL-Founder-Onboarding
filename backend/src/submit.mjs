@@ -9,6 +9,9 @@ const ses = new SESClient({});
 const SUBMISSIONS_TABLE = process.env.SUBMISSIONS_TABLE;
 const COUNTERS_TABLE = process.env.COUNTERS_TABLE;
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
+const FROM_EMAIL = process.env.FROM_EMAIL;
+const BOOK_READINGS_URL = process.env.BOOK_READINGS_URL;
+const GAME_PLAN_URL = process.env.GAME_PLAN_URL;
 const FOUNDING_CAP = Number(process.env.FOUNDING_CAP || 100);
 const CITIES = ['Davao', 'Manila', 'Cebu'];
 
@@ -71,6 +74,85 @@ async function notifyAdmin(submission) {
   }
 }
 
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+async function notifyFounder(submission) {
+  const to = submission.data?.email;
+  if (!to || !FROM_EMAIL) return;
+
+  const { businessName, founderName, city, status, foundingNumber, cap } = submission;
+  const firstName = String(founderName || '').split(' ')[0] || founderName;
+
+  let subject;
+  let htmlBody;
+  let textBody;
+
+  if (status === 'confirmed') {
+    subject = `You're in! Welcome to the Locals for Locals Founding Circle`;
+    textBody = [
+      `Congratulations, ${firstName}!`,
+      ``,
+      `${businessName} is officially Founding Partner No. ${foundingNumber} of ${cap} in ${city}.`,
+      ``,
+      `A couple of things to get started:`,
+      `- Book readings: ${BOOK_READINGS_URL}`,
+      `- Your 120-day game plan: ${GAME_PLAN_URL}`,
+      ``,
+      `Our team will reach out within 48 hours to review your profile and schedule your Founder Story session.`,
+      ``,
+      `Welcome to the circle.`,
+      `— Locals for Locals`,
+    ].join('\n');
+    htmlBody = `
+      <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#141210">
+        <h1 style="font-size:22px;">Congratulations, ${escapeHtml(firstName)}!</h1>
+        <p><strong>${escapeHtml(businessName)}</strong> is officially <strong>Founding Partner No. ${foundingNumber} of ${cap}</strong> in ${escapeHtml(city)}.</p>
+        <p>A couple of things to get started:</p>
+        <ul>
+          <li><a href="${BOOK_READINGS_URL}">Book readings</a></li>
+          <li><a href="${GAME_PLAN_URL}">Your 120-day game plan</a></li>
+        </ul>
+        <p>Our team will reach out within 48 hours to review your profile and schedule your Founder Story session.</p>
+        <p style="font-style:italic">Welcome to the circle.<br/>— Locals for Locals</p>
+      </div>`;
+  } else {
+    subject = `You're on the Locals for Locals waitlist`;
+    textBody = [
+      `Hi ${firstName},`,
+      ``,
+      `Thanks for applying! All ${cap} Founding spots in ${city} are currently filled, so ${businessName} is on the waitlist.`,
+      `We'll reach out the moment a spot opens up.`,
+      ``,
+      `— Locals for Locals`,
+    ].join('\n');
+    htmlBody = `
+      <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#141210">
+        <h1 style="font-size:22px;">Hi ${escapeHtml(firstName)},</h1>
+        <p>Thanks for applying! All ${cap} Founding spots in ${escapeHtml(city)} are currently filled, so <strong>${escapeHtml(businessName)}</strong> is on the waitlist.</p>
+        <p>We'll reach out the moment a spot opens up.</p>
+        <p style="font-style:italic">— Locals for Locals</p>
+      </div>`;
+  }
+
+  try {
+    await ses.send(
+      new SendEmailCommand({
+        Source: FROM_EMAIL,
+        Destination: { ToAddresses: [to] },
+        Message: {
+          Subject: { Data: subject },
+          Body: { Html: { Data: htmlBody }, Text: { Data: textBody } },
+        },
+      }),
+    );
+  } catch (err) {
+    // Best-effort — a failed confirmation email must never block a real submission.
+    console.error('SES founder email failed', err);
+  }
+}
+
 export const handler = async (event) => {
   try {
     const body = JSON.parse(event.body || '{}');
@@ -104,7 +186,7 @@ export const handler = async (event) => {
     };
 
     await ddb.send(new PutCommand({ TableName: SUBMISSIONS_TABLE, Item: submission }));
-    await notifyAdmin(submission);
+    await Promise.all([notifyAdmin(submission), notifyFounder(submission)]);
 
     return {
       statusCode: 200,

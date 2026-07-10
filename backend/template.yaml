@@ -14,6 +14,18 @@ Parameters:
   NotifyEmail:
     Type: String
     Description: Email address to receive a notification on every submission (must be SES-verified).
+  FromEmail:
+    Type: String
+    Default: "hello@localsforlocals.ph"
+    Description: Verified sending address (or verified domain address) used as the From on founder-facing emails.
+  BookReadingsUrl:
+    Type: String
+    Default: "https://drive.google.com/drive/folders/1zsvUcYIARmOXi9n-vtvzA_o63snrjd7H?usp=sharing"
+    Description: Link to the founder book-readings resource, sent in the confirmation email.
+  GamePlanUrl:
+    Type: String
+    Default: "https://drive.google.com/drive/folders/1zsvUcYIARmOXi9n-vtvzA_o63snrjd7H?usp=sharing"
+    Description: Link to the 120-day game plan document, sent in the confirmation email.
   AllowedOrigin:
     Type: String
     Default: "*"
@@ -31,6 +43,9 @@ Globals:
         ASSETS_BUCKET: !Ref AssetsBucket
         ADMIN_KEY: !Ref AdminKey
         NOTIFY_EMAIL: !Ref NotifyEmail
+        FROM_EMAIL: !Ref FromEmail
+        BOOK_READINGS_URL: !Ref BookReadingsUrl
+        GAME_PLAN_URL: !Ref GamePlanUrl
         FOUNDING_CAP: "100"
 
 Resources:
