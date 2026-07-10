@@ -111,3 +111,4 @@ sam build && sam deploy
   ```bash
   sam deploy --parameter-overrides BookReadingsUrl="https://..." GamePlanUrl="https://..."
   ```
+- **Confirmation email design**: the confirmed/waitlisted HTML templates live in `src/emailTemplates.mjs`, built to the branded design in `Founding Partner Confirmation Email.dc.html` (table-based, inline-styled, Outlook-safe). The logo image is loaded from `https://apply.localsforlocals.ph/assets/email-logo-mark.png` — that file lives in `app/public/assets/email-logo-mark.png`, so it only becomes live after the frontend is rebuilt and re-uploaded to S3 (see the frontend redeploy steps above). If emails go out before that upload happens, the logo will just show as a broken image until it does.

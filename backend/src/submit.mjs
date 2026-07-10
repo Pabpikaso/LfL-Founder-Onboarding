@@ -2,6 +2,7 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, UpdateCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { randomUUID } from 'node:crypto';
+import { renderConfirmedEmail, renderWaitlistEmail } from './emailTemplates.mjs';
 
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 const ses = new SESClient({});
@@ -74,10 +75,6 @@ async function notifyAdmin(submission) {
   }
 }
 
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
-
 async function notifyFounder(submission) {
   const to = submission.data?.email;
   if (!to || !FROM_EMAIL) return;
@@ -85,56 +82,18 @@ async function notifyFounder(submission) {
   const { businessName, founderName, city, status, foundingNumber, cap } = submission;
   const firstName = String(founderName || '').split(' ')[0] || founderName;
 
-  let subject;
-  let htmlBody;
-  let textBody;
-
-  if (status === 'confirmed') {
-    subject = `You're in! Welcome to the Locals for Locals Founding Circle`;
-    textBody = [
-      `Congratulations, ${firstName}!`,
-      ``,
-      `${businessName} is officially Founding Partner No. ${foundingNumber} of ${cap} in ${city}.`,
-      ``,
-      `A couple of things to get started:`,
-      `- Book readings: ${BOOK_READINGS_URL}`,
-      `- Your 120-day game plan: ${GAME_PLAN_URL}`,
-      ``,
-      `Our team will reach out within 48 hours to review your profile and schedule your Founder Story session.`,
-      ``,
-      `Welcome to the circle.`,
-      `— Locals for Locals`,
-    ].join('\n');
-    htmlBody = `
-      <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#141210">
-        <h1 style="font-size:22px;">Congratulations, ${escapeHtml(firstName)}!</h1>
-        <p><strong>${escapeHtml(businessName)}</strong> is officially <strong>Founding Partner No. ${foundingNumber} of ${cap}</strong> in ${escapeHtml(city)}.</p>
-        <p>A couple of things to get started:</p>
-        <ul>
-          <li><a href="${BOOK_READINGS_URL}">Book readings</a></li>
-          <li><a href="${GAME_PLAN_URL}">Your 120-day game plan</a></li>
-        </ul>
-        <p>Our team will reach out within 48 hours to review your profile and schedule your Founder Story session.</p>
-        <p style="font-style:italic">Welcome to the circle.<br/>— Locals for Locals</p>
-      </div>`;
-  } else {
-    subject = `You're on the Locals for Locals waitlist`;
-    textBody = [
-      `Hi ${firstName},`,
-      ``,
-      `Thanks for applying! All ${cap} Founding spots in ${city} are currently filled, so ${businessName} is on the waitlist.`,
-      `We'll reach out the moment a spot opens up.`,
-      ``,
-      `— Locals for Locals`,
-    ].join('\n');
-    htmlBody = `
-      <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#141210">
-        <h1 style="font-size:22px;">Hi ${escapeHtml(firstName)},</h1>
-        <p>Thanks for applying! All ${cap} Founding spots in ${escapeHtml(city)} are currently filled, so <strong>${escapeHtml(businessName)}</strong> is on the waitlist.</p>
-        <p>We'll reach out the moment a spot opens up.</p>
-        <p style="font-style:italic">— Locals for Locals</p>
-      </div>`;
-  }
+  const { subject, html, text } =
+    status === 'confirmed'
+      ? renderConfirmedEmail({
+          founderFirstName: firstName,
+          businessName,
+          foundingNumber: String(foundingNumber),
+          cap: String(cap),
+          city,
+          readingsLink: BOOK_READINGS_URL,
+          gamePlanLink: GAME_PLAN_URL,
+        })
+      : renderWaitlistEmail({ founderFirstName: firstName, businessName, cap: String(cap), city });
 
   try {
     await ses.send(
@@ -143,7 +102,7 @@ async function notifyFounder(submission) {
         Destination: { ToAddresses: [to] },
         Message: {
           Subject: { Data: subject },
-          Body: { Html: { Data: htmlBody }, Text: { Data: textBody } },
+          Body: { Html: { Data: html }, Text: { Data: text } },
         },
       }),
     );
