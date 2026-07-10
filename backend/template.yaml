@@ -24,7 +24,7 @@ Parameters:
     Description: Link to the founder book-readings resource, sent in the confirmation email.
   GamePlanUrl:
     Type: String
-    Default: "https://drive.google.com/drive/folders/1zsvUcYIARmOXi9n-vtvzA_o63snrjd7H?usp=sharing"
+    Default: "https://apply.localsforlocals.ph/assets/founding-circle-120-day-game-plan.pdf"
     Description: Link to the 120-day game plan document, sent in the confirmation email.
   AllowedOrigin:
     Type: String

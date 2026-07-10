@@ -107,7 +107,7 @@ sam build && sam deploy
 - **Photos are private** — the S3 bucket blocks all public access; the admin dashboard sees them via short-lived (1-hour) presigned URLs generated per request, not public links.
 - **Admin auth is a single shared password**, not per-user login — fine for one internal team, but if multiple people need separate accounts later, that'd need a real auth system (e.g. Cognito).
 - **Founder confirmation emails**: every submission also emails the founder directly (their own email from the form) — a congrats + book readings + 120-day game plan for confirmed Founding Partners, or a shorter waitlist message otherwise. Sent from `FromEmail` (defaults to `hello@localsforlocals.ph` — requires that domain to be SES-verified, which it already is). **This only works once your SES account has production access** — until then, SES will silently fail to send to any address you haven't manually verified (admin notifications still work fine since that address is verified).
-- **Changing the resource links**: `BookReadingsUrl` and `GamePlanUrl` currently both default to the same Google Drive folder in `template.yaml`. To point them at different links (or update them later) without touching code:
+- **Changing the resource links**: `BookReadingsUrl` defaults to the Google Drive folder; `GamePlanUrl` defaults to a PDF hosted directly on the site (`app/public/assets/founding-circle-120-day-game-plan.pdf` — like the logo, only live once the frontend's rebuilt/re-uploaded). To point either at different links later without touching code:
   ```bash
   sam deploy --parameter-overrides BookReadingsUrl="https://..." GamePlanUrl="https://..."
   ```
