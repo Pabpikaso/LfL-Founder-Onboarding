@@ -71,7 +71,7 @@
   header.on-dark a.navlink.current{color:#fff}
   nav a.navlink:hover{color:var(--ink)}
   header.on-dark a.navlink:hover{color:#fff}
-  @media (max-width:760px){ nav.navlinks{display:none} }
+  @media (max-width:820px){ nav.navlinks{display:none} }
 
   section{position:relative}
 
@@ -94,7 +94,7 @@
   .shead p.lede{margin-top:20px;font-size:clamp(1rem,1.5vw,1.15rem);line-height:1.55;color:var(--ink-soft)}
 
   /* ===== team groups ===== */
-  .groups{padding:130px 0 40px;background:var(--paper)}
+  .groups{padding:130px 0 110px;background:var(--paper)}
   .team-group{padding:56px 0;border-top:1px solid var(--hairline)}
   .team-group:last-of-type{border-bottom:1px solid var(--hairline)}
   .team-group .g-name{font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.02em}
@@ -107,19 +107,6 @@
   .role-list .role .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
   .tag-row{display:flex;flex-wrap:wrap;gap:10px}
   .tag{font-size:13px;font-weight:600;color:var(--ink-soft);background:var(--paper-dim);border:1px solid var(--hairline);border-radius:999px;padding:8px 15px}
-
-  /* ===== building southeast asia ===== */
-  .expansion{padding:100px 0;background:var(--paper-dim)}
-  .expansion-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hairline);border:1px solid var(--hairline);border-radius:20px;overflow:hidden;margin-top:48px}
-  @media (max-width:760px){.expansion-cols{grid-template-columns:1fr}}
-  .expansion-col{background:#fff;padding:34px 32px}
-  .expansion-col h4{font-size:14px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
-  .expansion-col .city-line{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:15.5px;color:var(--ink-soft)}
-  .expansion-col .city-line .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-  .expansion-col.soon{background:var(--paper-dim)}
-  .expansion-col.soon h4{color:var(--ink-faint)}
-  .expansion-col.soon .city-line{color:var(--ink-faint)}
-  .expansion-col.soon .city-line .dot{background:transparent;border:1.5px dashed var(--ink-faint)}
 
   /* ===== join the movement (dark closing) ===== */
   .closing{background:linear-gradient(180deg, var(--close-1) 0%, var(--close-2) 100%);color:#fff;padding:150px 0;text-align:center;overflow:hidden}
@@ -156,6 +143,7 @@
       <a class="navlink" href="index.html#cities">Cities</a>
       <a class="navlink" href="index.html#people">Founding Circle</a>
       <a class="navlink current" href="team.html">Team</a>
+      <a class="navlink" href="manifesto.html">Manifesto</a>
       <a class="navlink" href="index.html#closing">Contact</a>
     </nav>
   </div>
@@ -232,35 +220,6 @@
       </div>
     </div>
 
-  </div>
-</section>
-
-<section class="expansion" data-theme-section="light">
-  <div class="wrap">
-    <div class="shead center">
-      <div class="eyebrow-light">Where we are</div>
-      <h2>Building Southeast Asia</h2>
-      <p class="lede">We're currently building communities across:</p>
-    </div>
-    <div class="expansion-cols">
-      <div class="expansion-col">
-        <h4>Philippines</h4>
-        <div class="city-line"><span class="dot" style="background:var(--davao-glow)"></span>Davao City</div>
-        <div class="city-line"><span class="dot" style="background:var(--cebu-glow)"></span>Cebu City</div>
-        <div class="city-line"><span class="dot" style="background:var(--manila-glow)"></span>Manila</div>
-      </div>
-      <div class="expansion-col">
-        <h4>Thailand</h4>
-        <div class="city-line"><span class="dot" style="background:var(--bangkok-glow)"></span>Bangkok</div>
-      </div>
-      <div class="expansion-col soon">
-        <h4>Coming Soon</h4>
-        <div class="city-line"><span class="dot"></span>Vietnam</div>
-        <div class="city-line"><span class="dot"></span>Indonesia</div>
-        <div class="city-line"><span class="dot"></span>Malaysia</div>
-        <div class="city-line"><span class="dot"></span>Singapore</div>
-      </div>
-    </div>
   </div>
 </section>
 

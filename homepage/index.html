@@ -101,12 +101,19 @@
 
   /* ===== mission (light) ===== */
   .mission{padding:170px 0;background:var(--paper)}
-  .mission .wrap{max-width:760px;text-align:center}
+  .mission .wrap{max-width:760px}
+  .mission-part{text-align:center}
+  .mission-part + .mission-part{margin-top:90px;padding-top:90px;border-top:1px solid var(--hairline)}
   .mission .eyebrow{font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.02em;text-transform:none}
   .mission h2{margin-top:20px;font-weight:600;letter-spacing:-.02em;line-height:1.12;font-size:clamp(1.9rem,4.4vw,3.1rem);color:var(--ink)}
   .mission p.lede{margin-top:26px;font-size:clamp(1.05rem,1.6vw,1.3rem);line-height:1.5;color:var(--ink-soft);max-width:56ch;margin-left:auto;margin-right:auto}
   .mission p.lede + p.lede{margin-top:18px}
   .mission p.closing-line{margin-top:38px;font-weight:600;letter-spacing:-.01em;font-size:clamp(1.2rem,2vw,1.5rem);line-height:1.4;color:var(--ink);max-width:40ch;margin-left:auto;margin-right:auto}
+  .mission p.tagline{margin-top:22px;font-style:italic;font-size:16px;color:var(--ink-faint)}
+  .philosophy-intro{font-size:clamp(1.05rem,1.6vw,1.3rem);color:var(--ink-soft);margin-top:20px}
+  .philosophy-list{display:inline-flex;flex-direction:column;gap:16px;text-align:left;margin:36px auto 0}
+  .philosophy-list .belief{display:flex;align-items:flex-start;gap:12px;font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.5;color:var(--ink);max-width:52ch}
+  .philosophy-list .belief .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:11px}
 
   /* ===== city panels ===== */
   .city-panel{position:relative;min-height:92vh;display:flex;align-items:center;color:#fff;overflow:hidden}
@@ -190,7 +197,6 @@
       <a class="navlink" href="#mission">Our Story</a>
       <a class="navlink" href="#cities">Cities</a>
       <a class="navlink" href="#people">Founding Circle</a>
-      <a class="navlink" href="team.html">Team</a>
       <a class="navlink" href="#closing">Contact</a>
     </nav>
   </div>
@@ -213,11 +219,14 @@
 
 <section id="mission" class="mission" data-theme-section="light">
   <div class="wrap">
-    <div class="eyebrow">Why we exist</div>
-    <h2>Great local businesses do more than make a profit — they shape the culture of our cities.</h2>
-    <p class="lede">They're the cafés where friendships begin, the restaurants that become family traditions, and the hidden gems that give a place its identity. When they thrive, our communities thrive with them.</p>
-    <p class="lede">We believe they deserve more than customers. They deserve to be discovered, celebrated, and supported by people who genuinely value what they bring into the world.</p>
-    <p class="closing-line">Locals for Locals exists to help great local businesses find their people.</p>
+
+    <div class="mission-part">
+      <div class="eyebrow">Our why</div>
+      <h2>The strongest economies are built by strong communities.</h2>
+      <p class="lede">Today, many remarkable local businesses remain undiscovered — not because they lack quality, but because they lack visibility, community, and the infrastructure to grow sustainably.</p>
+      <p class="lede">We're building a future where local businesses don't grow alone. They grow alongside conscious consumers, founders, and communities that genuinely believe in what they do.</p>
+    </div>
+
   </div>
 </section>
 
@@ -323,6 +332,30 @@
         <p>100 Founding Partner spots per city, assigned in the real order founders join — not a marketing gimmick.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="mission" data-theme-section="light">
+  <div class="wrap">
+
+    <div class="mission-part">
+      <div class="eyebrow">Our mission</div>
+      <h2>To strengthen local economies by building the largest trusted network of local businesses and conscious consumers across Southeast Asia.</h2>
+      <p class="tagline">One founder. One business. One city at a time.</p>
+    </div>
+
+    <div class="mission-part">
+      <div class="eyebrow">Our philosophy</div>
+      <p class="philosophy-intro">We believe:</p>
+      <div class="philosophy-list">
+        <div class="belief"><span class="dot"></span>Businesses should enable meaningful lives for the founders who build them.</div>
+        <div class="belief"><span class="dot"></span>The economy should strengthen communities and preserve culture.</div>
+        <div class="belief"><span class="dot"></span>Technology should bring people closer together.</div>
+        <div class="belief"><span class="dot"></span>Great businesses deserve more than customers — they deserve their people.</div>
+        <div class="belief"><span class="dot"></span>Conscious consumers have the power to shape the future of their cities.</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
