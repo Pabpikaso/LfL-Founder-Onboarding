@@ -1,20 +1,33 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, UpdateCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import nodemailer from 'nodemailer';
 import { randomUUID } from 'node:crypto';
 import { renderConfirmedEmail, renderWaitlistEmail } from './emailTemplates.mjs';
 
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({}));
-const ses = new SESClient({});
 
 const SUBMISSIONS_TABLE = process.env.SUBMISSIONS_TABLE;
 const COUNTERS_TABLE = process.env.COUNTERS_TABLE;
 const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
 const FROM_EMAIL = process.env.FROM_EMAIL;
+const SMTP_APP_PASSWORD = process.env.SMTP_APP_PASSWORD;
 const BOOK_READINGS_URL = process.env.BOOK_READINGS_URL;
 const GAME_PLAN_URL = process.env.GAME_PLAN_URL;
 const FOUNDING_CAP = Number(process.env.FOUNDING_CAP || 100);
 const CITIES = ['Davao', 'Manila', 'Cebu'];
+
+// Sends via Google Workspace (Gmail SMTP), authenticated as FROM_EMAIL with
+// an app password — used instead of AWS SES, whose production-access
+// request AWS denied for this account.
+const transporter =
+  FROM_EMAIL && SMTP_APP_PASSWORD
+    ? nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: { user: FROM_EMAIL, pass: SMTP_APP_PASSWORD },
+      })
+    : null;
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -44,13 +57,13 @@ async function assignFoundingNumber(city) {
 }
 
 async function notifyAdmin(submission) {
-  if (!NOTIFY_EMAIL) return;
+  if (!NOTIFY_EMAIL || !transporter) return;
   const { businessName, founderName, city, status, foundingNumber } = submission;
   const subject =
     status === 'confirmed'
       ? `New Founding Partner: ${businessName} (#${foundingNumber}, ${city})`
       : `Waitlisted application: ${businessName} (${city})`;
-  const bodyText = [
+  const text = [
     `Business: ${businessName}`,
     `Founder: ${founderName}`,
     `City: ${city}`,
@@ -59,25 +72,16 @@ async function notifyAdmin(submission) {
   ].join('\n');
 
   try {
-    await ses.send(
-      new SendEmailCommand({
-        Source: NOTIFY_EMAIL,
-        Destination: { ToAddresses: [NOTIFY_EMAIL] },
-        Message: {
-          Subject: { Data: subject },
-          Body: { Text: { Data: bodyText } },
-        },
-      }),
-    );
+    await transporter.sendMail({ from: FROM_EMAIL, to: NOTIFY_EMAIL, subject, text });
   } catch (err) {
     // Best-effort — a failed notification email must never block a real submission.
-    console.error('SES notify failed', err);
+    console.error('admin notify failed', err);
   }
 }
 
 async function notifyFounder(submission) {
   const to = submission.data?.email;
-  if (!to || !FROM_EMAIL) return;
+  if (!to || !transporter) return;
 
   const { businessName, founderName, city, status, foundingNumber, cap } = submission;
   const firstName = String(founderName || '').split(' ')[0] || founderName;
@@ -96,19 +100,10 @@ async function notifyFounder(submission) {
       : renderWaitlistEmail({ founderFirstName: firstName, businessName, cap: String(cap), city });
 
   try {
-    await ses.send(
-      new SendEmailCommand({
-        Source: FROM_EMAIL,
-        Destination: { ToAddresses: [to] },
-        Message: {
-          Subject: { Data: subject },
-          Body: { Html: { Data: html }, Text: { Data: text } },
-        },
-      }),
-    );
+    await transporter.sendMail({ from: FROM_EMAIL, to, subject, html, text });
   } catch (err) {
     // Best-effort — a failed confirmation email must never block a real submission.
-    console.error('SES founder email failed', err);
+    console.error('founder email failed', err);
   }
 }
 

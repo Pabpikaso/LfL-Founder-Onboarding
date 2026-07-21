@@ -17,25 +17,24 @@ Install the AWS CLI and AWS SAM CLI on your own machine (not this sandbox):
 - SAM CLI: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html
 
 Then configure your AWS credentials (an IAM user with admin or sufficient
-permissions to create Lambda/DynamoDB/S3/API Gateway/SES resources):
+permissions to create Lambda/DynamoDB/S3/API Gateway resources):
 
 ```bash
 aws configure
 ```
 
-## 2. Verify your notification email in SES
+## 2. Generate a Google Workspace app password
 
-New AWS accounts start in SES "sandbox mode," which only allows sending to
-verified addresses. Since we're only emailing *you*, verify your own address
-once:
+Email is sent through your existing Google Workspace mailbox (`hello@localsforlocals.ph`)
+via SMTP, not AWS SES — AWS denied our SES production access request for this
+account, so this avoids AWS's sending restrictions entirely and uses infrastructure
+you already have.
 
-```bash
-aws ses verify-email-identity --email-address you@example.com --region ap-southeast-2
-```
-
-Check that inbox and click the confirmation link AWS sends. No need to
-request SES production access — sandbox mode is fine since sender and
-recipient are the same verified address.
+1. Log into `hello@localsforlocals.ph` (or have whoever manages it do this step).
+2. If not already on: turn on **2-Step Verification** for that account (required — Google won't issue app passwords without it). **Google Account** → **Security** → **2-Step Verification**.
+3. Go to https://myaccount.google.com/apppasswords
+4. Create a new app password (name it something like "Locals for Locals backend")
+5. Copy the 16-character password it gives you — you'll paste it into `sam deploy --guided` in the next step. Google only shows it once.
 
 ## 3. Deploy
 
@@ -50,7 +49,9 @@ You'll be prompted for:
 - **Stack Name**: e.g. `lfl-onboarding-backend`
 - **AWS Region**: `ap-southeast-2` (match your S3/CloudFront setup)
 - **Parameter AdminKey**: make up a strong password — this is what unlocks the admin dashboard. Save it somewhere; you'll need it to log in.
-- **Parameter NotifyEmail**: the email address you just verified in SES
+- **Parameter NotifyEmail**: whatever address should get an internal notification on every submission (e.g. your own Gmail)
+- **Parameter FromEmail**: `hello@localsforlocals.ph` (default, just press enter)
+- **Parameter SmtpAppPassword**: the 16-character app password from step 2
 - **Parameter AllowedOrigin**: `https://apply.localsforlocals.ph` (or `*` for now if you want to test before the domain's fully wired up — tighten it later)
 - Accept defaults for the rest (or answer `Y` to save these as future defaults)
 
@@ -100,13 +101,20 @@ sam build && sam deploy
 
 (no `--guided` needed after the first time — it reuses your saved answers)
 
+**Exception**: the first deploy *after* the SES→Workspace SMTP switch needs
+`sam deploy --guided` one more time, since `SmtpAppPassword` is a new
+required parameter your saved config doesn't have a value for yet. After
+that one time, plain `sam deploy` works again.
+
 ## Notes / things worth knowing
 
 - **Per-city cap**: 100 each for Davao, Manila, Cebu, hardcoded as the `FOUNDING_CAP` env var (currently `100`) — change it in `template.yaml`'s Globals section and redeploy if that number ever changes.
 - **Founding numbers are assigned atomically** at the moment "Confirm Founding Membership" is submitted (not when someone starts the form), so the number always reflects real close order — matches the original design intent.
 - **Photos are private** — the S3 bucket blocks all public access; the admin dashboard sees them via short-lived (1-hour) presigned URLs generated per request, not public links.
 - **Admin auth is a single shared password**, not per-user login — fine for one internal team, but if multiple people need separate accounts later, that'd need a real auth system (e.g. Cognito).
-- **Founder confirmation emails**: every submission also emails the founder directly (their own email from the form) — a congrats + book readings + 120-day game plan for confirmed Founding Partners, or a shorter waitlist message otherwise. Sent from `FromEmail` (defaults to `hello@localsforlocals.ph` — requires that domain to be SES-verified, which it already is). **This only works once your SES account has production access** — until then, SES will silently fail to send to any address you haven't manually verified (admin notifications still work fine since that address is verified).
+- **Founder confirmation emails**: every submission also emails the founder directly (their own email from the form) — a congrats + book readings + 120-day game plan for confirmed Founding Partners, or a shorter waitlist message otherwise. Sent via Google Workspace SMTP as `FromEmail` (`hello@localsforlocals.ph`), authenticated with the app password from step 2 — works immediately for any recipient, no sandbox/approval process like AWS SES has.
+- **If the app password ever stops working** (e.g. someone resets 2-Step Verification on that account, or revokes the app password), generate a new one at https://myaccount.google.com/apppasswords and redeploy with `sam deploy --parameter-overrides SmtpAppPassword="..."` (keeping the other parameters — SAM will reuse saved values for anything you don't override).
+- **Workspace sending limits**: Google Workspace accounts can send up to ~2,000 recipients/day via SMTP — far beyond what this needs. If that ever becomes a bottleneck, a dedicated transactional provider (Resend, Postmark, SendGrid) would be the next step.
 - **Changing the resource links**: `BookReadingsUrl` defaults to the Google Drive folder; `GamePlanUrl` defaults to a PDF hosted directly on the site (`app/public/assets/founding-circle-120-day-game-plan.pdf` — like the logo, only live once the frontend's rebuilt/re-uploaded). To point either at different links later without touching code:
   ```bash
   sam deploy --parameter-overrides BookReadingsUrl="https://..." GamePlanUrl="https://..."

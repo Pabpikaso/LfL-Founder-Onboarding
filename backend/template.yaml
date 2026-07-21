@@ -13,11 +13,15 @@ Parameters:
     Description: Shared secret the admin dashboard sends as the x-admin-key header.
   NotifyEmail:
     Type: String
-    Description: Email address to receive a notification on every submission (must be SES-verified).
+    Description: Email address to receive a notification on every submission.
   FromEmail:
     Type: String
     Default: "hello@localsforlocals.ph"
-    Description: Verified sending address (or verified domain address) used as the From on founder-facing emails.
+    Description: Google Workspace mailbox used as the From/SMTP-auth address for all outbound email.
+  SmtpAppPassword:
+    Type: String
+    NoEcho: true
+    Description: Google App Password for FromEmail (myaccount.google.com/apppasswords, requires 2-Step Verification enabled on that Workspace account).
   BookReadingsUrl:
     Type: String
     Default: "https://drive.google.com/drive/folders/1zsvUcYIARmOXi9n-vtvzA_o63snrjd7H?usp=sharing"
@@ -44,6 +48,7 @@ Globals:
         ADMIN_KEY: !Ref AdminKey
         NOTIFY_EMAIL: !Ref NotifyEmail
         FROM_EMAIL: !Ref FromEmail
+        SMTP_APP_PASSWORD: !Ref SmtpAppPassword
         BOOK_READINGS_URL: !Ref BookReadingsUrl
         GAME_PLAN_URL: !Ref GamePlanUrl
         FOUNDING_CAP: "100"
@@ -126,10 +131,6 @@ Resources:
             TableName: !Ref SubmissionsTable
         - DynamoDBCrudPolicy:
             TableName: !Ref CountersTable
-        - Statement:
-            - Effect: Allow
-              Action: ses:SendEmail
-              Resource: "*"
       Events:
         Api:
           Type: HttpApi
