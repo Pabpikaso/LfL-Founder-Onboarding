@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Locals for Locals</title>
+<meta name="description" content="Don't be a stranger. Meet your Locals. Help them experience Local. A curated circle of the businesses that make Davao, Manila, and Cebu feel like home." />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<style>
+  :root{
+    --paper:#FBFBFD;
+    --paper-dim:#F4F4F1;
+    --ink:#151513;
+    --ink-soft:rgba(21,21,19,.72);
+    --ink-faint:rgba(21,21,19,.46);
+    --hairline:rgba(21,21,19,.10);
+    --gold:#A9752B;
+    --gold-soft:rgba(169,117,43,.16);
+
+    --hero-1:#0A0A0B;
+    --hero-2:#241407;
+    --hero-glow:#C97A2E;
+
+    --davao-1:#0E2A1F;
+    --davao-2:#2E5B41;
+    --davao-glow:#D9A441;
+
+    --cebu-1:#0A3B42;
+    --cebu-2:#1E7A80;
+    --cebu-glow:#8FE0D8;
+
+    --manila-1:#3B1B14;
+    --manila-2:#8A3F24;
+    --manila-glow:#F0A25B;
+
+    --close-1:#0B0B0C;
+    --close-2:#1C1410;
+
+    --sf: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+    --max:1180px;
+    --nav-h:52px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);font-family:var(--sf);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    font-size:17px;line-height:1.47059;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  h1,h2,h3{margin:0;text-wrap:balance}
+  p{margin:0}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+  }
+
+  /* grain texture, layered on every dark/colored panel */
+  .grain{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.35;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* nav */
+  header{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav-h);
+    background:rgba(251,251,253,.72);backdrop-filter:blur(14px) saturate(1.6);-webkit-backdrop-filter:blur(14px) saturate(1.6);
+    border-bottom:1px solid var(--hairline);transition:background .3s ease,border-color .3s ease}
+  header.on-dark{background:rgba(10,10,11,.55);border-bottom-color:rgba(255,255,255,.08)}
+  header .bar{max-width:var(--max);margin:0 auto;padding:0 24px;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between}
+  header .logo{display:flex;align-items:center;gap:8px}
+  header .logo img{height:20px;width:auto}
+  header .logo span{font-size:13px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+  header.on-dark .logo span{color:#fff}
+  nav.navlinks{display:flex;align-items:center;gap:34px}
+  nav a.navlink{font-size:12px;font-weight:400;color:var(--ink-soft);letter-spacing:-.005em}
+  header.on-dark a.navlink{color:rgba(255,255,255,.78)}
+  nav a.navlink:hover{color:var(--ink)}
+  header.on-dark a.navlink:hover{color:#fff}
+  @media (max-width:760px){ nav.navlinks{display:none} }
+
+  section{position:relative}
+
+  /* ===== hero ===== */
+  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;background:radial-gradient(120% 90% at 50% 108%, var(--hero-glow) 0%, transparent 58%), linear-gradient(180deg, var(--hero-1) 0%, var(--hero-2) 100%);
+    color:#fff;overflow:hidden;padding:calc(var(--nav-h) + 40px) 24px 80px}
+  .hero .inner{position:relative;z-index:2;max-width:920px}
+  .hero h1{font-weight:600;letter-spacing:-.025em;line-height:1.03;font-size:clamp(2.6rem,7.4vw,6.2rem);color:#fff}
+  .hero h1 .line{display:block}
+  .hero .sub{margin-top:26px;font-weight:400;letter-spacing:-.01em;font-size:clamp(1.15rem,2.2vw,1.6rem);color:rgba(255,255,255,.72)}
+  .hero .status{margin-top:44px;display:inline-flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.5);letter-spacing:.01em}
+  .hero .status .dot{width:6px;height:6px;border-radius:50%;background:var(--hero-glow);box-shadow:0 0 10px var(--hero-glow)}
+  .scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;opacity:.5}
+  .scroll-cue svg{display:block;animation:bob 2.2s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+  /* ===== mission (light) ===== */
+  .mission{padding:170px 0;background:var(--paper)}
+  .mission .wrap{max-width:760px;text-align:center}
+  .mission .eyebrow{font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.02em;text-transform:none}
+  .mission h2{margin-top:20px;font-weight:600;letter-spacing:-.02em;line-height:1.12;font-size:clamp(1.9rem,4.4vw,3.1rem);color:var(--ink)}
+  .mission p.lede{margin-top:26px;font-size:clamp(1.05rem,1.6vw,1.3rem);line-height:1.5;color:var(--ink-soft);max-width:56ch;margin-left:auto;margin-right:auto}
+
+  /* ===== city panels ===== */
+  .city-panel{position:relative;min-height:92vh;display:flex;align-items:center;color:#fff;overflow:hidden}
+  .city-panel .bg{position:absolute;inset:0;z-index:0}
+  .city-panel .wrap{position:relative;z-index:2;width:100%;padding-top:120px;padding-bottom:120px}
+  .city-panel .frame{display:flex;flex-direction:column;gap:28px;max-width:640px}
+  .city-panel.align-right .frame{margin-left:auto;text-align:right;align-items:flex-end}
+  .city-tag{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:500;letter-spacing:.03em;color:rgba(255,255,255,.62)}
+  .city-panel.align-right .city-tag{flex-direction:row-reverse}
+  .city-tag .dot{width:6px;height:6px;border-radius:50%}
+  .city-panel h2{font-weight:600;letter-spacing:-.03em;line-height:.98;font-size:clamp(3.4rem,9vw,7rem)}
+  .city-panel p{font-size:clamp(1.05rem,1.7vw,1.35rem);line-height:1.5;color:rgba(255,255,255,.74);max-width:38ch}
+
+  .city-panel.davao .bg{background:radial-gradient(85% 70% at 12% 20%, var(--davao-glow) 0%, transparent 46%), linear-gradient(155deg, var(--davao-1) 0%, var(--davao-2) 100%)}
+  .city-panel.davao .city-tag .dot{background:var(--davao-glow)}
+  .city-panel.cebu .bg{background:radial-gradient(85% 70% at 88% 24%, var(--cebu-glow) 0%, transparent 50%), linear-gradient(200deg, var(--cebu-1) 0%, var(--cebu-2) 100%)}
+  .city-panel.cebu .city-tag .dot{background:var(--cebu-glow)}
+  .city-panel.manila .bg{background:radial-gradient(85% 70% at 15% 78%, var(--manila-glow) 0%, transparent 50%), linear-gradient(165deg, var(--manila-1) 0%, var(--manila-2) 100%)}
+  .city-panel.manila .city-tag .dot{background:var(--manila-glow)}
+
+  /* ===== people (light) ===== */
+  .people{padding:170px 0 150px;background:var(--paper)}
+  .people .section-head{max-width:640px;margin:0 auto;text-align:center}
+  .people .eyebrow{font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.02em}
+  .people h2{margin-top:20px;font-weight:600;letter-spacing:-.02em;line-height:1.12;font-size:clamp(1.9rem,4.4vw,3.1rem)}
+  .people p.lede{margin-top:22px;font-size:clamp(1.05rem,1.6vw,1.25rem);line-height:1.5;color:var(--ink-soft);max-width:54ch;margin-left:auto;margin-right:auto}
+
+  .orb-row{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:76px}
+  @media (max-width:820px){.orb-row{grid-template-columns:1fr;max-width:360px;margin-left:auto;margin-right:auto}}
+  .orb-card{text-align:center}
+  .orb{width:132px;height:132px;border-radius:50%;margin:0 auto;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .orb span{font-family:var(--sf);font-weight:600;font-size:15px;color:rgba(255,255,255,.88);letter-spacing:.01em;position:relative;z-index:2}
+  .orb::before{content:'';position:absolute;inset:0;opacity:.9}
+  .orb-1::before{background:radial-gradient(70% 70% at 30% 25%, var(--davao-glow), transparent 60%), linear-gradient(160deg, var(--davao-1), var(--davao-2))}
+  .orb-2::before{background:radial-gradient(70% 70% at 70% 25%, var(--cebu-glow), transparent 60%), linear-gradient(200deg, var(--cebu-1), var(--cebu-2))}
+  .orb-3::before{background:radial-gradient(70% 70% at 30% 75%, var(--manila-glow), transparent 60%), linear-gradient(165deg, var(--manila-1), var(--manila-2))}
+  .orb-card h3{margin-top:22px;font-size:16px;font-weight:600;color:var(--ink)}
+  .orb-card p{margin-top:6px;font-size:14px;color:var(--ink-faint);line-height:1.5}
+
+  /* ===== belonging strip (light, editorial pairs) ===== */
+  .belong{padding:0 0 170px;background:var(--paper)}
+  .belong .pairs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hairline);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+  @media (max-width:760px){.belong .pairs{grid-template-columns:1fr}}
+  .pair{background:var(--paper);padding:64px 48px}
+  .pair .k{font-size:12.5px;font-weight:600;color:var(--gold);letter-spacing:.02em}
+  .pair h3{margin-top:16px;font-size:clamp(1.3rem,2.2vw,1.7rem);font-weight:600;letter-spacing:-.015em;line-height:1.2}
+  .pair p{margin-top:12px;font-size:15.5px;line-height:1.55;color:var(--ink-soft);max-width:42ch}
+
+  /* ===== closing (dark, bookend) ===== */
+  .closing{background:linear-gradient(180deg, var(--close-1) 0%, var(--close-2) 100%);color:#fff;padding:180px 0;text-align:center;overflow:hidden}
+  .closing .wrap{position:relative;z-index:2;max-width:640px}
+  .closing h2{font-weight:600;letter-spacing:-.02em;line-height:1.14;font-size:clamp(1.9rem,4vw,2.9rem)}
+  .closing p{margin-top:22px;font-size:clamp(1.05rem,1.6vw,1.2rem);line-height:1.5;color:rgba(255,255,255,.62)}
+  .closing .contact{margin-top:30px;font-size:14.5px;color:rgba(255,255,255,.42)}
+  .closing .contact a{color:rgba(255,255,255,.72);border-bottom:1px solid rgba(255,255,255,.24)}
+  .closing .contact a:hover{color:#fff;border-color:rgba(255,255,255,.6)}
+
+  /* footer */
+  footer{padding:36px 0;background:var(--paper-dim)}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+  footer .brand{display:flex;align-items:center;gap:8px}
+  footer .brand img{height:16px;width:auto;opacity:.7}
+  footer .brand span{font-size:12px;color:var(--ink-faint)}
+  footer .legal{font-size:12px;color:var(--ink-faint);display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  footer .legal .italic{font-style:italic;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="bar">
+    <a class="logo" href="#top">
+      <img id="navLogo" src="assets/logo.png" alt="Locals for Locals" />
+      <span>Locals for Locals</span>
+    </a>
+    <nav class="navlinks">
+      <a class="navlink" href="#mission">Our Story</a>
+      <a class="navlink" href="#cities">Cities</a>
+      <a class="navlink" href="#people">Founding Circle</a>
+      <a class="navlink" href="#closing">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div id="top" class="hero" data-theme-section="dark">
+  <div class="grain"></div>
+  <div class="inner">
+    <h1>
+      <span class="line">Don't be a stranger.</span>
+      <span class="line">Meet your Locals.</span>
+    </h1>
+    <p class="sub">Help them experience Local.</p>
+    <div class="status"><span class="dot"></span>Founding Circle now forming — Davao, Manila, Cebu</div>
+  </div>
+  <div class="scroll-cue" aria-hidden="true">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 8L11 15L18 8" stroke="rgba(255,255,255,.6)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<section id="mission" class="mission" data-theme-section="light">
+  <div class="wrap">
+    <div class="eyebrow">Why we exist</div>
+    <h2>Every corner has a story worth knowing.</h2>
+    <p class="lede">The businesses that make a city feel like home rarely get the spotlight the chains do. Locals for Locals is a curated circle built to give them one — a real profile, a real story, and a community of members who show up because they mean to, not because of a coupon.</p>
+  </div>
+</section>
+
+<section id="cities">
+  <div class="city-panel davao align-left" data-theme-section="dark">
+    <div class="bg"><div class="grain"></div></div>
+    <div class="wrap">
+      <div class="frame">
+        <div class="city-tag"><span class="dot"></span>Southern Mindanao</div>
+        <h2>Davao</h2>
+        <p>Where the Founding Circle began — durian stalls, dive bars, and the family-run spots that never needed a billboard.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="city-panel cebu align-right" data-theme-section="dark">
+    <div class="bg"><div class="grain"></div></div>
+    <div class="wrap">
+      <div class="frame">
+        <div class="city-tag"><span class="dot"></span>Central Visayas</div>
+        <h2>Cebu</h2>
+        <p>Island light and a slower pace — the lechon joints, dive shops, and coffee corners locals actually queue for.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="city-panel manila align-left" data-theme-section="dark">
+    <div class="bg"><div class="grain"></div></div>
+    <div class="wrap">
+      <div class="frame">
+        <div class="city-tag"><span class="dot"></span>Metro Manila</div>
+        <h2>Manila</h2>
+        <p>The capital, made personal — the carinderias, ateliers, and corner shops that outlast every trend.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="people" class="people" data-theme-section="light">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The people behind the storefronts</div>
+      <h2>Founders, not vendors.</h2>
+      <p class="lede">Every business in the circle is run by someone locals already know by name. As they join, this is where you'll meet them — their story, their craft, their corner of the city.</p>
+    </div>
+    <div class="orb-row">
+      <div class="orb-card">
+        <div class="orb orb-1"><span>DVO</span></div>
+        <h3>A Davao founder</h3>
+        <p>Profile live once the first circle closes.</p>
+      </div>
+      <div class="orb-card">
+        <div class="orb orb-2"><span>CEB</span></div>
+        <h3>A Cebu founder</h3>
+        <p>Profile live once the first circle closes.</p>
+      </div>
+      <div class="orb-card">
+        <div class="orb orb-3"><span>MNL</span></div>
+        <h3>A Manila founder</h3>
+        <p>Profile live once the first circle closes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="belong" data-theme-section="light">
+  <div class="wrap">
+    <div class="pairs">
+      <div class="pair">
+        <div class="k">Not a directory</div>
+        <h3>A circle you're invited into.</h3>
+        <p>No open signup, no self-serve listing. Every founder is reviewed before they join — so membership means something.</p>
+      </div>
+      <div class="pair">
+        <div class="k">Not a discount app</div>
+        <h3>A community you can feel.</h3>
+        <p>Founders Table sessions, business trainings, and a network of people who've actually built something here.</p>
+      </div>
+      <div class="pair">
+        <div class="k">Not a coupon code</div>
+        <h3>Your own Local Privilege.</h3>
+        <p>Members are welcomed the way a friend would welcome them — an experience each founder designs themselves.</p>
+      </div>
+      <div class="pair">
+        <div class="k">Not one and done</div>
+        <h3>A number that means something.</h3>
+        <p>100 Founding Partner spots per city, assigned in the real order founders join — not a marketing gimmick.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="closing" class="closing" data-theme-section="dark">
+  <div class="grain"></div>
+  <div class="wrap">
+    <h2>Locals for Locals is invite-only, for now.</h2>
+    <p>We're closing the Founding Circle one city at a time. If a spot opens for a business like yours, we'll reach out directly.</p>
+    <div class="contact">Know someone who belongs here? <a href="mailto:hello@localsforlocals.ph">hello@localsforlocals.ph</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand">
+      <img src="assets/logo.png" alt="" />
+      <span>© <span id="year"></span> Locals for Locals</span>
+    </div>
+    <div class="legal">
+      <span class="italic">One founder. One business. One city at a time.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // swap header chrome to light-on-dark while a dark section sits under the nav
+  const header = document.getElementById('siteHeader');
+  const navLogo = document.getElementById('navLogo');
+  const sections = document.querySelectorAll('[data-theme-section]');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const isDark = entry.target.dataset.themeSection === 'dark';
+      header.classList.toggle('on-dark', isDark);
+      navLogo.src = isDark ? 'assets/logo-white.png' : 'assets/logo.png';
+    });
+  }, { rootMargin: `-${52}px 0px -85% 0px`, threshold: 0 });
+  sections.forEach((s) => io.observe(s));
+</script>
+
+</body>
+</html>
