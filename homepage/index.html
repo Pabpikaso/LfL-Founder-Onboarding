@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Locals for Locals — A curated home for Davao, Manila & Cebu's best local businesses</title>
+<meta name="description" content="Locals for Locals is a curated network connecting Davao, Manila, and Cebu's most-loved local businesses with the members who show up for them. Applications for the Founding Circle are open." />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@400..800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#F7F4EE; --card:#FFFFFF; --ink:#141210; --ink2:rgba(20,18,16,.62);
+    --ink3:rgba(20,18,16,.40); --line:rgba(20,18,16,.13); --line2:rgba(20,18,16,.07);
+    --accent:#E6B02C; --accent-deep:#8A6910; --accent-tint:#F6ECC7; --accent-wash:#FCF7E6;
+    --shadow-sm:0 1px 2px rgba(20,18,16,.05); --shadow:0 2px 8px rgba(20,18,16,.06),0 18px 46px rgba(20,18,16,.07);
+    --font-display:'Bricolage Grotesque',system-ui,sans-serif; --font-body:'Hanken Grotesk',system-ui,sans-serif;
+    --max:1080px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 22px}
+  h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-.015em}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent-deep)}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:14px;padding:16px 28px;font-size:15.5px;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .15s ease}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:var(--ink);color:#fff;box-shadow:var(--shadow)}
+  .btn-secondary{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+  .btn-inverse{background:var(--paper);color:var(--ink)}
+  .btn-inverse-outline{background:transparent;color:var(--paper);border:1px solid rgba(247,244,238,.3)}
+  section{padding:76px 0}
+  .section-label{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-deep);margin-bottom:12px}
+  .section-head{max-width:640px}
+  .section-head h2{font-weight:800;font-size:clamp(26px,4vw,38px);line-height:1.15}
+  .section-head p{font-size:16.5px;line-height:1.6;color:var(--ink2);margin-top:14px}
+
+  /* header */
+  header{position:sticky;top:0;z-index:40;background:color-mix(in srgb, var(--paper) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line2)}
+  header .bar{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+  header .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+  header .logo img{height:34px;width:auto}
+  header .logo span{font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:-.01em}
+  nav{display:flex;align-items:center;gap:30px}
+  nav a.navlink{font-size:14px;font-weight:600;color:var(--ink2);text-decoration:none}
+  nav a.navlink:hover{color:var(--ink)}
+  .navcta{display:flex;align-items:center;gap:16px}
+  @media (max-width:860px){
+    nav.navlinks{display:none}
+  }
+
+  /* hero */
+  .hero{padding:64px 0 40px;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-60px;right:-60px;width:280px;height:280px;background:url('assets/logo.png') center/contain no-repeat;opacity:.04;transform:rotate(10deg)}
+  .hero::after{content:'';position:absolute;bottom:-80px;left:-80px;width:260px;height:260px;background:url('assets/logo.png') center/contain no-repeat;opacity:.04;transform:rotate(-12deg)}
+  .hero h1{font-weight:800;font-size:clamp(36px,6vw,58px);line-height:1.05;max-width:16ch;margin:22px auto 0}
+  .hero p.lede{font-size:18px;line-height:1.6;color:var(--ink2);max-width:46ch;margin:20px auto 0}
+  .hero .ctas{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:32px;flex-wrap:wrap}
+  .hero .microcopy{font-size:13px;color:var(--ink3);margin-top:16px}
+
+  /* trust strip */
+  .trust{border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);background:var(--card)}
+  .trust .wrap{display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:center;padding:22px}
+  .trust .item{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--ink2)}
+  .trust .item .ico{color:var(--accent)}
+
+  /* mission */
+  .mission{text-align:center}
+  .mission .section-head{margin:0 auto}
+  .mission .quote{font-family:var(--font-display);font-weight:700;font-size:clamp(22px,3.2vw,30px);line-height:1.35;max-width:22ch;margin:28px auto 0}
+
+  /* perks grid */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:var(--shadow-sm)}
+  .card .num{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--accent-deep)}
+  .card h3{font-size:17px;font-weight:700;margin-top:12px}
+  .card p{font-size:14px;line-height:1.55;color:var(--ink2);margin-top:8px}
+
+  /* how it works */
+  .steps{counter-reset:step;margin-top:44px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  @media (max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.steps{grid-template-columns:1fr}}
+  .step{position:relative;padding-top:8px}
+  .step .n{width:38px;height:38px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:15px}
+  .step h3{font-size:16px;font-weight:700;margin-top:16px}
+  .step p{font-size:13.5px;line-height:1.55;color:var(--ink2);margin-top:6px}
+
+  /* founding circle band */
+  .founding{background:var(--ink);color:var(--paper);border-radius:28px;padding:52px 40px;position:relative;overflow:hidden}
+  .founding::before{content:'';position:absolute;top:-50px;right:-50px;width:220px;height:220px;background:url('assets/logo-white.png') center/contain no-repeat;opacity:.07;transform:rotate(8deg)}
+  .founding .inner{position:relative;display:flex;gap:40px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .founding .copy{max-width:520px}
+  .founding .eyebrow{background:transparent;border-color:rgba(247,244,238,.25);color:var(--accent)}
+  .founding .eyebrow .dot{background:var(--accent)}
+  .founding h2{font-weight:800;font-size:clamp(24px,3.4vw,32px);line-height:1.2;margin-top:18px;color:var(--paper)}
+  .founding p{font-size:15.5px;line-height:1.6;color:rgba(247,244,238,.72);margin-top:14px}
+  .cities{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+  .cities .city{border:1px solid rgba(247,244,238,.25);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:600}
+  .cities .city b{color:var(--accent)}
+  .founding .cta{flex-shrink:0}
+
+  /* placeholder spotlight */
+  .spotlight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+  @media (max-width:860px){.spotlight-grid{grid-template-columns:1fr}}
+  .spotlight-card{border:1.5px dashed var(--line);border-radius:18px;padding:26px;text-align:center;color:var(--ink3);background:var(--card)}
+  .spotlight-card .ph-img{width:52px;height:52px;border-radius:50%;background:var(--accent-tint);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:20px}
+  .spotlight-card h3{font-size:14.5px;font-weight:700;color:var(--ink2)}
+  .spotlight-card p{font-size:12.5px;margin-top:6px;line-height:1.5}
+
+  /* faq */
+  .faq{max-width:760px}
+  details{border-top:1px solid var(--line2);padding:20px 0}
+  details:last-child{border-bottom:1px solid var(--line2)}
+  summary{cursor:pointer;font-family:var(--font-display);font-weight:700;font-size:16px;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:'+';font-size:22px;color:var(--accent-deep);transition:transform .2s ease;flex-shrink:0}
+  details[open] summary::after{transform:rotate(45deg)}
+  details p{font-size:14.5px;line-height:1.65;color:var(--ink2);margin:14px 0 0}
+
+  /* final cta */
+  .final{background:var(--ink);color:var(--paper);text-align:center;padding:80px 0}
+  .final h2{font-weight:800;font-size:clamp(28px,4.5vw,42px);line-height:1.15;color:var(--paper);max-width:18ch;margin:0 auto}
+  .final p{font-size:16.5px;color:rgba(247,244,238,.7);max-width:44ch;margin:18px auto 0}
+  .final .ctas{margin-top:32px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  /* footer */
+  footer{padding:48px 0 60px}
+  footer .top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:30px;border-bottom:1px solid var(--line2);padding-bottom:36px}
+  footer .brand{display:flex;align-items:center;gap:10px}
+  footer .brand img{height:30px;width:auto}
+  footer .brand span{font-family:var(--font-display);font-weight:800;font-size:15px}
+  footer .cols{display:flex;gap:56px;flex-wrap:wrap}
+  footer .col h4{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+  footer .col a{display:block;font-size:14px;color:var(--ink2);text-decoration:none;margin-bottom:9px}
+  footer .col a:hover{color:var(--ink)}
+  footer .bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:24px;font-size:12.5px;color:var(--ink3)}
+  footer .italic{font-style:italic}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top">
+      <img src="assets/logo.png" alt="Locals for Locals" />
+      <span>LOCALS FOR LOCALS</span>
+    </a>
+    <nav class="navlinks">
+      <a class="navlink" href="#mission">What We Do</a>
+      <a class="navlink" href="#how">How It Works</a>
+      <a class="navlink" href="#founding">Founding Circle</a>
+      <a class="navlink" href="#faq">FAQ</a>
+    </nav>
+    <div class="navcta">
+      <a class="btn btn-primary" href="https://apply.localsforlocals.ph" style="padding:11px 20px;font-size:14px;border-radius:11px">Apply Now</a>
+    </div>
+  </div>
+</header>
+
+<div id="top" class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span>Davao · Manila · Cebu — by invitation</span>
+    <h1>A curated home for the local businesses people actually love.</h1>
+    <p class="lede">Locals for Locals connects the region's most-loved independent businesses with the members who show up for them — real profiles, real perks, real community, not another discount app.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="https://apply.localsforlocals.ph">Apply to Join →</a>
+      <a class="btn btn-secondary" href="#how">See how it works</a>
+    </div>
+    <div class="microcopy">Applications are reviewed — not everyone gets accepted.</div>
+  </div>
+</div>
+
+<div class="trust">
+  <div class="wrap">
+    <div class="item"><span class="ico">✦</span>Founding Circle applications open now</div>
+    <div class="item"><span class="ico">✦</span>Curated, not open signup</div>
+    <div class="item"><span class="ico">✦</span>100 Founding spots per city</div>
+  </div>
+</div>
+
+<section id="mission" class="mission">
+  <div class="wrap">
+    <div class="section-head" style="margin:0 auto">
+      <div class="section-label">What we do</div>
+      <h2>Most platforms sell discounts. We're building belonging.</h2>
+      <p>Locals for Locals exists because the businesses that make a city feel like home rarely get the spotlight big platforms give to chains. We give them a real profile, a real story, and a real community of members and fellow founders — not just a coupon code.</p>
+    </div>
+    <div class="quote">"One founder. One business. One city at a time."</div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-label">For businesses</div>
+      <h2>What you get as a partner</h2>
+      <p>Joining isn't buying a listing — it's joining a circle built around your story.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="num">01</div>
+        <h3>A professional business profile</h3>
+        <p>A polished page members actually browse and share — not a buried directory entry.</p>
+      </div>
+      <div class="card">
+        <div class="num">02</div>
+        <h3>Founder story, on film</h3>
+        <p>A real video shoot that turns your story into something worth watching.</p>
+      </div>
+      <div class="card">
+        <div class="num">03</div>
+        <h3>A network of fellow founders</h3>
+        <p>Trainings and sessions with operators who've actually built something in this market.</p>
+      </div>
+      <div class="card">
+        <div class="num">04</div>
+        <h3>A seat at the Founders Table</h3>
+        <p>Rooms and relationships you can't buy into once the Founding Circle is full.</p>
+      </div>
+      <div class="card">
+        <div class="num">05</div>
+        <h3>Visibility to real members</h3>
+        <p>Seen by people who are specifically looking for a business like yours.</p>
+      </div>
+      <div class="card">
+        <div class="num">06</div>
+        <h3>Your own Local Privilege</h3>
+        <p>Offer members a memorable experience you design yourself — not a forced blanket discount.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-label">How it works</div>
+      <h2>From application to opening day</h2>
+      <p>A short, human process — no long forms disguised as a "growth platform."</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h3>Apply</h3>
+        <p>Tell us your story first — the tedious business details come after.</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h3>Get reviewed</h3>
+        <p>Our team looks at every application. This is a curated circle, not an open signup.</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h3>Build your profile</h3>
+        <p>Photos, your story, and the Local Privilege you want to offer members.</p>
+      </div>
+      <div class="step">
+        <div class="n">4</div>
+        <h3>Join the circle</h3>
+        <p>Get your Founding Partner certificate and meet the other founders building this with you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="founding">
+  <div class="wrap">
+    <div class="founding">
+      <div class="inner">
+        <div class="copy">
+          <span class="eyebrow"><span class="dot"></span>Limited</span>
+          <h2>The Founding Circle is capped on purpose.</h2>
+          <p>Just 100 Founding Partner spots in each city — a real, sequential number tied to when you actually join, not a marketing gimmick. Once a city fills, the rest go to a waitlist.</p>
+          <div class="cities">
+            <div class="city">Davao · <b>Open</b></div>
+            <div class="city">Manila · <b>Open</b></div>
+            <div class="city">Cebu · <b>Open</b></div>
+          </div>
+        </div>
+        <div class="cta">
+          <a class="btn btn-inverse" href="https://apply.localsforlocals.ph">Apply to Join →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="spotlight">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-label">Founder spotlight</div>
+      <h2>Meet the founders building this with us</h2>
+      <p>Coming soon — this is where our first Founding Partners will be featured as they join.</p>
+    </div>
+    <div class="spotlight-grid">
+      <div class="spotlight-card">
+        <div class="ph-img">👤</div>
+        <h3>Your business here</h3>
+        <p>Founding Partner spotlights go live as members join the circle.</p>
+      </div>
+      <div class="spotlight-card">
+        <div class="ph-img">👤</div>
+        <h3>Your business here</h3>
+        <p>Founding Partner spotlights go live as members join the circle.</p>
+      </div>
+      <div class="spotlight-card">
+        <div class="ph-img">👤</div>
+        <h3>Your business here</h3>
+        <p>Founding Partner spotlights go live as members join the circle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-label">FAQ</div>
+      <h2>Good to know</h2>
+    </div>
+    <div class="faq" style="margin-top:32px">
+      <details open>
+        <summary>What exactly is Locals for Locals?</summary>
+        <p>A curated network connecting independent local businesses with members who want to discover and support them — through real profiles, founder stories, and member perks, not blanket discount codes.</p>
+      </details>
+      <details>
+        <summary>Who can apply to be a Founding Partner?</summary>
+        <p>Independent businesses in Davao, Manila, or Cebu that locals already love recommending. Every application is reviewed — this isn't an open signup.</p>
+      </details>
+      <details>
+        <summary>What does Founding Circle membership cost?</summary>
+        <p>₱7,000/year, which includes your business profile, founder story videos, Founders Table access, and business trainings. It's framed as joining a circle, not buying a listing.</p>
+      </details>
+      <details>
+        <summary>What happens after I apply?</summary>
+        <p>You'll build your profile — founder story, business details, photos, and your own Local Privilege — then our team reviews it before you're confirmed as a Founding Partner.</p>
+      </details>
+      <details>
+        <summary>Is there a limit on how many businesses can join?</summary>
+        <p>Yes — 100 Founding Partner spots per city. Once a city is full, new applicants join a waitlist and are contacted the moment a spot opens.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<div class="final">
+  <div class="wrap">
+    <h2>Ready to be one of the first?</h2>
+    <p>Founding Circle applications are open now in Davao, Manila, and Cebu — and capped for a reason.</p>
+    <div class="ctas">
+      <a class="btn btn-inverse" href="https://apply.localsforlocals.ph">Apply to Join →</a>
+      <a class="btn btn-inverse-outline" href="#faq">Read the FAQ</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <img src="assets/logo.png" alt="Locals for Locals" />
+        <span>LOCALS FOR LOCALS</span>
+      </div>
+      <div class="cols">
+        <div class="col">
+          <h4>Explore</h4>
+          <a href="#mission">What We Do</a>
+          <a href="#how">How It Works</a>
+          <a href="#founding">Founding Circle</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="col">
+          <h4>Businesses</h4>
+          <a href="https://apply.localsforlocals.ph">Apply Now</a>
+        </div>
+        <div class="col">
+          <h4>Contact</h4>
+          <a href="mailto:hello@localsforlocals.ph">hello@localsforlocals.ph</a>
+        </div>
+      </div>
+    </div>
+    <div class="bottom">
+      <div>© <span id="year"></span> Locals for Locals. All rights reserved.</div>
+      <div class="italic">One founder. One business. One city at a time.</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
