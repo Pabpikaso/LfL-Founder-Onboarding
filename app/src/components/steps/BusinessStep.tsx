@@ -10,10 +10,10 @@ const socialFields: Array<{ key: 'instagram' | 'facebook' | 'website' | 'tiktok'
 ];
 
 export function BusinessStep({ api }: { api: OnboardingApi }) {
-  const { data, errors, updateField, toggleHighlight, setPriceRange, dropPin, next, back } = api;
+  const { data, errors, updateField, toggleHighlight, setPriceRange, next, back } = api;
   const category = data.category || '';
   const hasCat = !!CATCONFIG[category];
-  const nextLabel = hasCat ? `Next: ${category} details →` : 'Next: your local privilege →';
+  const nextLabel = hasCat ? `Next: ${category} details →` : 'Next: review your story →';
   const highlights = data.highlights || [];
 
   return (
@@ -62,7 +62,7 @@ export function BusinessStep({ api }: { api: OnboardingApi }) {
         <div>
           <label style={label}>Price range</label>
           <div style={{ display: 'flex', gap: 8 }}>
-            {PRICE_LEVELS.map(([sym, lvl]) => {
+            {PRICE_LEVELS.map(([sym, lvl, amount]) => {
               const on = data.priceRange === sym;
               return (
                 <div
@@ -85,6 +85,7 @@ export function BusinessStep({ api }: { api: OnboardingApi }) {
                 >
                   <span style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 800, letterSpacing: '.02em' }}>{sym}</span>
                   <span style={{ fontSize: 11, fontWeight: 600 }}>{lvl}</span>
+                  <span style={{ fontSize: 10, fontWeight: 500, opacity: 0.75 }}>{amount}</span>
                 </div>
               );
             })}
@@ -103,77 +104,30 @@ export function BusinessStep({ api }: { api: OnboardingApi }) {
           <div style={helperText}>2–3 sentences is perfect.</div>
         </div>
 
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: 140 }}>
-            <label style={label}>City</label>
-            <select
-              value={data.city || ''}
-              onChange={(e) => updateField('city', e.target.value)}
-              style={{
-                ...input,
-                appearance: 'none',
-                backgroundImage:
-                  "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23999%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>')",
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 14px center',
-              }}
-            >
-              <option value="" disabled>
-                Choose one…
-              </option>
-              {CITIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-            {errors.city && <div style={errorText}>{errors.city}</div>}
-          </div>
-          <div style={{ flex: 2, minWidth: 180 }}>
-            <label style={label}>Address</label>
-            <input
-              value={data.address || ''}
-              onChange={(e) => updateField('address', e.target.value)}
-              placeholder="Street, barangay, city"
-              style={input}
-            />
-          </div>
-        </div>
-
         <div>
-          <label style={label}>Google Maps pin</label>
-          <div
-            onClick={dropPin}
+          <label style={label}>City</label>
+          <select
+            value={data.city || ''}
+            onChange={(e) => updateField('city', e.target.value)}
             style={{
-              position: 'relative',
-              height: 120,
-              borderRadius: 14,
-              overflow: 'hidden',
-              border: '1px solid var(--line)',
-              backgroundImage: 'repeating-linear-gradient(45deg,#EFE9DF 0 12px,#E9E2D5 12px 24px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
+              ...input,
+              appearance: 'none',
+              backgroundImage:
+                "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23999%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>')",
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'right 14px center',
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '8px 14px',
-                borderRadius: 999,
-                background: data.maps === 'pinned' ? 'var(--accent-tint)' : 'rgba(255,255,255,.85)',
-                border: '1px solid var(--line)',
-              }}
-            >
-              <span style={{ fontSize: 22 }}>📍</span>
-              <span style={{ fontFamily: 'ui-monospace,Menlo,monospace', fontSize: 11.5, fontWeight: 600, color: 'var(--ink2)' }}>
-                {data.maps === 'pinned' ? 'PINNED — TAP TO ADJUST' : 'TAP TO DROP YOUR PIN'}
-              </span>
-            </div>
-          </div>
+            <option value="" disabled>
+              Choose one…
+            </option>
+            {CITIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+          {errors.city && <div style={errorText}>{errors.city}</div>}
         </div>
 
         <div style={{ borderTop: '1px solid var(--line2)', paddingTop: 20 }}>

@@ -189,7 +189,7 @@ export function CategoryDetailStep({ api }: { api: OnboardingApi }) {
           ←
         </button>
         <button onClick={next} style={primaryButton}>
-          Next: your local privilege →
+          Next: review your story →
         </button>
       </div>
     </div>

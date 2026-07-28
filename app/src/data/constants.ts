@@ -14,19 +14,12 @@ export const FOUNDER_QUESTIONS: FounderQuestion[] = [
     required: true,
   },
   {
-    key: 'founderPhoto',
-    question: 'Add a photo of yourself',
-    type: 'photo',
-    help: "A natural photo, not a headshot — we'll polish it in your video shoot.",
-  },
-  {
     key: 'why',
     question: 'Why did you start this business?',
     type: 'area',
     max: 200,
     help: 'One or two honest sentences.',
   },
-  { key: 'proud', question: 'What are you most proud of?', type: 'area', max: 200 },
   {
     key: 'remember',
     question: 'If someone only visits once, what do you hope they remember?',
@@ -35,7 +28,7 @@ export const FOUNDER_QUESTIONS: FounderQuestion[] = [
   },
   {
     key: 'signature',
-    question: "What's the one thing you're known for?",
+    question: "What's something your business is known for?",
     type: 'text',
     placeholder: 'A dish, a service, a product…',
   },
@@ -57,8 +50,6 @@ export const FOUNDER_QUESTIONS: FounderQuestion[] = [
 export const STEP_LABELS = [
   'Meet the Founder',
   'Tell Us About Your Business',
-  'Your Local Privilege',
-  'Business Profile Assets',
   'Review Your Story',
   'Founding Membership',
 ];
@@ -66,13 +57,11 @@ export const STEP_LABELS = [
 export const STEP_SHORT = [
   'Founder',
   'Business',
-  'Privilege',
-  'Photos',
   'Review',
   'Payment',
 ];
 
-export const CATEGORIES = ['Cafe', 'Restaurant', 'Wellness', 'Retail', 'Studio', 'Other'];
+export const CATEGORIES = ['Cafe', 'Restaurant', 'Wellness', 'Studio', 'Other'];
 
 export const CITIES = ['Davao', 'Manila', 'Cebu'];
 
@@ -94,38 +83,11 @@ export const HIGHLIGHTS: Array<[string, string]> = [
   ['🪑', 'High Chairs Available'],
 ];
 
-export const PRIVILEGES: Array<[string, string]> = [
-  ['Complimentary dessert', 'A small treat on the house'],
-  ['Signature drink upgrade', 'Bump their order up, our pick'],
-  ['Birthday treat', 'Free cake on their birthday'],
-  ['Discount on products or services', 'A percentage off'],
-  ['Other', 'Something uniquely yours'],
-];
-
-export const PRIVCONFIG: Record<string, Array<[string, string]>> = {
-  Cafe: [
-    ['Free signature iced latte', 'With any main entrée or pastry — first visit'],
-    ['Free upsize + extra shot', 'Upsize to large with an extra shot — first 3 orders'],
-  ],
-  Restaurant: [
-    ['Free siopao or basket of fries', 'With any premium main course'],
-    ['Free dessert', 'With a ₱500 minimum table spend'],
-  ],
-  Wellness: [
-    ['Free 15-min hot stone or foot scrub', 'With any 1-hour full body massage'],
-    ['Free hydrating facial mask add-on', 'During a body scrub — first booking'],
-  ],
-  Retail: [
-    ['Free 3kg laundry', 'Valid on 8kg+ orders — first drop-off'],
-    ['Free interior fogging & vacuum', 'With an Executive exterior wash & wax'],
-  ],
-};
-
-export const PRICE_LEVELS: Array<[string, string]> = [
-  ['₱', 'Budget'],
-  ['₱₱', 'Moderate'],
-  ['₱₱₱', 'Premium'],
-  ['₱₱₱₱', 'Fine'],
+export const PRICE_LEVELS: Array<[string, string, string]> = [
+  ['₱', 'Budget', 'Under ₱300'],
+  ['₱₱', 'Moderate', '₱300–700'],
+  ['₱₱₱', 'Premium', '₱700–1,500'],
+  ['₱₱₱₱', 'Fine', '₱1,500+'],
 ];
 
 export const CATCONFIG: Record<string, CategoryConfig> = {
@@ -180,16 +142,6 @@ export const CATCONFIG: Record<string, CategoryConfig> = {
       { key: 'goodfor', type: 'chips', label: 'Good for', options: ['Beginners', 'Weight Loss', 'Strength', 'Athletes', 'Seniors', 'Group Classes'] },
     ],
   },
-  Retail: {
-    title: 'Retail Information',
-    intro: 'Show members what they can discover in-store.',
-    sections: [
-      { key: 'products', type: 'chips', label: 'What do you sell?', options: ['Apparel', 'Accessories', 'Home Goods', 'Beauty', 'Local Crafts', 'Food & Drink', 'Books', 'Plants', 'Gifts', 'Vintage'] },
-      { key: 'services', type: 'chips', label: 'Services', options: ['Custom Orders', 'Gift Wrapping', 'Delivery', 'Repairs', 'Personal Shopping', 'Loyalty Program'] },
-      { key: 'catAmenities', type: 'chips', label: 'Amenities', options: ['Parking', 'Airconditioned', 'Fitting Rooms', 'Free Wi-Fi', 'Wheelchair Accessible', 'Card Payments'] },
-      { key: 'goodfor', type: 'chips', label: 'Good for', options: ['Gifts', 'Souvenirs', 'Everyday', 'Special Occasions', 'Collectors'] },
-    ],
-  },
 };
 
 export const PERKS: Array<{ no: string; title: string; desc: string }> = [
@@ -224,7 +176,6 @@ export const SAMPLE: OnboardingData = {
   description:
     "A slow-living cafe serving single-origin Mindanao beans, roasted in-house. Come for the barako, stay for the quiet.",
   city: 'Davao City',
-  address: 'Purok 3, Juna Subdivision, Matina, Davao City',
   priceRange: '₱₱',
   instagram: '@kalinawcoffee',
   facebook: '',
@@ -234,10 +185,6 @@ export const SAMPLE: OnboardingData = {
   email: 'hello@kalinawcoffee.ph',
   hours: 'Tue–Sun · 7:00 AM – 8:00 PM',
   highlights: ['Specialty Coffee', 'Great for Remote Work', 'Free Wi-Fi', 'Alfresco'],
-  privilege: 'Signature drink upgrade',
-  privSecondary: '',
-  minSpend: '300',
-  terms: 'Dine-in only. One upgrade per visit.',
 };
 
 export const emptyDish = (): Dish => ({ name: '', desc: '', price: '', photo: '' });

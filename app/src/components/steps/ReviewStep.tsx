@@ -1,4 +1,4 @@
-import { CATCONFIG, FOUNDING_CAP_PER_CITY, SAMPLE } from '../../data/constants';
+import { CATCONFIG, FOUNDING_CAP_PER_CITY } from '../../data/constants';
 import type { OnboardingApi } from '../../state/useOnboarding';
 import { pv } from '../../utils/preview';
 import { editPill, primaryButtonFull, textLinkButton } from '../../styles/shared';
@@ -33,14 +33,10 @@ export function ReviewStep({ api }: { api: OnboardingApi }) {
     description: pv(data, 'description'),
     city: pv(data, 'city'),
     priceRange: pv(data, 'priceRange'),
-    address: pv(data, 'address'),
     instagram: pv(data, 'instagram'),
     email: pv(data, 'email'),
     hours: pv(data, 'hours'),
     highlights: ((pv(data, 'highlights') as string[]) || []).join(' · '),
-    privilege: data.privilege === 'Other' ? data.privOther || SAMPLE.privilege : pv(data, 'privilege'),
-    minSpend: pv(data, 'minSpend'),
-    terms: data.terms || SAMPLE.terms,
   };
 
   return (
@@ -54,23 +50,6 @@ export function ReviewStep({ api }: { api: OnboardingApi }) {
 
       {/* PROFILE PREVIEW */}
       <div style={{ marginTop: 22, background: 'var(--card)', border: '1px solid var(--line)', borderRadius: 20, overflow: 'hidden', boxShadow: 'var(--shadow)' }}>
-        <div style={{ position: 'relative', aspectRatio: '16/9' }}>
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundImage: data.cover ? `url(${data.cover})` : 'repeating-linear-gradient(45deg,#E6DFD2 0 16px,#DED6C6 16px 32px)',
-            }}
-          />
-          <button
-            onClick={() => go('s4')}
-            style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(20,18,16,.78)', color: '#fff', border: 'none', fontSize: 12, fontWeight: 600, padding: '7px 13px', borderRadius: 999, cursor: 'pointer', backdropFilter: 'blur(4px)' }}
-          >
-            Edit photos
-          </button>
-        </div>
         <div style={{ padding: 20 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
             <div>
@@ -181,36 +160,12 @@ export function ReviewStep({ api }: { api: OnboardingApi }) {
           </div>
         </div>
 
-        {/* privilege */}
-        <div style={{ padding: 20, borderTop: '1px solid var(--line2)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase', color: 'var(--ink)' }}>
-              Your Local Privilege
-            </div>
-            <button onClick={() => go('s3')} style={editPill}>
-              Edit
-            </button>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 13, border: '1px dashed var(--accent)', borderRadius: 14, padding: 15, background: 'var(--accent-wash)' }}>
-            <span style={{ fontSize: 26 }}>🎁</span>
-            <div>
-              <div style={{ fontSize: 15.5, fontWeight: 700 }}>{rv.privilege}</div>
-              <div style={{ fontSize: 12.5, color: 'var(--ink2)', marginTop: 2 }}>
-                Min. spend ₱{rv.minSpend} · {rv.terms}
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* details */}
         <div style={{ padding: 20, borderTop: '1px solid var(--line2)', display: 'flex', flexDirection: 'column', gap: 10 }}>
           <div style={{ display: 'flex', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
             <span style={{ width: 20 }}>🕐</span>
             {rv.hours}
-          </div>
-          <div style={{ display: 'flex', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
-            <span style={{ width: 20 }}>📍</span>
-            {rv.address}
           </div>
           <div style={{ display: 'flex', gap: 10, fontSize: 13.5, color: 'var(--ink)' }}>
             <span style={{ width: 20 }}>📷</span>
@@ -235,7 +190,7 @@ export function ReviewStep({ api }: { api: OnboardingApi }) {
         Continue to Membership →
       </button>
       <button onClick={back} style={textLinkButton}>
-        Back to photos
+        Back
       </button>
     </div>
   );

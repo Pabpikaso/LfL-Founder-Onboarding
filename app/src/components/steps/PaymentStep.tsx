@@ -22,7 +22,8 @@ export function PaymentStep({ api }: { api: OnboardingApi }) {
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700 }}>Founding Circle Membership</div>
           <div style={{ textAlign: 'right' }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 800 }}>₱7,000</span>
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 600, color: 'rgba(247,244,238,.5)', textDecoration: 'line-through', marginRight: 8 }}>₱12,000</span>
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 800 }}>₱8,888</span>
             <span style={{ fontSize: 13, color: 'rgba(247,244,238,.6)' }}> / year</span>
           </div>
         </div>

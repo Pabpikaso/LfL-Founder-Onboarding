@@ -29,13 +29,5 @@ export function validateScreen(
     }
   }
 
-  if (screen === 's3') {
-    if (!str(data.privilege).trim()) errors.privilege = 'Choose one experience to offer.';
-  }
-
-  if (screen === 's4') {
-    if (!data.cover) errors.cover = 'A cover photo is required.';
-  }
-
   return errors;
 }

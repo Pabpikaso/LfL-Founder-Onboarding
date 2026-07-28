@@ -3,8 +3,6 @@ export type Screen =
   | 'founder'
   | 's2'
   | 'catdetail'
-  | 's3'
-  | 's4'
   | 'review'
   | 'pay'
   | 'welcome';
@@ -31,8 +29,6 @@ export interface OnboardingData {
   priceRange?: string;
   description?: string;
   city?: string;
-  address?: string;
-  maps?: string;
   facebook?: string;
   instagram?: string;
   website?: string;
@@ -41,16 +37,6 @@ export interface OnboardingData {
   email?: string;
   hours?: string;
   highlights?: string[];
-
-  privilege?: string;
-  privOther?: string;
-  minSpend?: string;
-  terms?: string;
-
-  cover?: string;
-  logo?: string;
-  menu?: string;
-  gallery?: string[];
 
   dishes?: Dish[];
   paymentRef?: string;
