@@ -24,16 +24,6 @@
     --close-1:#0B0B0C;
     --close-2:#1C1410;
 
-    /* tokens borrowed directly from the real Business Portal app, used only
-       inside product-preview insets so they read as the actual product */
-    --app-ink:#141414;
-    --app-mid:#57544f;
-    --app-muted:#8a8782;
-    --app-faint:#a8a6a0;
-    --app-paper:#faf9f6;
-    --app-line:#ece9e3;
-    --app-white:#ffffff;
-
     --sf: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
     --max:1180px;
     --nav-h:56px;
@@ -131,40 +121,17 @@
   .invest-line .amt-unit{font-size:14px;color:var(--ink-soft)}
   .invest-line .framing{margin-top:10px;font-size:13.5px;color:var(--ink-faint)}
 
-  /* ===== pricing card ===== */
-  .pricing{padding:120px 0;background:var(--paper-dim)}
-  .price-card{max-width:640px;margin:0 auto;background:#fff;border:1px solid var(--hairline);border-radius:24px;padding:48px 44px;box-shadow:0 2px 8px rgba(20,18,16,.05),0 24px 60px rgba(20,18,16,.08);text-align:center}
-  .price-card .pitch-line{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-bottom:16px}
-  .price-card .cap-line{font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.02em}
-  .price-card .compare{margin-top:20px;display:flex;align-items:baseline;justify-content:center;gap:14px;flex-wrap:wrap}
-  .price-card .compare .was{font-size:20px;color:var(--ink-faint);text-decoration:line-through}
-  .price-card .compare .now{font-size:48px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
-  .price-card .compare .unit{font-size:14px;color:var(--ink-soft)}
-  .price-card .save-line{margin-top:10px;font-size:14px;font-weight:600;color:#3a7a4e}
-  .price-card .cta{margin-top:32px}
-  .price-card .cta .btn{width:100%}
-  .price-card .fine{margin-top:14px;font-size:12px;color:var(--ink-faint)}
-
-  /* ===== your perk your rules ===== */
-  .perk{padding:120px 0;background:var(--paper)}
-  .perk-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-top:48px}
-  @media (max-width:900px){.perk-grid{grid-template-columns:1fr;gap:36px}}
-  .perk-list{display:flex;flex-direction:column;gap:20px}
-  .perk-list .row{font-size:15px;line-height:1.55;color:var(--ink-soft)}
-  .perk-list .row b{display:block;color:var(--ink);font-weight:700;font-size:15.5px;margin-bottom:4px}
-
-  /* product preview shell — mimics the real app's own visual language */
-  .app-card{background:var(--app-white);border:1px solid var(--app-line);border-radius:20px;box-shadow:0 1px 2px rgba(20,18,16,.04),0 20px 48px rgba(20,18,16,.09);overflow:hidden}
-  .app-card .app-card-head{padding:18px 22px 14px;border-bottom:1px solid var(--app-line)}
-  .app-card .app-card-head .app-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--app-muted)}
-  .app-card .app-card-head h4{margin-top:6px;font-size:17px;font-weight:800;color:var(--app-ink);letter-spacing:-.01em}
-  .app-card-body{padding:20px 22px 22px}
-
-  /* privilege card mockup */
-  .priv-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;background:var(--app-paper);border:1px solid var(--app-line);border-radius:14px;padding:16px 18px}
-  .priv-row .priv-title{font-size:14.5px;font-weight:700;color:var(--app-ink)}
-  .priv-row .priv-meta{margin-top:5px;font-size:12px;color:var(--app-muted);line-height:1.5}
-  .priv-row .priv-badge{flex-shrink:0;font-size:10.5px;font-weight:700;color:var(--gold);background:var(--gold-soft);padding:4px 10px;border-radius:999px;white-space:nowrap}
+  /* ===== level up / founders pass ===== */
+  .levelup{padding:120px 0;background:var(--paper)}
+  .levelup-card{max-width:640px;margin:40px auto 0;background:#fff;border:1px solid var(--hairline);border-radius:24px;padding:48px 44px;box-shadow:0 2px 8px rgba(20,18,16,.05),0 24px 60px rgba(20,18,16,.08);text-align:center}
+  .levelup-price{display:flex;align-items:baseline;justify-content:center;gap:8px}
+  .levelup-price .now{font-size:42px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+  .levelup-price .unit{font-size:14px;color:var(--ink-soft)}
+  .levelup-permonth{margin-top:6px;font-size:13.5px;color:var(--ink-faint)}
+  .levelup-includes{margin-top:28px;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--gold);text-transform:uppercase}
+  .levelup-card .get-list{margin-top:18px;text-align:left}
+  .levelup-card .cta{margin-top:32px}
+  .levelup-card .cta .btn{width:100%}
 
   /* ===== business portal tour ===== */
   .tour{padding:0 0 100px;background:var(--paper)}
@@ -173,6 +140,35 @@
   .feature:last-of-type{border-bottom:1px solid var(--hairline)}
   .feature.rev .copy{order:2}
   .feature.rev .visual{order:1}
+
+  /* ===== 5-visit habit path ===== */
+  .journey-path{padding:0 0 70px;border-bottom:1px solid var(--hairline)}
+  .journey-path-head{font-size:12.5px;font-weight:600;color:var(--gold);letter-spacing:.03em}
+  .journey-list{margin-top:28px;display:flex;flex-direction:column;gap:26px}
+  .journey-item{display:flex;gap:20px;align-items:flex-start}
+  .journey-item .n{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  .journey-item h4{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.005em}
+  .journey-item h4 .sub{font-weight:500;color:var(--ink-faint)}
+  .journey-item p{margin-top:6px;font-size:14.5px;line-height:1.6;color:var(--ink-soft);max-width:62ch}
+  .journey-item p .why{color:var(--ink);font-weight:700}
+
+  .math-details{margin-top:36px;background:var(--paper-dim);border:1px solid var(--hairline);border-radius:16px;padding:22px 26px}
+  .math-details summary{cursor:pointer;font-weight:700;font-size:16px;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--ink)}
+  .math-details summary::-webkit-details-marker{display:none}
+  .math-details summary::after{content:'+';font-size:22px;color:var(--gold);transition:transform .2s ease;flex-shrink:0}
+  .math-details[open] summary::after{transform:rotate(45deg)}
+  .math-body{margin-top:20px;padding-top:20px;border-top:1px solid var(--hairline)}
+  .math-body p{font-size:14.5px;line-height:1.6;color:var(--ink-soft)}
+  .math-body .note{margin-top:6px;font-size:13px;color:var(--ink-faint);font-style:italic}
+  .math-body h5{margin-top:26px;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.03em;text-transform:uppercase}
+  .math-row{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-top:14px;padding-bottom:14px;border-bottom:1px solid var(--hairline);font-size:14.5px;color:var(--ink)}
+  .math-row .dim{display:block;margin-top:3px;font-size:13px;font-weight:400;color:var(--ink-faint)}
+  .math-row > span:last-child{flex-shrink:0;font-weight:700;white-space:nowrap}
+  .math-callout{margin-top:16px;font-size:14.5px;font-weight:700;color:var(--ink)}
+  .math-bottom{margin-top:24px;padding-top:20px;border-top:1px solid var(--hairline)}
+  .math-bottom-row{display:flex;justify-content:space-between;font-size:14.5px;color:var(--ink-soft);padding:6px 0}
+  .math-bottom-row.net{margin-top:6px;padding-top:14px;border-top:1px solid var(--hairline);font-size:17px;font-weight:800;color:var(--ink)}
+  .math-roi{margin-top:22px;font-size:15px;font-weight:600;color:var(--ink);background:var(--gold-soft);padding:16px 18px;border-radius:12px}
   @media (max-width:900px){
     .feature{grid-template-columns:1fr;gap:36px;padding:50px 0}
     .feature.rev .copy{order:1}
@@ -188,7 +184,6 @@
   .phone-frame::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:112px;height:24px;background:#0b0b0c;border-radius:0 0 16px 16px;z-index:3}
   .phone-frame .screen{position:relative;border-radius:36px;overflow:hidden;background:#fff}
   .phone-frame .screen img{display:block;width:100%;height:auto}
-  .phone-caption{margin-top:16px;text-align:center;font-size:12px;color:var(--ink-faint)}
 
   /* ===== tangible / "your business, live" section ===== */
   .tangible{padding:110px 0 120px;background:var(--paper)}
@@ -204,21 +199,6 @@
   .support-card{background:var(--paper);padding:36px 28px}
   .support-card h4{font-size:15.5px;font-weight:700;color:var(--ink)}
   .support-card p{margin-top:9px;font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
-
-  /* ===== comparison ===== */
-  .compare-sec{padding:120px 0;background:var(--paper-dim)}
-  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hairline);border:1px solid var(--hairline);border-radius:20px;overflow:hidden;margin-top:48px}
-  @media (max-width:760px){.compare-grid{grid-template-columns:1fr}}
-  .compare-col{background:#fff;padding:38px 34px}
-  .compare-col.good{background:var(--ink)}
-  .compare-col h4{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
-  .compare-col.good h4{color:#fff}
-  .compare-col ul{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:16px}
-  .compare-col li{font-size:14.5px;line-height:1.55;padding-left:24px;position:relative;color:var(--ink-soft)}
-  .compare-col.good li{color:rgba(255,255,255,.78)}
-  .compare-col li::before{position:absolute;left:0;top:1px;font-size:12px;font-weight:700}
-  .compare-col:not(.good) li::before{content:'✕';color:#b23a2e}
-  .compare-col.good li::before{content:'✓';color:#E6B02C}
 
   /* ===== why early ===== */
   .why-early{padding:120px 0;background:var(--paper)}
@@ -267,9 +247,9 @@
   <div class="grain"></div>
   <div class="inner">
     <span class="eyebrow"><span class="dot"></span>Founding Circle — Southeast Asia, 100 spots per city</span>
-    <h1>Join the Founding Circle.</h1>
-    <p class="sub">We connect great local businesses with people looking for their next favorite place — and we do it with real relationships, not algorithms.</p>
-    <p class="supporting">Not everyone gets accepted. We're building a curated circle of businesses people genuinely love recommending.</p>
+    <h1>Real relationships. Zero algorithms.</h1>
+    <p class="sub">We connect great local businesses with conscious consumers looking for their next favorite place. We do it through authentic human connection, not cold ad metrics.</p>
+    <p class="supporting">We're not building a mass directory. We're building a curated circle of businesses people genuinely love recommending.</p>
     <div class="ctas">
       <a class="btn btn-gold" href="https://apply.localsforlocals.ph">Apply to Become a Founding Partner</a>
       <a class="btn btn-ghost-dark" href="#get">See what's included ↓</a>
@@ -295,23 +275,23 @@
     <div class="steps">
       <div class="step">
         <div class="n">1</div>
-        <h4>Apply</h4>
-        <p>Tell us about your business. We look for founders who care about their craft and their customers — not just anyone who wants a listing.</p>
+        <h4>Discover</h4>
+        <p>Before we ever reach out, we visit anonymously to experience your space firsthand. We only pursue businesses we would confidently recommend to our closest friends.</p>
       </div>
       <div class="step">
         <div class="n">2</div>
-        <h4>Meet Your Growth Manager</h4>
-        <p>A real person visits your business, experiences it firsthand, and listens to your story before anything else. No scripts, no cold forms.</p>
+        <h4>Connect &amp; Discover Your Story</h4>
+        <p>We sit down for a real conversation to listen, not to pitch. We learn what inspired you, what you are most proud of, and what success looks like for your business.</p>
       </div>
       <div class="step">
         <div class="n">3</div>
-        <h4>Build Your Profile &amp; Your Local Privilege</h4>
-        <p>Your founder story, photos, and a member perk you design yourself — built around what makes sense for your margins, not a forced discount.</p>
+        <h4>Craft Your Profile &amp; Local Perk</h4>
+        <p>We write your founder story, capture your space, and help you design a custom perk. It is built around memorable experiences that protect your margins, never forced discounts.</p>
       </div>
       <div class="step">
         <div class="n">4</div>
-        <h4>Go Live in the Founding Circle</h4>
-        <p>Your profile builds now through business trainings and Founders Table sessions — then goes live to every Locals for Locals member the moment the app opens this October.</p>
+        <h4>Join the Founding Circle</h4>
+        <p>Access business trainings and Founders Table sessions right away. Your business goes live to every Locals for Locals member the moment the app opens this October.</p>
       </div>
     </div>
   </div>
@@ -324,14 +304,11 @@
       <h2>Membership built around trust, not just traffic.</h2>
     </div>
     <div class="get-list">
-      <div class="row"><span class="chk">✓</span><span><b>Professional Business Profile</b></span></div>
-      <div class="row"><span class="chk">✓</span><span><b>Founder Story</b> — three professional videos</span></div>
-      <div class="row"><span class="chk">✓</span><span>A <b>Local Privilege</b> you design and control</span></div>
-      <div class="row"><span class="chk">✓</span><span>Access to the <b>Founders Table</b></span></div>
-      <div class="row"><span class="chk">✓</span><span><b>Business Trainings</b> &amp; coaching</span></div>
-      <div class="row"><span class="chk">✓</span><span>Access to the <b>Local Business Network</b></span></div>
-      <div class="row"><span class="chk">✓</span><span>Visibility to every <b>Locals for Locals member</b></span></div>
-      <div class="row"><span class="chk">✓</span><span>Your own <b>Business Portal app</b> — Local Gift Pass, Local Journey, and real analytics</span></div>
+      <div class="row"><span class="chk">✓</span><span><b>Professional Business Profile</b> — showcase your space, story, and hours on the app</span></div>
+      <div class="row"><span class="chk">✓</span><span><b>Full Platform Visibility</b> — get discovered by every conscious consumer in the city</span></div>
+      <div class="row"><span class="chk">✓</span><span><b>Local Journey (Digital Loyalty Card)</b> — turn first-time visitors into regular guests</span></div>
+      <div class="row"><span class="chk">✓</span><span><b>Local Gift Pass</b> — accept regional gift cards and drive new revenue to your door</span></div>
+      <div class="row"><span class="chk">✓</span><span><b>Business Portal App</b> — manage your profile, Local Gift Pass, and Local Journey in one place</span></div>
     </div>
     <div class="invest-line">
       <div class="framing">One membership. No hidden percentage per sale, no bidding for placement.</div>
@@ -363,40 +340,6 @@
   </div>
 </section>
 
-<section class="perk" data-theme-section="light">
-  <div class="wrap">
-    <div class="shead center">
-      <div class="eyebrow-light">Your perk, your rules</div>
-      <h2>You decide what you give — we help you protect your margins.</h2>
-      <p class="lede">Every Founding Partner designs their own Local Privilege — a perk members redeem when they visit. You choose what it is, and you set the minimum spend that protects your bottom line.</p>
-    </div>
-    <div class="perk-grid">
-      <div class="perk-list">
-        <div class="row"><b>You control the offer.</b>Complimentary item, an upgrade, a discount — your call.</div>
-        <div class="row"><b>You set the terms.</b>Minimum spend, blackout dates, dine-in only — whatever makes sense for your business.</div>
-        <div class="row"><b>We help you design it.</b>Your Growth Manager works with you to build a perk members actually want to come back for.</div>
-      </div>
-      <div class="visual">
-        <div class="app-card">
-          <div class="app-card-head">
-            <div class="app-label">Local Privileges</div>
-            <h4>Your active perk</h4>
-          </div>
-          <div class="app-card-body">
-            <div class="priv-row">
-              <div>
-                <div class="priv-title">Free Dessert on Your Birthday</div>
-                <div class="priv-meta">₱1,000 min. spend · Valid within 7 days of birthday · One redemption per member per year · Dine-in only</div>
-              </div>
-              <div class="priv-badge">Live</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section id="tour" class="tour" data-theme-section="light">
   <div class="wrap">
     <div class="tour-intro shead center" style="margin:0 auto">
@@ -421,8 +364,8 @@
     <div class="feature rev">
       <div class="copy">
         <div class="kicker">Local Journey</div>
-        <h3>Turn one-time visitors into regulars, on autopilot.</h3>
-        <p>Build a milestone-based loyalty path — what a customer gets at their 1st visit, their 5th, their 10th. Get AI-assisted suggestions, publish it, and the app tracks every customer's progress for you.</p>
+        <h3>Turn First-Time Guests into Lifelong Regulars.</h3>
+        <p>Most traditional loyalty programs fail because asking a customer for 10 stamps feels like work. Our 5-Visit Local Journey uses proven behavioral science to guide new guests step-by-step into becoming regular patrons — tracked automatically by the app.</p>
       </div>
       <div class="visual">
         <div class="phone-frame">
@@ -431,19 +374,81 @@
       </div>
     </div>
 
-    <div class="feature">
-      <div class="copy">
-        <div class="kicker">Analytics</div>
-        <h3>See what's actually working. In real numbers.</h3>
-        <p>Profile views, favorites, privilege redemptions, event attendance, recommendations from other Locals — tracked in one dashboard, filterable by day, week, month, or year.</p>
-      </div>
-      <div class="visual">
-        <div class="phone-frame">
-          <div class="screen"><img src="assets/proto-analytics.png" alt="The Analytics dashboard screen in the Locals for Locals app, shown with example data" /></div>
+    <div class="journey-path">
+      <div class="journey-path-head">The 5-Visit Habit Path</div>
+      <div class="journey-list">
+        <div class="journey-item">
+          <div class="n">1</div>
+          <div>
+            <h4>Visit 1: 50% OFF <span class="sub">(The Spark)</span></h4>
+            <p><span class="why">Why it works:</span> Removes all hesitation for a new guest to try your space for the first time. Because the discount gets them through the door, guests naturally spend more on drinks, sides, and appetizers, driving up their total bill.</p>
+          </div>
         </div>
-        <div class="phone-caption">Shown with example data — your dashboard fills in as members engage.</div>
+        <div class="journey-item">
+          <div class="n">2</div>
+          <div>
+            <h4>Visit 2: Free Drink or Side <span class="sub">(The Momentum)</span></h4>
+            <p><span class="why">Why it works:</span> Capitalizes on their fresh memory of Visit 1. A quick, low-cost perk encourages them to return within 7 to 14 days without hurting your food margins.</p>
+          </div>
+        </div>
+        <div class="journey-item">
+          <div class="n">3</div>
+          <div>
+            <h4>Visit 3: Surprise Chef's Treat <span class="sub">(The Hook)</span></h4>
+            <p><span class="why">Why it works:</span> Variable and unexpected rewards trigger excitement. A surprise off-menu item, dessert, or sample transforms a casual trip into an automatic habit.</p>
+          </div>
+        </div>
+        <div class="journey-item">
+          <div class="n">4</div>
+          <div>
+            <h4>Visit 4: 5% OFF Group Bill <span class="sub">(The Social Anchor)</span></h4>
+            <p><span class="why">Why it works:</span> Encourages your growing regular to bring friends, family, or coworkers. A simple 5% group discount gives them social currency to host their group at your spot, filling more seats while keeping your margins completely safe.</p>
+          </div>
+        </div>
+        <div class="journey-item">
+          <div class="n">5</div>
+          <div>
+            <h4>Visit 5: VIP Local Status <span class="sub">(The Regular)</span></h4>
+            <p><span class="why">Why it works:</span> Shifts the dynamic from discounts to status. Unlocking "Local Regular" privileges — like secret menu access, priority seating, or special birthday perks — locks in long-term emotional loyalty.</p>
+          </div>
+        </div>
       </div>
+
+      <details class="math-details">
+        <summary>Do the Math: Low CAC, Massive 1-Year Value</summary>
+        <div class="math-body">
+          <p>Let's look at the real numbers when a new customer completes their 5-Visit Local Journey and continues visiting you just once a month for the rest of the year.</p>
+          <p class="note">Based on a modest average spend of ₱500 per visit.</p>
+
+          <h5>1. What It Costs to Get Them (CAC)</h5>
+          <p>You never pay upfront for empty advertising promises. Your Customer Acquisition Cost is built directly into their first meal:</p>
+          <div class="math-row">
+            <span>Visit 1 Discount (50% OFF)<span class="dim">or just ~₱75 in actual food/ingredient cost</span></span>
+            <span>₱250</span>
+          </div>
+          <p class="math-callout">Your Total CAC: ₱250 to get a brand-new customer sitting at your table.</p>
+
+          <h5>2. What They Spend in Year 1 (LTV)</h5>
+          <div class="math-row">
+            <span><b>The 5-Visit Habit Loop</b> (Months 1–2)<span class="dim">They complete their initial 5 visits, including bringing friends on Visit 4.</span></span>
+            <span>₱3,500</span>
+          </div>
+          <div class="math-row">
+            <span><b>The Regular Habit</b> (Months 3–12)<span class="dim">Now a loyal regular, they return just once a month for the rest of the year (10 more visits).</span></span>
+            <span>₱5,000</span>
+          </div>
+
+          <div class="math-bottom">
+            <div class="math-bottom-row"><span>Total 1-Year Revenue (LTV)</span><span>₱8,500</span></div>
+            <div class="math-bottom-row"><span>Total Perks &amp; Discounts Given</span><span>₱415</span></div>
+            <div class="math-bottom-row net"><span>Net Revenue to Your Business</span><span>₱8,085</span></div>
+          </div>
+
+          <p class="math-roi">The Return on Investment: You invest ₱250 on Day 1, and in return, you secure ₱8,000+ in net revenue over their first year as a regular.</p>
+        </div>
+      </details>
     </div>
+
   </div>
 
   <div class="wrap" style="margin-top:10px">
@@ -468,47 +473,27 @@
   </div>
 </section>
 
-<section class="compare-sec" data-theme-section="light">
+<section class="levelup" data-theme-section="light">
   <div class="wrap">
     <div class="shead center">
-      <div class="eyebrow-light">Locals for Locals vs. paying for ads</div>
-      <h2>Pay for a relationship, not a click.</h2>
+      <div class="eyebrow-light">Level Up</div>
+      <h2>The Founders Pass</h2>
+      <p class="lede">For founders who want consistent social media content, business growth, and inner-circle networking.</p>
     </div>
-    <div class="compare-grid">
-      <div class="compare-col">
-        <h4>Running ads yourself</h4>
-        <ul>
-          <li>Pay upfront, before you know who shows up</li>
-          <li>Competing in a bidding auction for attention</li>
-          <li>No story, no trust — just an impression</li>
-        </ul>
+    <div class="levelup-card">
+      <div class="levelup-price"><span class="now">₱8,888</span><span class="unit">/ year</span></div>
+      <div class="levelup-permonth">Just ~₱740/month</div>
+      <div class="levelup-includes">Includes EVERYTHING in the Free Partner Plan, plus:</div>
+      <div class="get-list">
+        <div class="row"><span class="chk">✓</span><span><b>3-Part Video &amp; Content Spotlight</b> — Authentic social-ready videos designed for Reels, TikTok, and Facebook, featuring your Founder Story, your Signature Offerings, and a Behind-the-Scenes look at your space</span></div>
+        <div class="row"><span class="chk">✓</span><span><b>Host &amp; Join The Founders Table</b> — Network with top business leaders and host official dinners where attending founders pay to dine at your venue</span></div>
+        <div class="row"><span class="chk">✓</span><span><b>Business Trainings &amp; Coaching</b> — Year-round workshops on operations, local marketing, and scaling</span></div>
+        <div class="row"><span class="chk">✓</span><span><b>Founding Circle Community</b> — Direct access to an exclusive network of local business owners</span></div>
       </div>
-      <div class="compare-col good">
-        <h4>Locals for Locals</h4>
-        <ul>
-          <li>One annual membership, no per-click bidding</li>
-          <li>A real person curates and introduces your business</li>
-          <li>Your founder story builds trust before a single transaction</li>
-        </ul>
+      <div class="cta">
+        <a class="btn btn-gold" href="https://apply.localsforlocals.ph">Apply for the Founders Pass →</a>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="pricing" data-theme-section="light">
-  <div class="price-card wrap">
-    <div class="pitch-line">Instead of paying for marketing, hand it to us.</div>
-    <div class="cap-line">100 Founding Partner spots per city</div>
-    <div class="compare">
-      <span class="was">₱1,888/mo or ₱12,000/yr</span>
-      <span class="now">₱8,888</span>
-      <span class="unit">/ year</span>
-    </div>
-    <div class="save-line">Save ₱3,112/year off the annual rate — or ₱13,768/year versus paying monthly</div>
-    <div class="cta">
-      <a class="btn btn-gold" href="https://apply.localsforlocals.ph">Apply for the Founding Rate →</a>
-    </div>
-    <div class="fine">Once a city's 100 spots are filled, new applicants join a waitlist at the regular rate.</div>
   </div>
 </section>
 
@@ -538,11 +523,11 @@
     <div class="faq" style="margin-top:32px">
       <details open>
         <summary>How much does it cost, and what's included?</summary>
-        <p>Regularly ₱1,888/month, or ₱12,000/year if you pay annually — instead of paying for marketing on your own, you hand that budget to us. As a Founding Partner, the annual rate drops to ₱8,888, covering your business profile, three founder story videos, your Local Privilege, your full Business Portal — Local Gift Pass, Local Journey, and analytics — access to the Founders Table, business trainings, and visibility to every Locals for Locals member.</p>
+        <p>Your core membership — a Professional Business Profile, Full Platform Visibility, the Local Journey, the Local Gift Pass, and your own Business Portal App — is included as a Founding Partner at no cost. If you want consistent social content, Founders Table access, business trainings, and the wider founder community, you can level up to the Founders Pass for ₱8,888/year (about ₱740/month).</p>
       </details>
       <details>
         <summary>Do I have to give a discount?</summary>
-        <p>No. Your Local Privilege can be a discount, but it can also be a complimentary item, an upgrade, or an experience — whatever protects your margins while still feeling generous.</p>
+        <p>Your 5-Visit Local Journey opens with a 50% off first visit — a proven hook designed to get new guests through the door risk-free. From there, the path shifts to low-cost perks, surprises, and status rewards instead of straight discounts, so your margins stay protected as guests become regulars.</p>
       </details>
       <details>
         <summary>How many businesses are you accepting?</summary>
@@ -550,15 +535,15 @@
       </details>
       <details>
         <summary>Do I have to manage the Local Gift Pass myself?</summary>
-        <p>No. It's network-wide — you just accept and redeem it like a Local Privilege when a member uses one at your business. There's nothing to set up or sell.</p>
+        <p>No. It's network-wide — you just accept and redeem it like any other purchase when a member uses one at your business. There's nothing to set up or sell.</p>
       </details>
       <details>
-        <summary>What if I want to change my Local Privilege later?</summary>
-        <p>Your Growth Manager can help you adjust it anytime — the goal is a perk that keeps working for your business, not one locked in forever.</p>
+        <summary>Can I customize my 5-Visit Local Journey?</summary>
+        <p>Your Growth Manager sets you up with the proven 5-Visit path by default — it's built on behavioral science to turn first-timers into regulars. If you'd like to adjust a specific reward, talk to your Growth Manager and they'll help you tune it for your business.</p>
       </details>
       <details>
         <summary>Is this like Groupon or a deal site?</summary>
-        <p>No. There's no per-transaction commission and no race-to-the-bottom discounting. It's an annual membership built around your story and your community, not a flash sale.</p>
+        <p>No. There's no per-transaction commission and no race-to-the-bottom discounting. It's a membership built around your story and your community, not a flash sale.</p>
       </details>
       <details>
         <summary>How do I get started?</summary>
