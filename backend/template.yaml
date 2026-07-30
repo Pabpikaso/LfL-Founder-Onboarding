@@ -139,6 +139,22 @@ Resources:
             Path: /submissions
             Method: POST
 
+  SubmitAgreementFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: agreement.handler
+      CodeUri: src/
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SubmissionsTable
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /submissions/{submissionId}/agreement
+            Method: POST
+
   AdminListFunction:
     Type: AWS::Serverless::Function
     Properties:

@@ -1,4 +1,5 @@
 import { PERKS } from '../data/constants';
+import { FLOW_MAX_WIDTH } from '../styles/shared';
 
 interface LandingProps {
   onApply: () => void;
@@ -25,44 +26,24 @@ export function Landing({ onApply }: LandingProps) {
           alt="Locals for Locals"
           style={{ height: 72, width: 'auto', margin: '6px auto 0', animation: 'floaty 6s ease-in-out infinite', transformOrigin: 'center', display: 'block' }}
         />
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 7,
-            margin: '26px auto 0',
-            padding: '6px 13px',
-            border: '1px solid var(--line)',
-            borderRadius: 999,
-            background: 'var(--card)',
-            fontSize: 11.5,
-            fontWeight: 700,
-            letterSpacing: '.09em',
-            textTransform: 'uppercase',
-            color: 'var(--accent-deep)',
-          }}
-        >
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)' }} />
-          Davao · Manila · Cebu — by invitation
-        </div>
         <h1
           style={{
             fontFamily: 'var(--font-display)',
             fontWeight: 800,
-            fontSize: 'clamp(34px, 8.5vw, 52px)',
-            lineHeight: 1.02,
+            fontSize: 'clamp(30px, 7.5vw, 46px)',
+            lineHeight: 1.06,
             letterSpacing: '-.02em',
-            margin: '18px auto 0',
-            maxWidth: '12ch',
+            margin: '32px auto 0',
+            maxWidth: '15ch',
           }}
         >
           Join the Founding Circle
         </h1>
-        <p style={{ fontSize: 16, lineHeight: 1.55, color: 'var(--ink2)', margin: '16px auto 0', maxWidth: '34ch' }}>
-          Become one of the first 100 curated businesses in Davao, Manila, or Cebu inside Locals for Locals.
+        <p style={{ fontSize: 16, lineHeight: 1.55, color: 'var(--ink2)', margin: '16px auto 0', maxWidth: '36ch' }}>
+          We're building Southeast Asia's trusted network of local businesses.
         </p>
-        <p style={{ fontSize: 15, lineHeight: 1.5, color: 'var(--ink)', margin: '14px auto 0', maxWidth: '32ch', fontWeight: 600 }}>
-          Not everyone gets accepted. We're looking for businesses people genuinely love recommending.
+        <p style={{ fontSize: 15, lineHeight: 1.5, color: 'var(--ink)', margin: '14px auto 0', maxWidth: '34ch', fontWeight: 600 }}>
+          Become one of the first 100 carefully selected businesses in your city to join Locals for Locals.
         </p>
         <div style={{ marginTop: 26 }}>
           <button
@@ -92,7 +73,7 @@ export function Landing({ onApply }: LandingProps) {
       </div>
 
       <div style={{ background: 'var(--ink)', color: 'var(--paper)', padding: '34px 22px 40px', marginTop: 8 }}>
-        <div style={{ maxWidth: 520, margin: '0 auto' }}>
+        <div style={{ maxWidth: FLOW_MAX_WIDTH, margin: '0 auto' }}>
           <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--accent)', opacity: 0.9 }}>
             What you get
           </div>
@@ -103,15 +84,18 @@ export function Landing({ onApply }: LandingProps) {
               fontSize: 26,
               lineHeight: 1.12,
               letterSpacing: '-.01em',
-              margin: '10px 0 22px',
+              margin: '10px 0 12px',
             }}
           >
-            More than a listing — a place at the table.
+            What You Get
           </h2>
+          <p style={{ fontSize: 15, lineHeight: 1.55, color: 'rgba(247,244,238,.68)', margin: '0 0 22px' }}>
+            Everything you need to attract more customers, build lasting relationships, and grow your business.
+          </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {PERKS.map((p) => (
               <div
-                key={p.no}
+                key={p.title}
                 style={{
                   display: 'flex',
                   alignItems: 'flex-start',
@@ -122,15 +106,14 @@ export function Landing({ onApply }: LandingProps) {
               >
                 <span
                   style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 13,
+                    fontSize: 15,
                     fontWeight: 700,
                     color: 'var(--accent)',
-                    minWidth: 26,
+                    minWidth: 20,
                     paddingTop: 1,
                   }}
                 >
-                  {p.no}
+                  ✓
                 </span>
                 <div>
                   <div style={{ fontSize: 16, fontWeight: 600, lineHeight: 1.3 }}>{p.title}</div>

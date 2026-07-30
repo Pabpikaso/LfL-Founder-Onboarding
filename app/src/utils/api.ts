@@ -1,3 +1,5 @@
+import type { AgreementChecks, JourneyConfig } from '../types';
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL as string | undefined;
 
 function requireBase(): string {
@@ -48,6 +50,23 @@ export async function submitApplication(
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
     throw new Error(body.error || `Submission failed (${res.status})`);
+  }
+  return res.json();
+}
+
+export async function submitAgreement(
+  submissionId: string,
+  checks: AgreementChecks,
+  journey: JourneyConfig,
+): Promise<{ ok: boolean; agreedAt: string }> {
+  const res = await fetch(`${requireBase()}/submissions/${encodeURIComponent(submissionId)}/agreement`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ checks, journey }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || `Could not save your agreement (${res.status})`);
   }
   return res.json();
 }

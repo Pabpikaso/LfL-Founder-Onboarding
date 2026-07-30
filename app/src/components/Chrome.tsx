@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { STEP_LABELS, STEP_SHORT } from '../data/constants';
+import { FLOW_MAX_WIDTH } from '../styles/shared';
 import type { Screen } from '../types';
 
 const STEP_INDEX: Partial<Record<Screen, number>> = {
@@ -33,7 +34,7 @@ export function Chrome({ screen, justSaved, onSaveLater }: ChromeProps) {
     >
       <div
         style={{
-          maxWidth: 640,
+          maxWidth: FLOW_MAX_WIDTH,
           margin: '0 auto',
           padding: '13px 20px 0',
           display: 'flex',
@@ -90,7 +91,7 @@ export function Chrome({ screen, justSaved, onSaveLater }: ChromeProps) {
           </button>
         </div>
       </div>
-      <div style={{ maxWidth: 640, margin: '0 auto', padding: '12px 20px 13px' }}>
+      <div style={{ maxWidth: FLOW_MAX_WIDTH, margin: '0 auto', padding: '12px 20px 13px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
           {STEP_SHORT.map((_, i) => {
             const done = curStepIdx > i;

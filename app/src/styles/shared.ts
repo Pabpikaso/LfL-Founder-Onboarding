@@ -1,5 +1,11 @@
 import type { CSSProperties } from 'react';
 
+// Caps the flow's content width so it fills more of a desktop screen instead
+// of sitting as a narrow, phone-width column — but never forces mobile
+// viewports wider than they already render at (clamp's lower bound only
+// applies once the viewport itself is wide enough to reach it).
+export const FLOW_MAX_WIDTH = 'clamp(560px, 62vw, 820px)';
+
 export const label: CSSProperties = {
   display: 'block',
   fontSize: 13,
@@ -125,7 +131,7 @@ export const chipStyle = (on: boolean, dim?: boolean): CSSProperties => ({
 });
 
 export const stepShellStyle: CSSProperties = {
-  maxWidth: 600,
+  maxWidth: FLOW_MAX_WIDTH,
   margin: '0 auto',
   padding: '22px 22px 40px',
   animation: 'fadeUp .45s ease both',

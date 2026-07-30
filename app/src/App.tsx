@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Chrome } from './components/Chrome';
 import { Landing } from './components/Landing';
+import { AgreementStep } from './components/steps/AgreementStep';
 import { BusinessStep } from './components/steps/BusinessStep';
 import { CategoryDetailStep } from './components/steps/CategoryDetailStep';
 import { FounderStep } from './components/steps/FounderStep';
@@ -29,6 +30,7 @@ function App() {
       {screen === 'review' && <ReviewStep api={api} />}
       {screen === 'pay' && <PaymentStep api={api} />}
       {screen === 'welcome' && <WelcomeStep api={api} />}
+      {screen === 'agreement' && <AgreementStep api={api} />}
 
       <Toast message={toast} />
     </div>

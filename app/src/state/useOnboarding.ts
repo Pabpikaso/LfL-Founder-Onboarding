@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CATCONFIG, FOUNDER_QUESTIONS, emptyDish } from '../data/constants';
-import type { Dish, FieldErrors, OnboardingData, Screen } from '../types';
+import type { AgreementChecks, AgreementRecord, Dish, FieldErrors, JourneyConfig, OnboardingData, Screen } from '../types';
 import { clearPersisted, loadPersisted, savePersisted } from '../utils/storage';
 import { validateScreen } from '../utils/validation';
-import { submitApplication, uploadFileToS3, type SubmitResult } from '../utils/api';
+import { submitAgreement as submitAgreementApi, submitApplication, uploadFileToS3, type SubmitResult } from '../utils/api';
 
 const SINGLE_FILE_FIELDS = ['founderPhoto', 'paymentRef'] as const;
 
@@ -21,6 +21,9 @@ export function useOnboarding() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submissionResult, setSubmissionResult] = useState<SubmitResult | null>(persisted.submissionResult || null);
+  const [agreement, setAgreement] = useState<AgreementRecord | null>(persisted.agreement || null);
+  const [agreementSubmitting, setAgreementSubmitting] = useState(false);
+  const [agreementError, setAgreementError] = useState<string | null>(null);
 
   const savedTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -30,8 +33,8 @@ export function useOnboarding() {
   const fileRefs = useRef<Map<string, File>>(new Map());
 
   useEffect(() => {
-    savePersisted({ screen, q, data, submissionResult });
-  }, [screen, q, data, submissionResult]);
+    savePersisted({ screen, q, data, submissionResult, agreement });
+  }, [screen, q, data, submissionResult, agreement]);
 
   const flashSaved = useCallback(() => {
     setJustSaved(true);
@@ -191,9 +194,9 @@ export function useOnboarding() {
   const startApply = useCallback(() => go('founder'), [go]);
 
   const saveLater = useCallback(() => {
-    savePersisted({ screen, q, data, submissionResult });
+    savePersisted({ screen, q, data, submissionResult, agreement });
     showToast('Saved. Come back anytime from the same device.');
-  }, [screen, q, data, submissionResult, showToast]);
+  }, [screen, q, data, submissionResult, agreement, showToast]);
 
   const restart = useCallback(() => {
     clearPersisted();
@@ -204,6 +207,8 @@ export function useOnboarding() {
     setErrors({});
     setSubmitError(null);
     setSubmissionResult(null);
+    setAgreement(null);
+    setAgreementError(null);
   }, []);
 
   const jumpToFounderStart = useCallback(() => {
@@ -252,6 +257,26 @@ export function useOnboarding() {
     }
   }, [data, go, resolveFile]);
 
+  const submitAgreement = useCallback(
+    async (checks: AgreementChecks, journey: JourneyConfig) => {
+      if (!submissionResult?.submissionId) {
+        setAgreementError('Missing submission reference — please refresh and try again.');
+        return;
+      }
+      setAgreementSubmitting(true);
+      setAgreementError(null);
+      try {
+        const result = await submitAgreementApi(submissionResult.submissionId, checks, journey);
+        setAgreement({ checks, journey, agreedAt: result.agreedAt });
+      } catch (err) {
+        setAgreementError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      } finally {
+        setAgreementSubmitting(false);
+      }
+    },
+    [submissionResult],
+  );
+
   return {
     screen,
     q,
@@ -282,6 +307,10 @@ export function useOnboarding() {
     submitting,
     submitError,
     submissionResult,
+    agreement,
+    agreementSubmitting,
+    agreementError,
+    submitAgreement,
   };
 }
 

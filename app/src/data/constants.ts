@@ -2,8 +2,37 @@ import type {
   CategoryConfig,
   Dish,
   FounderQuestion,
+  JourneyVisit,
   OnboardingData,
 } from '../types';
+
+export const SUGGESTED_JOURNEY: JourneyVisit[] = [
+  {
+    title: '50% OFF (The Spark)',
+    description:
+      'Removes all hesitation for a new guest to try your space for the first time. Because the discount gets them through the door, guests naturally spend more on drinks, sides, and appetizers, driving up their total bill.',
+  },
+  {
+    title: 'Free Drink or Side (The Momentum)',
+    description:
+      'Capitalizes on their fresh memory of Visit 1. A quick, low-cost perk encourages them to return within 7 to 14 days without hurting your food margins.',
+  },
+  {
+    title: "Surprise Chef's Treat (The Hook)",
+    description:
+      'Variable and unexpected rewards trigger excitement. A surprise off-menu item, dessert, or sample transforms a casual trip into an automatic habit.',
+  },
+  {
+    title: '5% OFF Group Bill (The Social Anchor)',
+    description:
+      'Encourages your growing regular to bring friends, family, or coworkers. A simple 5% group discount gives them social currency to host their group at your spot, filling more seats while keeping your margins completely safe.',
+  },
+  {
+    title: 'VIP Local Status (The Regular)',
+    description:
+      'Shifts the dynamic from discounts to status. Unlocking "Local Regular" privileges — like secret menu access, priority seating, or special birthday perks — locks in long-term emotional loyalty.',
+  },
+];
 
 export const FOUNDER_QUESTIONS: FounderQuestion[] = [
   {
@@ -33,12 +62,6 @@ export const FOUNDER_QUESTIONS: FounderQuestion[] = [
     placeholder: 'A dish, a service, a product…',
   },
   {
-    key: 'different',
-    question: "What's one thing that makes you different?",
-    type: 'area',
-    max: 200,
-  },
-  {
     key: 'favorite',
     question: 'What should a member try first?',
     type: 'text',
@@ -63,7 +86,7 @@ export const STEP_SHORT = [
 
 export const CATEGORIES = ['Cafe', 'Restaurant', 'Wellness', 'Studio', 'Other'];
 
-export const CITIES = ['Davao', 'Manila', 'Cebu'];
+export const CITIES = ['Bangkok', 'Cebu', 'Chiang Mai', 'Davao', 'Makati', 'Manila', 'Quezon City'];
 
 export const HIGHLIGHTS: Array<[string, string]> = [
   ['🏆', 'Hidden Gem'],
@@ -81,6 +104,7 @@ export const HIGHLIGHTS: Array<[string, string]> = [
   ['🧺', 'Locally Sourced'],
   ['♿', 'Wheelchair Accessible'],
   ['🪑', 'High Chairs Available'],
+  ['🧑‍💼', 'With Meeting Room'],
 ];
 
 export const PRICE_LEVELS: Array<[string, string, string]> = [
@@ -144,12 +168,12 @@ export const CATCONFIG: Record<string, CategoryConfig> = {
   },
 };
 
-export const PERKS: Array<{ no: string; title: string; desc: string }> = [
-  { no: '01', title: 'Professional business profile', desc: 'A polished page members browse and share.' },
-  { no: '02', title: 'Founder story — three videos', desc: 'A shoot that turns your story into film.' },
-  { no: '03', title: 'Founder network & trainings', desc: 'Real sessions with the best local operators.' },
-  { no: '04', title: 'A seat at the Founders Table', desc: "Rooms and dinners you can't buy into later." },
-  { no: '05', title: 'Visibility to Locals members', desc: 'Seen by people looking for exactly you.' },
+export const PERKS: Array<{ title: string; desc: string }> = [
+  { title: 'Be Discovered', desc: 'A professional business profile that helps conscious locals find your business, learn your story, and choose you with confidence.' },
+  { title: 'Keep Customers Coming Back', desc: 'Local Journey — your own digital loyalty program that rewards repeat visits and encourages lasting customer relationships.' },
+  { title: 'Accept the Local Gift Pass', desc: 'Welcome new customers through the Locals for Locals network and get paid through our regional gift pass program.' },
+  { title: 'Share Your Story', desc: "Content Spotlight — We'll capture your founder story, signature offerings, and the experience behind your business through authentic, social-ready content." },
+  { title: 'Connect & Grow', desc: 'Join a community of local business owners through Founders Table, networking events, workshops, and coaching.' },
 ];
 
 export const WELCOME_NEXT_STEPS = [
@@ -171,7 +195,6 @@ export const SAMPLE: OnboardingData = {
   proud: 'Training three baristas from our barangay who now compete nationally.',
   remember: 'That they felt unhurried — like the whole city paused for one cup.',
   signature: 'Barako cold brew with muscovado',
-  different: 'Every bean is roasted in-house, sourced from small farms up on Mt. Apo.',
   favorite: 'Muscovado cold brew',
   description:
     "A slow-living cafe serving single-origin Mindanao beans, roasted in-house. Come for the barako, stay for the quiet.",

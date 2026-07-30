@@ -1,5 +1,5 @@
 import type { OnboardingApi } from '../../state/useOnboarding';
-import { primaryButtonFull, textLinkButton } from '../../styles/shared';
+import { FLOW_MAX_WIDTH, primaryButtonFull, textLinkButton } from '../../styles/shared';
 import { PaymentQr } from '../PaymentQr';
 
 export function PaymentStep({ api }: { api: OnboardingApi }) {
@@ -7,7 +7,7 @@ export function PaymentStep({ api }: { api: OnboardingApi }) {
   const city = data.city || 'your city';
 
   return (
-    <div style={{ maxWidth: 560, margin: '0 auto', padding: '22px 22px 40px', animation: 'fadeUp .45s ease both' }}>
+    <div style={{ maxWidth: FLOW_MAX_WIDTH, margin: '0 auto', padding: '22px 22px 40px', animation: 'fadeUp .45s ease both' }}>
       <div style={{ textAlign: 'center' }}>
         <img src="/assets/logo.png" alt="Locals for Locals" style={{ height: 52, width: 'auto', margin: '6px auto 0', display: 'block' }} />
         <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 28, lineHeight: 1.12, letterSpacing: '-.015em', margin: '18px 0 0' }}>

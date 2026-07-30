@@ -1,7 +1,7 @@
 import { CATCONFIG, FOUNDING_CAP_PER_CITY } from '../../data/constants';
 import type { OnboardingApi } from '../../state/useOnboarding';
 import { pv } from '../../utils/preview';
-import { editPill, primaryButtonFull, textLinkButton } from '../../styles/shared';
+import { FLOW_MAX_WIDTH, editPill, primaryButtonFull, textLinkButton } from '../../styles/shared';
 import { Certificate } from '../Certificate';
 
 export function ReviewStep({ api }: { api: OnboardingApi }) {
@@ -40,7 +40,7 @@ export function ReviewStep({ api }: { api: OnboardingApi }) {
   };
 
   return (
-    <div style={{ maxWidth: 620, margin: '0 auto', padding: '22px 20px 40px', animation: 'fadeUp .45s ease both' }}>
+    <div style={{ maxWidth: FLOW_MAX_WIDTH, margin: '0 auto', padding: '22px 20px 40px', animation: 'fadeUp .45s ease both' }}>
       <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 27, lineHeight: 1.14, letterSpacing: '-.015em', margin: 0, padding: '0 2px' }}>
         Here's how your story will look to {rv.city}.
       </h2>

@@ -1,4 +1,5 @@
 import { FOUNDER_QUESTIONS } from '../../data/constants';
+import { FLOW_MAX_WIDTH } from '../../styles/shared';
 import type { OnboardingApi } from '../../state/useOnboarding';
 
 export function FounderStep({ api }: { api: OnboardingApi }) {
@@ -12,7 +13,7 @@ export function FounderStep({ api }: { api: OnboardingApi }) {
   const showSkip = !cur.required && q !== 0;
 
   return (
-    <div style={{ maxWidth: 560, margin: '0 auto', padding: '20px 22px 40px', minHeight: '60vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ maxWidth: FLOW_MAX_WIDTH, margin: '0 auto', padding: '20px 22px 40px', minHeight: '60vh', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
         <div style={{ fontFamily: 'var(--font-display)', fontSize: 12, fontWeight: 700, color: 'var(--accent-deep)', letterSpacing: '.05em' }}>
           MEET THE FOUNDER

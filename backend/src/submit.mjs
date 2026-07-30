@@ -14,7 +14,7 @@ const SMTP_APP_PASSWORD = process.env.SMTP_APP_PASSWORD;
 const BOOK_READINGS_URL = process.env.BOOK_READINGS_URL;
 const GAME_PLAN_URL = process.env.GAME_PLAN_URL;
 const FOUNDING_CAP = Number(process.env.FOUNDING_CAP || 100);
-const CITIES = ['Davao', 'Manila', 'Cebu'];
+const CITIES = ['Bangkok', 'Cebu', 'Chiang Mai', 'Davao', 'Makati', 'Manila', 'Quezon City'];
 
 // Sends via Google Workspace (Gmail SMTP), authenticated as FROM_EMAIL with
 // an app password — used instead of AWS SES, whose production-access
