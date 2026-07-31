@@ -3,11 +3,37 @@ export type Screen =
   | 'founder'
   | 's2'
   | 'catdetail'
-  | 's3'
-  | 's4'
   | 'review'
   | 'pay'
-  | 'welcome';
+  | 'welcome'
+  | 'agreement';
+
+export interface AgreementChecks {
+  authorized: boolean;
+  giftPass: boolean;
+  journey: boolean;
+  feeUnderstanding: boolean;
+  partnerTerms: boolean;
+  privacyPolicy: boolean;
+}
+
+export interface JourneyVisit {
+  title: string;
+  description: string;
+}
+
+export type JourneyMode = 'suggested' | 'custom';
+
+export interface JourneyConfig {
+  mode: JourneyMode;
+  visits: JourneyVisit[];
+}
+
+export interface AgreementRecord {
+  checks: AgreementChecks;
+  journey: JourneyConfig;
+  agreedAt: string;
+}
 
 export interface Dish {
   name: string;
@@ -23,7 +49,6 @@ export interface OnboardingData {
   proud?: string;
   remember?: string;
   signature?: string;
-  different?: string;
   favorite?: string;
 
   businessName?: string;
@@ -31,8 +56,6 @@ export interface OnboardingData {
   priceRange?: string;
   description?: string;
   city?: string;
-  address?: string;
-  maps?: string;
   facebook?: string;
   instagram?: string;
   website?: string;
@@ -41,16 +64,6 @@ export interface OnboardingData {
   email?: string;
   hours?: string;
   highlights?: string[];
-
-  privilege?: string;
-  privOther?: string;
-  minSpend?: string;
-  terms?: string;
-
-  cover?: string;
-  logo?: string;
-  menu?: string;
-  gallery?: string[];
 
   dishes?: Dish[];
   paymentRef?: string;

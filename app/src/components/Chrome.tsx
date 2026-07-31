@@ -1,15 +1,14 @@
 import { Fragment } from 'react';
 import { STEP_LABELS, STEP_SHORT } from '../data/constants';
+import { FLOW_MAX_WIDTH } from '../styles/shared';
 import type { Screen } from '../types';
 
 const STEP_INDEX: Partial<Record<Screen, number>> = {
   founder: 0,
   s2: 1,
   catdetail: 1,
-  s3: 2,
-  s4: 3,
-  review: 4,
-  pay: 5,
+  review: 2,
+  pay: 3,
 };
 
 interface ChromeProps {
@@ -35,7 +34,7 @@ export function Chrome({ screen, justSaved, onSaveLater }: ChromeProps) {
     >
       <div
         style={{
-          maxWidth: 640,
+          maxWidth: FLOW_MAX_WIDTH,
           margin: '0 auto',
           padding: '13px 20px 0',
           display: 'flex',
@@ -92,7 +91,7 @@ export function Chrome({ screen, justSaved, onSaveLater }: ChromeProps) {
           </button>
         </div>
       </div>
-      <div style={{ maxWidth: 640, margin: '0 auto', padding: '12px 20px 13px' }}>
+      <div style={{ maxWidth: FLOW_MAX_WIDTH, margin: '0 auto', padding: '12px 20px 13px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
           {STEP_SHORT.map((_, i) => {
             const done = curStepIdx > i;
@@ -153,7 +152,7 @@ export function Chrome({ screen, justSaved, onSaveLater }: ChromeProps) {
               textTransform: 'uppercase',
             }}
           >
-            Step {curStepIdx + 1} / 6
+            Step {curStepIdx + 1} / {STEP_SHORT.length}
           </div>
         </div>
       </div>

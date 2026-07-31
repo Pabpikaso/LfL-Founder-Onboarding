@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CATCONFIG, FOUNDER_QUESTIONS, emptyDish } from '../data/constants';
-import type { Dish, FieldErrors, OnboardingData, Screen } from '../types';
+import type { AgreementChecks, AgreementRecord, Dish, FieldErrors, JourneyConfig, OnboardingData, Screen } from '../types';
 import { clearPersisted, loadPersisted, savePersisted } from '../utils/storage';
 import { validateScreen } from '../utils/validation';
-import { submitApplication, uploadFileToS3, type SubmitResult } from '../utils/api';
+import { submitAgreement as submitAgreementApi, submitApplication, uploadFileToS3, type SubmitResult } from '../utils/api';
 
-const SINGLE_FILE_FIELDS = ['founderPhoto', 'cover', 'logo', 'menu', 'paymentRef'] as const;
+const SINGLE_FILE_FIELDS = ['founderPhoto', 'paymentRef'] as const;
 
-const FLOW_AFTER_S2: Screen[] = ['s3', 's4', 'review', 'pay', 'welcome'];
+const FLOW_AFTER_S2: Screen[] = ['review', 'pay', 'welcome'];
 
 export function useOnboarding() {
   const persisted = useRef(loadPersisted()).current;
@@ -21,6 +21,9 @@ export function useOnboarding() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submissionResult, setSubmissionResult] = useState<SubmitResult | null>(persisted.submissionResult || null);
+  const [agreement, setAgreement] = useState<AgreementRecord | null>(persisted.agreement || null);
+  const [agreementSubmitting, setAgreementSubmitting] = useState(false);
+  const [agreementError, setAgreementError] = useState<string | null>(null);
 
   const savedTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -30,8 +33,8 @@ export function useOnboarding() {
   const fileRefs = useRef<Map<string, File>>(new Map());
 
   useEffect(() => {
-    savePersisted({ screen, q, data, submissionResult });
-  }, [screen, q, data, submissionResult]);
+    savePersisted({ screen, q, data, submissionResult, agreement });
+  }, [screen, q, data, submissionResult, agreement]);
 
   const flashSaved = useCallback(() => {
     setJustSaved(true);
@@ -65,43 +68,6 @@ export function useOnboarding() {
     [flashSaved],
   );
 
-  const onGalleryPick = useCallback(
-    (files: FileList) => {
-      const urls = Array.from(files)
-        .slice(0, 6)
-        .map((f) => {
-          const url = URL.createObjectURL(f);
-          fileRefs.current.set(url, f);
-          return url;
-        });
-      setData((d) => ({ ...d, gallery: [...(d.gallery || []), ...urls].slice(0, 6) }));
-      flashSaved();
-    },
-    [flashSaved],
-  );
-
-  const removeGalleryPhoto = useCallback(
-    (i: number) => {
-      setData((d) => ({ ...d, gallery: (d.gallery || []).filter((_, j) => j !== i) }));
-      flashSaved();
-    },
-    [flashSaved],
-  );
-
-  const moveGalleryPhoto = useCallback(
-    (i: number, dir: -1 | 1) => {
-      setData((d) => {
-        const g = [...(d.gallery || [])];
-        const j = i + dir;
-        if (j < 0 || j >= g.length) return d;
-        [g[i], g[j]] = [g[j], g[i]];
-        return { ...d, gallery: g };
-      });
-      flashSaved();
-    },
-    [flashSaved],
-  );
-
   const toggleHighlight = useCallback(
     (name: string) => {
       setData((d) => {
@@ -127,20 +93,10 @@ export function useOnboarding() {
     [flashSaved],
   );
 
-  const setPrivilege = useCallback(
-    (name: string) => updateField('privilege', name),
-    [updateField],
-  );
-
   const setPriceRange = useCallback(
     (sym: string) => updateField('priceRange', sym),
     [updateField],
   );
-
-  const dropPin = useCallback(() => {
-    updateField('maps', 'pinned');
-    showToast('Pin dropped on the map.');
-  }, [updateField, showToast]);
 
   const addDish = useCallback(() => {
     setData((d) => ({ ...d, dishes: [...(d.dishes || []), emptyDish()].slice(0, 5) }));
@@ -204,11 +160,11 @@ export function useOnboarding() {
       return;
     }
     if (screen === 's2') {
-      go(hasCat() ? 'catdetail' : 's3');
+      go(hasCat() ? 'catdetail' : 'review');
       return;
     }
     if (screen === 'catdetail') {
-      go('s3');
+      go('review');
       return;
     }
     const i = FLOW_AFTER_S2.indexOf(screen);
@@ -228,9 +184,7 @@ export function useOnboarding() {
     const map: Partial<Record<Screen, Screen>> = {
       s2: 'founder',
       catdetail: 's2',
-      s3: hasCat() ? 'catdetail' : 's2',
-      s4: 's3',
-      review: 's4',
+      review: hasCat() ? 'catdetail' : 's2',
       pay: 'review',
     };
     const target = map[screen];
@@ -240,9 +194,9 @@ export function useOnboarding() {
   const startApply = useCallback(() => go('founder'), [go]);
 
   const saveLater = useCallback(() => {
-    savePersisted({ screen, q, data, submissionResult });
+    savePersisted({ screen, q, data, submissionResult, agreement });
     showToast('Saved. Come back anytime from the same device.');
-  }, [screen, q, data, submissionResult, showToast]);
+  }, [screen, q, data, submissionResult, agreement, showToast]);
 
   const restart = useCallback(() => {
     clearPersisted();
@@ -253,6 +207,8 @@ export function useOnboarding() {
     setErrors({});
     setSubmitError(null);
     setSubmissionResult(null);
+    setAgreement(null);
+    setAgreementError(null);
   }, []);
 
   const jumpToFounderStart = useCallback(() => {
@@ -276,16 +232,6 @@ export function useOnboarding() {
         if (file) assets[field] = await uploadFileToS3(file);
       }
 
-      if (data.gallery?.length) {
-        const keys = await Promise.all(
-          data.gallery.map(async (url) => {
-            const file = resolveFile(url);
-            return file ? uploadFileToS3(file) : null;
-          }),
-        );
-        assets.gallery = keys.filter((k): k is string => !!k);
-      }
-
       if (data.dishes?.length) {
         assets.dishes = await Promise.all(
           data.dishes.map(async (dish) => {
@@ -297,7 +243,6 @@ export function useOnboarding() {
 
       const cleaned: Record<string, unknown> = { ...data };
       for (const field of SINGLE_FILE_FIELDS) delete cleaned[field];
-      delete cleaned.gallery;
       if (Array.isArray(data.dishes)) {
         cleaned.dishes = data.dishes.map(({ photo: _photo, ...rest }) => rest);
       }
@@ -312,6 +257,26 @@ export function useOnboarding() {
     }
   }, [data, go, resolveFile]);
 
+  const submitAgreement = useCallback(
+    async (checks: AgreementChecks, journey: JourneyConfig) => {
+      if (!submissionResult?.submissionId) {
+        setAgreementError('Missing submission reference — please refresh and try again.');
+        return;
+      }
+      setAgreementSubmitting(true);
+      setAgreementError(null);
+      try {
+        const result = await submitAgreementApi(submissionResult.submissionId, checks, journey);
+        setAgreement({ checks, journey, agreedAt: result.agreedAt });
+      } catch (err) {
+        setAgreementError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      } finally {
+        setAgreementSubmitting(false);
+      }
+    },
+    [submissionResult],
+  );
+
   return {
     screen,
     q,
@@ -322,14 +287,9 @@ export function useOnboarding() {
     justSaved,
     updateField,
     uploadFile,
-    onGalleryPick,
-    removeGalleryPhoto,
-    moveGalleryPhoto,
     toggleHighlight,
     toggleMulti,
-    setPrivilege,
     setPriceRange,
-    dropPin,
     addDish,
     updateDish,
     updateDishPhoto,
@@ -347,6 +307,10 @@ export function useOnboarding() {
     submitting,
     submitError,
     submissionResult,
+    agreement,
+    agreementSubmitting,
+    agreementError,
+    submitAgreement,
   };
 }
 

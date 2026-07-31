@@ -1,4 +1,4 @@
-const LOGO_URL = 'https://apply.localsforlocals.ph/assets/email-logo-mark.png';
+const LOGO_URL = 'https://apply.localsforlocals.co/assets/email-logo-mark.png';
 
 const FONT_STACK = "'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif";
 const SERIF_STACK = "Georgia,'Times New Roman',serif";

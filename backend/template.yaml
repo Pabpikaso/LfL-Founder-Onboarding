@@ -16,7 +16,7 @@ Parameters:
     Description: Email address to receive a notification on every submission.
   FromEmail:
     Type: String
-    Default: "hello@localsforlocals.ph"
+    Default: "support@localsforlocals.co"
     Description: Google Workspace mailbox used as the From/SMTP-auth address for all outbound email.
   SmtpAppPassword:
     Type: String
@@ -28,12 +28,12 @@ Parameters:
     Description: Link to the founder book-readings resource, sent in the confirmation email.
   GamePlanUrl:
     Type: String
-    Default: "https://apply.localsforlocals.ph/assets/founding-circle-120-day-game-plan.pdf"
+    Default: "https://apply.localsforlocals.co/assets/founding-circle-120-day-game-plan.pdf"
     Description: Link to the 120-day game plan document, sent in the confirmation email.
   AllowedOrigin:
     Type: String
     Default: "*"
-    Description: CORS origin allowed to call this API (set to https://apply.localsforlocals.ph once known).
+    Description: CORS origin allowed to call this API (set to https://apply.localsforlocals.co once known).
 
 Globals:
   Function:
@@ -137,6 +137,22 @@ Resources:
           Properties:
             ApiId: !Ref HttpApi
             Path: /submissions
+            Method: POST
+
+  SubmitAgreementFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: agreement.handler
+      CodeUri: src/
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SubmissionsTable
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /submissions/{submissionId}/agreement
             Method: POST
 
   AdminListFunction:

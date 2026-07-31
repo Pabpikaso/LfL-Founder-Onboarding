@@ -4,9 +4,10 @@ import type { OnboardingApi } from '../../state/useOnboarding';
 import { downloadCertificatePng, formatJoinDate } from '../../utils/certificate';
 import { pv } from '../../utils/preview';
 import { Certificate } from '../Certificate';
+import { FLOW_MAX_WIDTH } from '../../styles/shared';
 
 export function WelcomeStep({ api }: { api: OnboardingApi }) {
-  const { data, showToast, submissionResult } = api;
+  const { data, showToast, submissionResult, agreement, go } = api;
   const businessName = (pv(data, 'businessName') as string) || '';
   const [downloading, setDownloading] = useState(false);
 
@@ -106,7 +107,7 @@ export function WelcomeStep({ api }: { api: OnboardingApi }) {
         </div>
       </div>
 
-      <div style={{ maxWidth: 520, margin: '0 auto', padding: '26px 22px 40px' }}>
+      <div style={{ maxWidth: FLOW_MAX_WIDTH, margin: '0 auto', padding: '26px 22px 40px' }}>
         {!isWaitlisted && (
           <>
             <div style={{ animation: 'fadeUp .5s .1s ease both' }}>
@@ -130,6 +131,23 @@ export function WelcomeStep({ api }: { api: OnboardingApi }) {
             </div>
             <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--ink3)', marginTop: 10 }}>
               Post it to your Stories — it doubles as your announcement.
+            </div>
+
+            <div style={{ marginTop: 22, background: 'var(--ink)', color: 'var(--paper)', borderRadius: 18, padding: 20, boxShadow: 'var(--shadow)', display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 14.5, fontWeight: 700 }}>
+                  {agreement ? 'Partner agreement — signed ✓' : 'One last step'}
+                </div>
+                <div style={{ fontSize: 12.5, color: 'rgba(247,244,238,.7)', marginTop: 3, lineHeight: 1.4 }}>
+                  {agreement ? 'Your Merchant Partner agreement is on file.' : 'Review and sign your Merchant Partner agreement.'}
+                </div>
+              </div>
+              <button
+                onClick={() => go('agreement')}
+                style={{ flexShrink: 0, background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 11, padding: '11px 16px', fontSize: 13.5, fontWeight: 700, cursor: 'pointer' }}
+              >
+                {agreement ? 'View' : 'Continue →'}
+              </button>
             </div>
           </>
         )}

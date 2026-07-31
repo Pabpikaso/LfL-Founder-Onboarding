@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Locals for Locals</title>
-<meta name="description" content="Don't be a stranger. Meet your Locals. Help them experience Local. A curated circle of the businesses that make Southeast Asia feel like home — starting in Davao, Cebu, Manila, and Bangkok." />
+<meta name="description" content="Don't be a stranger. Meet Locals. Experience Local. Discover the businesses, founders, and communities that make a city worth falling in love with — starting in Davao, Cebu, Manila, and Bangkok." />
 <link rel="icon" type="image/png" href="assets/logo.png" />
 <style>
   :root{
@@ -72,9 +72,12 @@
     border-bottom:1px solid var(--hairline);transition:background .3s ease,border-color .3s ease}
   header.on-dark{background:rgba(10,10,11,.55);border-bottom-color:rgba(255,255,255,.08)}
   header .bar{max-width:var(--max);margin:0 auto;padding:0 24px;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between}
-  header .logo{display:flex;align-items:center;gap:8px}
-  header .logo img{height:20px;width:auto}
-  header .logo span{font-size:13px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+  header .logo{display:flex;align-items:center;gap:10px}
+  header .logo .mark{width:34px;height:34px;border-radius:50%;background:#FBF7EE;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 1px 3px rgba(0,0,0,.12);flex-shrink:0}
+  header.on-dark .logo .mark{box-shadow:0 1px 4px rgba(0,0,0,.4)}
+  header .logo .mark img{width:26px;height:26px;display:block}
+  header .logo span{font-size:14px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
   header.on-dark .logo span{color:#fff}
   nav.navlinks{display:flex;align-items:center;gap:34px}
   nav a.navlink{font-size:12px;font-weight:400;color:var(--ink-soft);letter-spacing:-.005em}
@@ -87,12 +90,30 @@
 
   /* ===== hero ===== */
   .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    text-align:center;background:radial-gradient(120% 90% at 50% 108%, var(--hero-glow) 0%, transparent 58%), linear-gradient(180deg, var(--hero-1) 0%, var(--hero-2) 100%);
+    text-align:center;background:var(--hero-1);
     color:#fff;overflow:hidden;padding:calc(var(--nav-h) + 40px) 24px 80px}
-  .hero .inner{position:relative;z-index:2;max-width:920px}
-  .hero h1{font-weight:600;letter-spacing:-.025em;line-height:1.03;font-size:clamp(2.6rem,7.4vw,6.2rem);color:#fff}
+  .hero-grid{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(5,1fr)}
+  .hero-box{position:relative;overflow:hidden;background:var(--box-bg,var(--hero-1))}
+  .hero-box.v2{--box-bg:var(--davao-1)}
+  .hero-box.v3{--box-bg:var(--cebu-1)}
+  .hero-box.v4{--box-bg:var(--manila-1)}
+  .hero-box.v5{--box-bg:var(--bangkok-1)}
+  .hero-box::before{content:'';position:absolute;inset:0;background-image:var(--box-img,none);background-size:cover;background-position:center;
+    opacity:0;transform:scale(1.06);transition:opacity .5s ease,transform .6s ease}
+  .hero-box::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .3s ease}
+  .hero-box:hover::before,.hero-box.revealed::before{opacity:1;transform:scale(1)}
+  .hero-box:hover::after,.hero-box.revealed::after{background:rgba(0,0,0,.08)}
+  @media (max-width:900px){.hero-grid{grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(7,1fr)}}
+  @media (max-width:560px){.hero-grid{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(10,1fr)}}
+  .hero .grain{z-index:1}
+  .hero .inner{position:relative;z-index:2;max-width:760px;animation:heroFloat 6s ease-in-out infinite}
+  .hero .inner::before{content:'';position:absolute;inset:-70px -50px;z-index:-1;pointer-events:none;
+    background:radial-gradient(60% 65% at 50% 42%, rgba(0,0,0,.5) 0%, rgba(0,0,0,.22) 48%, rgba(0,0,0,0) 76%);
+    filter:blur(8px)}
+  @keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  .hero h1{font-weight:600;letter-spacing:-.025em;line-height:1.03;font-size:clamp(2.6rem,7.4vw,6.2rem);color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.5),0 1px 3px rgba(0,0,0,.6)}
   .hero h1 .line{display:block}
-  .hero .sub{margin-top:26px;font-weight:400;letter-spacing:-.01em;font-size:clamp(1.15rem,2.2vw,1.6rem);color:rgba(255,255,255,.72)}
+  .hero .sub{margin-top:26px;font-weight:400;letter-spacing:-.01em;font-size:clamp(1.15rem,2.2vw,1.6rem);color:rgba(255,255,255,.72);text-shadow:0 2px 16px rgba(0,0,0,.55)}
   .hero .status{margin-top:44px;display:inline-flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.5);letter-spacing:.01em}
   .hero .status .dot{width:6px;height:6px;border-radius:50%;background:var(--hero-glow);box-shadow:0 0 10px var(--hero-glow)}
   .scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;opacity:.5}
@@ -110,10 +131,6 @@
   .mission p.lede + p.lede{margin-top:18px}
   .mission p.closing-line{margin-top:38px;font-weight:600;letter-spacing:-.01em;font-size:clamp(1.2rem,2vw,1.5rem);line-height:1.4;color:var(--ink);max-width:40ch;margin-left:auto;margin-right:auto}
   .mission p.tagline{margin-top:22px;font-style:italic;font-size:16px;color:var(--ink-faint)}
-  .philosophy-intro{font-size:clamp(1.05rem,1.6vw,1.3rem);color:var(--ink-soft);margin-top:20px}
-  .philosophy-list{display:inline-flex;flex-direction:column;gap:16px;text-align:left;margin:36px auto 0}
-  .philosophy-list .belief{display:flex;align-items:flex-start;gap:12px;font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.5;color:var(--ink);max-width:52ch}
-  .philosophy-list .belief .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:11px}
 
   /* ===== city panels ===== */
   .city-panel{position:relative;min-height:92vh;display:flex;align-items:center;color:#fff;overflow:hidden}
@@ -157,19 +174,42 @@
   .orb-card h3{margin-top:22px;font-size:16px;font-weight:600;color:var(--ink)}
   .orb-card p{margin-top:6px;font-size:14px;color:var(--ink-faint);line-height:1.5}
 
-  /* ===== belonging strip (light, editorial pairs) ===== */
-  .belong{padding:0 0 170px;background:var(--paper)}
-  .belong .pairs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hairline);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
-  @media (max-width:760px){.belong .pairs{grid-template-columns:1fr}}
-  .pair{background:var(--paper);padding:64px 48px}
-  .pair .k{font-size:12.5px;font-weight:600;color:var(--gold);letter-spacing:.02em}
-  .pair h3{margin-top:16px;font-size:clamp(1.3rem,2.2vw,1.7rem);font-weight:600;letter-spacing:-.015em;line-height:1.2}
-  .pair p{margin-top:12px;font-size:15.5px;line-height:1.55;color:var(--ink-soft);max-width:42ch}
+
+  /* ===== for locals (dark, phone mockups) ===== */
+  .for-locals{padding:170px 0;background:var(--paper)}
+  .for-locals .section-head{max-width:620px;margin:0 auto;text-align:center}
+  .for-locals .eyebrow{font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.02em}
+  .for-locals h2{margin-top:20px;font-weight:600;letter-spacing:-.02em;line-height:1.12;font-size:clamp(1.9rem,4.4vw,3.1rem);color:var(--ink)}
+  .for-locals .lede{margin-top:22px;font-size:clamp(1.05rem,1.6vw,1.25rem);line-height:1.5;color:var(--ink-soft)}
+  .for-locals .footline{max-width:640px;margin:64px auto 0;text-align:center}
+  .for-locals .footline p{font-size:clamp(1.05rem,1.7vw,1.3rem);line-height:1.5;color:var(--ink)}
+  .for-locals .footline strong{font-weight:600}
+
+  /* punchy moment cards — deliberately louder than the rest of the page */
+  .moment-grid{margin-top:70px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  @media (max-width:980px){.moment-grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.moment-grid{grid-template-columns:1fr;max-width:340px;margin-left:auto;margin-right:auto}}
+  .moment-card{position:relative;aspect-ratio:3/4;border-radius:18px;padding:22px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;color:#fff}
+  .moment-card .tag{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;opacity:.86}
+  .moment-card .headline{font-weight:800;letter-spacing:-.02em;line-height:.92;font-size:clamp(1.7rem,3.4vw,2.3rem);text-transform:uppercase}
+  .moment-card .cap{font-size:13px;line-height:1.4;font-weight:500;opacity:.9;max-width:22ch}
+  .moment-card.m-1{background:radial-gradient(120% 90% at 100% 0%, #35E0C8 0%, #0FB6A6 60%, #0A8C82 100%)}
+  .moment-card.m-2{background:radial-gradient(120% 90% at 0% 100%, #FFB13C 0%, #FF7A1A 55%, #E85D04 100%)}
+  .moment-card.m-3{background:radial-gradient(120% 90% at 100% 100%, #FF7AC6 0%, #F0428C 55%, #C41E7A 100%)}
+  .moment-card.m-4{background:radial-gradient(120% 90% at 0% 0%, #B98CFF 0%, #7B4EF0 55%, #5A2FD0 100%)}
+
+  /* ===== cta buttons ===== */
+  .cta-buttons{margin-top:38px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 30px;border-radius:999px;font-size:14.5px;font-weight:600;letter-spacing:-.005em;transition:background .25s ease,border-color .25s ease,color .25s ease}
+  .btn-primary{background:#fff;color:var(--close-1)}
+  .btn-primary:hover{background:var(--hero-glow);color:#fff}
+  .btn-secondary{border:1px solid rgba(255,255,255,.3);color:#fff}
+  .btn-secondary:hover{border-color:#fff;background:rgba(255,255,255,.08)}
 
   /* ===== closing (dark, bookend) ===== */
   .closing{background:linear-gradient(180deg, var(--close-1) 0%, var(--close-2) 100%);color:#fff;padding:180px 0;text-align:center;overflow:hidden}
   .closing .wrap{position:relative;z-index:2;max-width:640px}
-  .closing h2{font-weight:600;letter-spacing:-.02em;line-height:1.14;font-size:clamp(1.9rem,4vw,2.9rem)}
+  .closing h2{font-weight:600;letter-spacing:-.02em;line-height:1.14;font-size:clamp(1.9rem,4vw,2.9rem);color:#fff}
   .closing p{margin-top:22px;font-size:clamp(1.05rem,1.6vw,1.2rem);line-height:1.5;color:rgba(255,255,255,.62)}
   .closing .contact{margin-top:30px;font-size:14.5px;color:rgba(255,255,255,.42)}
   .closing .contact a{color:rgba(255,255,255,.72);border-bottom:1px solid rgba(255,255,255,.24)}
@@ -179,7 +219,7 @@
   footer{padding:36px 0;background:var(--paper-dim)}
   footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
   footer .brand{display:flex;align-items:center;gap:8px}
-  footer .brand img{height:16px;width:auto;opacity:.7}
+  footer .brand img{height:26px;width:auto;opacity:.85}
   footer .brand span{font-size:12px;color:var(--ink-faint)}
   footer .legal{font-size:12px;color:var(--ink-faint);display:flex;gap:18px;align-items:center;flex-wrap:wrap}
   footer .legal .italic{font-style:italic;color:var(--ink-soft)}
@@ -190,7 +230,7 @@
 <header id="siteHeader">
   <div class="bar">
     <a class="logo" href="#top">
-      <img id="navLogo" src="assets/logo.png" alt="Locals for Locals" />
+      <span class="mark"><img src="assets/logo.png" alt="Locals for Locals" /></span>
       <span>Locals for Locals</span>
     </a>
     <nav class="navlinks">
@@ -203,13 +243,54 @@
 </header>
 
 <div id="top" class="hero" data-theme-section="dark">
+  <div class="hero-grid" id="heroGrid" aria-hidden="true">
+    <div class="hero-box" data-photo="assets/partners/partner-01.jpg"></div>
+    <div class="hero-box v2" data-photo="assets/partners/partner-02.jpg"></div>
+    <div class="hero-box v3" data-photo="assets/partners/partner-03.jpg"></div>
+    <div class="hero-box v4" data-photo="assets/partners/partner-04.jpg"></div>
+    <div class="hero-box v5" data-photo="assets/partners/partner-05.jpg"></div>
+    <div class="hero-box" data-photo="assets/partners/partner-06.jpg"></div>
+    <div class="hero-box v2" data-photo="assets/partners/partner-07.jpg"></div>
+    <div class="hero-box v3" data-photo="assets/partners/partner-08.jpg"></div>
+    <div class="hero-box v4" data-photo="assets/partners/partner-09.jpg"></div>
+    <div class="hero-box v5" data-photo="assets/partners/partner-10.jpg"></div>
+    <div class="hero-box" data-photo="assets/partners/partner-11.jpg"></div>
+    <div class="hero-box v2" data-photo="assets/partners/partner-12.jpg"></div>
+    <div class="hero-box v3" data-photo="assets/partners/partner-13.jpg"></div>
+    <div class="hero-box v4" data-photo="assets/partners/partner-14.jpg"></div>
+    <div class="hero-box v5" data-photo="assets/partners/partner-15.jpg"></div>
+    <div class="hero-box" data-photo="assets/partners/partner-16.jpg"></div>
+    <div class="hero-box v2" data-photo="assets/partners/partner-17.jpg"></div>
+    <div class="hero-box v3" data-photo="assets/partners/partner-18.jpg"></div>
+    <div class="hero-box v4" data-photo="assets/partners/partner-19.jpg"></div>
+    <div class="hero-box v5" data-photo="assets/partners/partner-20.jpg"></div>
+    <div class="hero-box" data-photo="assets/partners/partner-21.jpg"></div>
+    <div class="hero-box v2" data-photo="assets/partners/partner-22.jpg"></div>
+    <div class="hero-box v3" data-photo="assets/partners/partner-23.jpg"></div>
+    <div class="hero-box v4" data-photo="assets/partners/partner-24.jpg"></div>
+    <div class="hero-box v5" data-photo="assets/partners/partner-25.jpg"></div>
+    <div class="hero-box" data-photo="assets/partners/partner-26.jpg"></div>
+    <div class="hero-box v2" data-photo="assets/partners/partner-27.jpg"></div>
+    <div class="hero-box v3" data-photo="assets/partners/partner-28.jpg"></div>
+    <div class="hero-box v4" data-photo="assets/partners/partner-29.jpg"></div>
+    <div class="hero-box v5" data-photo="assets/partners/partner-30.jpg"></div>
+    <div class="hero-box" data-photo="assets/partners/partner-31.jpg"></div>
+    <div class="hero-box v2" data-photo="assets/partners/partner-32.jpg"></div>
+    <div class="hero-box v3" data-photo="assets/partners/partner-33.jpg"></div>
+    <div class="hero-box v4" data-photo="assets/partners/partner-34.jpg"></div>
+    <div class="hero-box v5" data-photo="assets/partners/partner-35.jpg"></div>
+    <div class="hero-box" data-photo="assets/partners/partner-36.jpg"></div>
+    <div class="hero-box v2" data-photo="assets/partners/partner-01.jpg"></div>
+    <div class="hero-box v3" data-photo="assets/partners/partner-02.jpg"></div>
+    <div class="hero-box v4" data-photo="assets/partners/partner-03.jpg"></div>
+    <div class="hero-box v5" data-photo="assets/partners/partner-04.jpg"></div>
+  </div>
   <div class="grain"></div>
   <div class="inner">
     <h1>
       <span class="line">Don't be a stranger.</span>
-      <span class="line">Meet your Locals.</span>
+      <span class="line">Meet Locals. Experience Local.</span>
     </h1>
-    <p class="sub">Help them experience Local.</p>
     <div class="status"><span class="dot"></span>Founding Circle now forming across Southeast Asia</div>
   </div>
   <div class="scroll-cue" aria-hidden="true">
@@ -222,9 +303,10 @@
 
     <div class="mission-part">
       <div class="eyebrow">Our why</div>
-      <h2>The strongest economies are built by strong communities.</h2>
-      <p class="lede">Today, many remarkable local businesses remain undiscovered — not because they lack quality, but because they lack visibility, community, and the infrastructure to grow sustainably.</p>
-      <p class="lede">We're building a future where local businesses don't grow alone. They grow alongside conscious consumers, founders, and communities that genuinely believe in what they do.</p>
+      <h2>We believe that the strongest economies are built by strong communities.</h2>
+      <p class="lede">A local business creates the greatest neighborhood impact when it has the room to truly thrive.</p>
+      <p class="lede">When local creators connect with conscious consumers who share their values, it creates an overflow of community support. That surplus gives businesses the freedom to give back, innovate, and invest in sustainable initiatives.</p>
+      <p class="lede">Locals for Locals exists to help build that overflow.</p>
     </div>
 
   </div>
@@ -237,7 +319,7 @@
       <div class="frame">
         <div class="city-tag"><span class="dot"></span>Southern Mindanao</div>
         <h2>Davao</h2>
-        <p>Where the Founding Circle began — durian stalls, dive bars, and the family-run spots that never needed a billboard.</p>
+        <p>This is where we started — home to hidden gems, passionate founders, and a community of conscious consumers we're proud to call ours.</p>
       </div>
     </div>
   </div>
@@ -248,7 +330,7 @@
       <div class="frame">
         <div class="city-tag"><span class="dot"></span>Central Visayas</div>
         <h2>Cebu</h2>
-        <p>Island light and a slower pace — the lechon joints, dive shops, and coffee corners locals actually queue for.</p>
+        <p>Where culture, creativity, and entrepreneurship come together — we couldn't have built this without a city like this one.</p>
       </div>
     </div>
   </div>
@@ -259,7 +341,7 @@
       <div class="frame">
         <div class="city-tag"><span class="dot"></span>Metro Manila</div>
         <h2>Manila</h2>
-        <p>The capital, made personal — the carinderias, ateliers, and corner shops that outlast every trend.</p>
+        <p>Come meet the founders we've watched shape the future of local commerce in the capital.</p>
       </div>
     </div>
   </div>
@@ -270,8 +352,43 @@
       <div class="frame">
         <div class="city-tag"><span class="dot"></span>Central Thailand</div>
         <h2>Bangkok</h2>
-        <p>The circle's first stop outside the Philippines — the shophouses, street-food stalls, and temple-side markets locals swear by.</p>
+        <p>Our first stop outside the Philippines — we're here because these businesses deserve to be remembered.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="for-locals" class="for-locals" data-theme-section="light">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">For locals</div>
+      <h2>Experience Every City Like a Local.</h2>
+      <p class="lede">Whether you're home or somewhere new, discover the businesses, founders, and communities that'll make you fall in love with the city.</p>
+    </div>
+    <div class="moment-grid">
+      <div class="moment-card m-1">
+        <div class="tag">Discovery</div>
+        <div class="headline">Hidden<br />Gem</div>
+        <div class="cap">Discover Hidden Gems that only locals know.</div>
+      </div>
+      <div class="moment-card m-2">
+        <div class="tag">Local Privilege</div>
+        <div class="headline">Local<br />Perks</div>
+        <div class="cap">Claim cwazy local discounts %</div>
+      </div>
+      <div class="moment-card m-3">
+        <div class="tag">Local Gift Pass</div>
+        <div class="headline">Gift<br />Cards</div>
+        <div class="cap">One Pass for all your local favorites, from every city across Southeast Asia.</div>
+      </div>
+      <div class="moment-card m-4">
+        <div class="tag">Community Event</div>
+        <div class="headline">Squad<br />Up</div>
+        <div class="cap">Connect with like-minded locals to explore events, support community initiatives, and build local culture together.</div>
+      </div>
+    </div>
+    <div class="footline">
+      <p><strong>Where you spend matters.</strong> Turn everyday purchases into fuel for local culture, sustainable practices, and thriving communities.</p>
     </div>
   </div>
 </section>
@@ -308,52 +425,13 @@
   </div>
 </section>
 
-<section class="belong" data-theme-section="light">
-  <div class="wrap">
-    <div class="pairs">
-      <div class="pair">
-        <div class="k">Not a directory</div>
-        <h3>A circle you're invited into.</h3>
-        <p>No open signup, no self-serve listing. Every founder is reviewed before they join — so membership means something.</p>
-      </div>
-      <div class="pair">
-        <div class="k">Not a discount app</div>
-        <h3>A community you can feel.</h3>
-        <p>Founders Table sessions, business trainings, and a network of people who've actually built something here.</p>
-      </div>
-      <div class="pair">
-        <div class="k">Not a coupon code</div>
-        <h3>Your own Local Privilege.</h3>
-        <p>Members are welcomed the way a friend would welcome them — an experience each founder designs themselves.</p>
-      </div>
-      <div class="pair">
-        <div class="k">Not one and done</div>
-        <h3>A number that means something.</h3>
-        <p>100 Founding Partner spots per city, assigned in the real order founders join — not a marketing gimmick.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="mission" data-theme-section="light">
   <div class="wrap">
 
     <div class="mission-part">
       <div class="eyebrow">Our mission</div>
-      <h2>To strengthen local economies by building the largest trusted network of local businesses and conscious consumers across Southeast Asia.</h2>
+      <h2>To build thriving local economies where every purchase empowers local businesses to invest in sustainable initiatives, stronger communities, and human flourishing.</h2>
       <p class="tagline">One founder. One business. One city at a time.</p>
-    </div>
-
-    <div class="mission-part">
-      <div class="eyebrow">Our philosophy</div>
-      <p class="philosophy-intro">We believe:</p>
-      <div class="philosophy-list">
-        <div class="belief"><span class="dot"></span>Businesses should enable meaningful lives for the founders who build them.</div>
-        <div class="belief"><span class="dot"></span>The economy should strengthen communities and preserve culture.</div>
-        <div class="belief"><span class="dot"></span>Technology should bring people closer together.</div>
-        <div class="belief"><span class="dot"></span>Great businesses deserve more than customers — they deserve their people.</div>
-        <div class="belief"><span class="dot"></span>Conscious consumers have the power to shape the future of their cities.</div>
-      </div>
     </div>
 
   </div>
@@ -362,9 +440,13 @@
 <section id="closing" class="closing" data-theme-section="dark">
   <div class="grain"></div>
   <div class="wrap">
-    <h2>Locals for Locals is invite-only, for now.</h2>
-    <p>We're closing the Founding Circle one city at a time. If a spot opens for a business like yours, we'll reach out directly.</p>
-    <div class="contact">Know someone who belongs here? <a href="mailto:hello@localsforlocals.ph">hello@localsforlocals.ph</a></div>
+    <h2>Welcome to the Founding Circle.</h2>
+    <p>We're not looking for every business. We're looking for businesses with heart. The creators who shape culture and make their cities better.</p>
+    <p>If that sounds like you, we'd love to meet you.</p>
+    <div class="cta-buttons">
+      <a class="btn btn-primary" href="https://apply.localsforlocals.ph">Become a Founding Partner</a>
+    </div>
+    <div class="contact">Locals for Locals is invite-only, for now. Know a local place that deserves to be here? Recommend it at <a href="mailto:hello@localsforlocals.ph">hello@localsforlocals.ph</a></div>
   </div>
 </section>
 
@@ -385,17 +467,51 @@
 
   // swap header chrome to light-on-dark while a dark section sits under the nav
   const header = document.getElementById('siteHeader');
-  const navLogo = document.getElementById('navLogo');
   const sections = document.querySelectorAll('[data-theme-section]');
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       const isDark = entry.target.dataset.themeSection === 'dark';
       header.classList.toggle('on-dark', isDark);
-      navLogo.src = isDark ? 'assets/logo-white.png' : 'assets/logo.png';
     });
   }, { rootMargin: `-${52}px 0px -85% 0px`, threshold: 0 });
   sections.forEach((s) => io.observe(s));
+
+  // hero grid — each box picks up its photo from data-photo once set
+  const heroBoxes = Array.from(document.querySelectorAll('.hero-box[data-photo]'));
+  heroBoxes.forEach((box) => {
+    const src = box.dataset.photo;
+    if (src) box.style.setProperty('--box-img', `url("${src}")`);
+  });
+
+  // on touch devices there's no hover, so gently auto-reveal random boxes
+  // on a rolling cycle to keep the grid alive
+  (function initHeroAutoReveal(){
+    if (!window.matchMedia('(hover: none)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const withPhoto = heroBoxes.filter((b) => b.dataset.photo);
+    if (!withPhoto.length) return;
+
+    const CONCURRENT = 4;   // how many boxes are shown at once
+    const HOLD = 2200;      // ms a box stays revealed
+    const active = new Set();
+
+    function revealOne(){
+      const candidates = withPhoto.filter((b) => !active.has(b));
+      if (!candidates.length) return;
+      const box = candidates[Math.floor(Math.random() * candidates.length)];
+      box.classList.add('revealed');
+      active.add(box);
+      setTimeout(() => {
+        box.classList.remove('revealed');
+        active.delete(box);
+      }, HOLD + Math.random() * 800);
+    }
+
+    // stagger the initial reveals, then keep a steady rolling cycle
+    for (let i = 0; i < CONCURRENT; i++) setTimeout(revealOne, i * 500);
+    setInterval(revealOne, HOLD / CONCURRENT);
+  })();
 </script>
 
 </body>

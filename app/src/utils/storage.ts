@@ -1,5 +1,5 @@
 import type { SubmitResult } from './api';
-import type { OnboardingData, Screen } from '../types';
+import type { AgreementRecord, OnboardingData, Screen } from '../types';
 
 const STORAGE_KEY = 'lfl_onboard';
 
@@ -8,6 +8,7 @@ export interface PersistedState {
   q: number;
   data: OnboardingData;
   submissionResult: SubmitResult | null;
+  agreement: AgreementRecord | null;
 }
 
 export function loadPersisted(): Partial<PersistedState> {
